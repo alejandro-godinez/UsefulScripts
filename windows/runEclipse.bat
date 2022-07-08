@@ -1,0 +1,1 @@
+START /B eclipse.exe -data .

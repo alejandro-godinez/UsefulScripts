@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="help" name="ProjectName" basedir=".">
+  <description>
+  </description>
+  
+  <!-- NOTE: update the version number in installToMaven.sh and pom.xml -->
+  <property name="version.no" value="1.0.0.0" />
+  
+  <!-- source directory paths -->
+  <property name="dirProj" value="${basedir}/${ant.project.name}" />
+  <property name="dirSrc" value="${basedir}/${ant.project.name}/src" />
+  <property name="dirTestSrc" value="${basedir}/${ant.project.name}/test" />
+  <property name="dirTestFiles" value="${basedir}/${ant.project.name}/testFiles" />
+  <property name="dirLib" value="${basedir}/${ant.project.name}/lib" />
+  <property name="dirDocs" value="${basedir}/${ant.project.name}/docs" />
+  <property name="dirScripts" value="${basedir}/${ant.project.name}/scripts" />
+  <property name="dirImg" value="${basedir}/${ant.project.name}/img" />
+  
+  <!-- release  directory paths -->
+  <property name="dirRelease" value="${basedir}/release/${version.no}" />
+  <property name="dirReleaseBin" value="${dirRelease}/bin" />
+  <property name="dirReleaseLib" value="${dirRelease}/lib" />
+  <property name="dirReleaseUnibasic" value="${dirRelease}/unibasic" />
+  <property name="dirReleaseJDoc" value="${dirRelease}/javadoc" /> 
+  
+  <!-- junit testing build paths -->
+  <property name="dirJUnit" value="${basedir}/release/junit" />
+  <property name="dirJUnitBin" value="${dirJUnit}/bin" />
+  <property name="dirJUnitTestFiles" value="${dirJUnit}/testFiles" />
+  <property name="dirJUnitReport" value="${dirJUnit}/report" /> 
+   
+    
+  <target name="help"> 
+    <java classname="org.apache.tools.ant.Main"> 
+      <arg value="-projecthelp" /> 
+      <arg value="-buildfile" /> 
+      <arg value="${ant.file}" /> 
+    </java> 
+  </target>
+  
+  <target name="clean" description="Deletes contents of release directory">
+    <delete dir="${dirRelease}" /> 
+  </target>
+  
+  <target name="clean_tests" description="Deletes contents of release directory">
+    <delete dir="${dirJUnit}" /> 
+  </target>
+  
+  <target name="init" description="Initialize the release directory">
+    <mkdir dir="${dirRelease}" />
+  </target>
+  
+  <target name="compile" depends="clean, init" description="Compiles the all java files to the BIN directory." >
+    <mkdir dir="${dirReleaseBin}" />
+
+    <javac includeAntRuntime="false" destdir="${dirReleaseBin}" encoding="ISO-8859-1">
+      <!-- Enable this to see deprecation warning information -->
+      <!--compilerarg value="-Xlint:deprecation"/-->
+      
+      <!-- set the location of the project source code here, allows for multiple entries -->
+      <src path="${dirSrc}"/>
+      
+      <!--classpath id="classpath" description="The default classpath."-->
+      <classpath>
+        <fileset dir="${dirLib}">
+          <include name="*.zip" />
+          <include name="*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="compile-tests" depends="clean_tests" description="Compiles the unit test source files together with main source to a separate junit output folder">
+    <mkdir dir="${dirJUnitBin}" />
+    
+    <javac includeAntRuntime="false" destdir="${dirJUnitBin}" encoding="ISO-8859-1">
+     
+     <!-- set the location of both the project and test source here, allows for multiple entries -->
+      <src path="${dirSrc}"/>
+      <src path="${dirTestSrc}"/>
+      
+      <classpath>        
+        <fileset dir="${dirLib}">
+          <include name="*.zip" />
+          <include name="*.jar" />
+        </fileset>
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="copyTestFiles" description="Copies test files to junit test build are">
+    <!-- copy all the test files -->
+    <copy todir="${dirJUnitTestFiles}">
+      <fileset dir="${dirTestFiles}">
+        <include name="**/*.txt" />
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="runTests" depends="compile-tests" description="Runs JUnit tests">
+    <mkdir dir="${dirJUnitReport}"/>
+    
+    <path id="test.classpath">
+      <fileset dir="${dirLib}">
+        <include name="*.zip" />
+        <include name="*.jar" />
+      </fileset>
+    </path>
+    <pathconvert  property="testoutput" refid="test.classpath"/>
+    <echo>JUnit Task ClassPath:</echo>
+    <echo>${testoutput}</echo>
+    
+    <!-- 
+      Define the JUnit ANT task to avoid having to require that developers know how to configure ANT_HOME/lib path.
+      This also uses the junit files deployed with the project and avoid version miss-match.
+    -->
+    <taskdef name="junit" classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask">
+      <classpath refid="test.classpath"/>
+    </taskdef>
+      
+    <!-- 
+      Set junit task to run in 'fork' mode so that jvmarg values are applied. 
+      Also "halt" is set to true to prevent build from completing unless all tests are successful
+    -->
+    <junit fork="true" haltonfailure="true" printsummary="true" errorProperty="test.failed" failureProperty="test.failed">
+      <jvmarg value="-Dfile.encoding=ISO-8859-1" />
+      <jvmarg value="-Duser.dir=${dirProj}"/>
+      
+      <!-- 
+        alternatively you can use the junit folder as working directory if you prefer to copy all test files there. 
+        Just add "copyTestFiles" depends to the runTests task.
+      -->
+      <!-- <jvmarg value="-Duser.dir=${dirJUnit}"/-->
+      
+      <classpath>
+        <pathelement location="${dirJUnitBin}"/>
+        <fileset dir="${dirLib}">
+          <include name="*.zip" />
+          <include name="*.jar" />
+        </fileset>
+      </classpath>
+
+      <!-- formatter type="plain" /-->
+      <formatter type="xml" />
+      <batchtest todir="${dirJUnitReport}">
+        <fileset dir="${dirJUnitBin}">
+          <include name="**/*Test.class"/>
+          <exclude name="**/AllTests.class"/>
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+    
+  <target name="cleanJDoc" description="Deletes contents of release javadoc directory">
+    <delete dir="${dirReleaseJDoc}" />
+  </target>
+  
+  <!-- Generate javadocs for current project into ${dirReleaseJDoc} -->
+  <target name="jdocs" depends="cleanJDoc, init" description="Generate javadoc documentation">
+    <mkdir dir="${dirReleaseJDoc}" />
+    
+    <!-- generate a lib class path for libraries in project for use in javadoc build-->
+    <path id="docs.classpath">
+      <fileset dir="${dirLib}">
+        <include name="*.zip" />
+        <include name="*.jar" />
+      </fileset>
+    </path>
+    
+    <!-- generate the javadoc files -->
+    <javadoc sourcepath="${dirSrc}" destdir="${dirReleaseJDoc}" classpathref="docs.classpath" />
+    
+    <!-- package javadoc files into a jar -->
+    <jar jarfile="${dirRelease}/${ant.project.name}-${version.no}-javadoc.jar">
+      <fileset dir="${dirReleaseJDoc}" />
+    </jar>
+    
+    <delete dir="${dirReleaseJDoc}" />
+  </target>
+  
+  <target name="buildjar" depends="compile, copyLibs" description="Create a JAR file for this program with external libraries">
+    <jar jarfile="${dirRelease}/${ant.project.name}-${version.no}.jar">
+      <manifest>
+        <attribute name="Built-By" value="${user.name}"/>
+        <attribute name="Main-Class" value="com.JUniConnectTools.main.Main"/>
+        <attribute name="Class-Path" value="${classpath.bin}"/>
+      </manifest>
+      <fileset dir="${dirReleaseBin}" />
+      
+      <!-- include the source so its available during development as reference -->
+      <fileset dir="${dirSrc}" includes="**/*.java" />
+    </jar>
+    <delete dir="${dirReleaseBin}" />
+  </target>
+  
+  <target name="copyLibs" description="Copies all library files into the release folder and generates a class path.">
+    <mkdir dir="${dirReleaseLib}" />
+    <!-- copy all the standard project libraries to the release lib folder -->
+    <copy todir="${dirReleaseLib}">
+      <fileset dir="${dirLib}">
+        <include name="*.zip" />
+        <include name="*.jar" />
+        <exclude name="*junit*.jar" />
+      </fileset>
+    </copy>
+    
+    <!-- Generate a file set of the library files in the release lib directory.-->
+    <path id="lib.files">
+      <fileset dir="${dirReleaseLib}">
+        <include name="**/*.jar" />
+        <include name="asjava*.zip" />
+      </fileset>	
+    </path>
+    
+    <!-- Generate a path value from the library file set.-->
+    <pathconvert targetos="unix" property="classpath.bin" refid="lib.files" pathsep=" ">
+      <!-- map the full path to a relative to the lib folder-->
+      <map from="${dirReleaseLib}" to="lib"/>
+      
+      <!-- <flattenmapper/> -->
+      <!-- <globmapper from="*" to="lib/*"/> -->
+    </pathconvert> 
+  
+    <echo>
+      Created CLASSPATH: 
+      ${classpath.bin}
+    </echo>
+  </target>
+    
+  <target name="release" depends="runTests, buildjar" description="Produces a release of all all necessary application files for deployment in loose dependency form">
+    <copy file="${dirDocs}/readme.txt" tofile="${dirRelease}/readme.txt" />
+  </target>
+ 
+</project>

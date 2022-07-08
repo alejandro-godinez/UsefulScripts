@@ -1,0 +1,1 @@
+NET USE * /DELETE /Y

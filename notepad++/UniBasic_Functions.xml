@@ -1,0 +1,1379 @@
+<?xml version="1.0" encoding="Windows-1252" ?>
+<NotepadPlus>
+    <AutoComplete>
+        <KeyWord name="ABORT" />
+        <KeyWord name="ABS" func="yes">
+          <Overload retVal="int">
+            <Param name="num" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="ABSOLUTE" />
+        <KeyWord name="acceptConnection" func="yes">
+          <Overload retVal="int">
+            <Param name="svr_socket" />
+            <Param name="blocking_mode" />            
+            <Param name="timeout" />            
+            <Param name="in_addr" />
+            <Param name="in_name" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="ACOS" func="yes">
+          <Overload retVal="int">
+            <Param name="float val" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="addRequestPrameter" func="yes">
+          <Overload retVal="int">
+            <Param name="request_handle" />
+            <Param name="parameter_name" />
+            <Param name="parameter_value" />
+            <Param name="content_handling" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="ALPHA" func="yes">
+          <Overload retVal="int">
+            <Param name="string expr" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="AND" />
+        <KeyWord name="APPEND" />
+        <KeyWord name="AS" />
+        <KeyWord name="ASCII" func="yes">
+          <Overload retVal="string ascii.expr">
+            <Param name="string ebcdic.expr" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="ASIN" func="yes">
+          <Overload retVal="int">
+            <Param name="float val" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="ASSIGN" />
+        <KeyWord name="ASYNC" />
+        <KeyWord name="AT" />
+        <KeyWord name="ATAN" func="yes">
+          <Overload retVal="int">
+            <Param name="float val" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="BEFORE" />
+        <KeyWord name="BEGIN" />
+        <KeyWord name="BITAND" func="yes">
+          <Overload retVal="int">
+            <Param name="int num1" />
+            <Param name="int num2" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="BITNOT" func="yes">
+          <Overload retVal="int">
+            <Param name="int num" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="BITOR" func="yes">
+          <Overload retVal="int">
+            <Param name="int num1" />
+            <Param name="int num2" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="BITXOR" func="yes">
+          <Overload retVal="int">
+            <Param name="int num1" />
+            <Param name="int num2" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="BPIOCP" />
+        <KeyWord name="BPIOCPN" />
+        <KeyWord name="BREAK" />
+        <KeyWord name="BUFFER.KEYS" />
+        <KeyWord name="BY" />
+        <KeyWord name="BYTELEN" func="yes">
+          <Overload retVal="int">
+            <Param name="string expr" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CALCULATE" func="yes">
+          <Overload retVal="string">
+            <Param name="string dictItem" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CALL" />
+        <KeyWord name="CALLC" />
+        <KeyWord name="CALLING" />
+        <KeyWord name="CAPTURING" />
+        <KeyWord name="CASE" />
+        <KeyWord name="CAT" />
+        <KeyWord name="CATS" />
+        <KeyWord name="CHAIN" />
+        <KeyWord name="CHANGE" func="yes">
+          <Overload retVal="string">
+            <Param name="string text" />
+            <Param name="string old.txt" />
+            <Param name="string new.txt" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CHAR" func="yes">
+          <Overload retVal="string">
+            <Param name="int asciiNo" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CHARLEN" func="yes">
+          <Overload retVal="int">
+            <Param name="string expr" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CHARS" func="yes">
+          <Overload retVal="string">
+            <Param name="int[] ascNumbers" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CHECKSUM" func="yes">
+          <Overload retVal="int">
+            <Param name="string expr" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="CLEAR" />
+        <KeyWord name="CLEARCOM" />
+        <KeyWord name="CLEARCOMMON" />
+        <KeyWord name="CLEARDATA" />
+        <KeyWord name="CLEARFILE" />
+        <KeyWord name="CLEARINPUT" />
+        <KeyWord name="CLEARSELECT" />
+        <KeyWord name="CLEARSQL" />
+        <KeyWord name="CLOSE" />
+        <KeyWord name="CLOSESEQ" />
+        <KeyWord name="closeSocket" func="yes">
+          <Overload retVal="int">
+            <Param name="socket_handle" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="COL1" func="yes">
+          <Overload retVal="int">
+            <Param name="void" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="COL2" />
+        <KeyWord name="COM" />
+        <KeyWord name="COMMIT" />
+        <KeyWord name="COMMON" />
+        <KeyWord name="COMPILE.DICT.ITEM" />
+        <KeyWord name="CONNECT" />
+        <KeyWord name="CONTINUE" />
+        <KeyWord name="CONVERT" />
+        <KeyWord name="CONVERT" func="yes">
+          <Overload retVal="string">
+            <Param name="string oldVal" />
+            <Param name="string newVal" />
+            <Param name="string text" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="COS" func="yes">
+          <Overload retVal="float">
+            <Param name="int degree" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="COUNT" func="yes">
+          <Overload retVal="int">
+            <Param name="string text" />
+            <Param name="string subText" />
+          </Overload>
+        </KeyWord>
+        <KeyWord name="COUNTS" />
+       <KeyWord name="createRequest" func="yes">
+         <Overload retVal="int">
+           <Param name="string URL" />
+           <Param name="string http_method" />
+           <Param name="int request_handle" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="CRT" />
+       <KeyWord name="CURRENT" />
+       <KeyWord name="DATA" />
+       <KeyWord name="DATE" func="yes">
+         <Overload retVal="int">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DCOUNT" func="yes">
+         <Overload retVal="int">
+           <Param name="string text" />
+           <Param name="string delim" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DEBUG" />
+       <KeyWord name="DECLARE" />
+       <KeyWord name="DEFFUN" />
+       <KeyWord name="DEL" />
+       <KeyWord name="DELETE" />
+       <KeyWord name="DELETE" func="yes">
+         <Overload retVal="string">
+           <Param name="string dynArray" />
+           <Param name="int attribute" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string dynArray" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string dynArray" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+           <Param name="int subValue" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DELETELIST" />
+       <KeyWord name="DELETEU" />
+       <KeyWord name="DIM" />
+       <KeyWord name="DIMENSION" />
+       <KeyWord name="DIR" func="yes">
+         <Overload retVal="string">
+           <Param name="string dir" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DISCONNECT" />
+       <KeyWord name="DISPLAY" />
+       <KeyWord name="DISPLAYWIDTH" func="yes">
+         <Overload retVal="int">
+           <Param name="string" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DO" />
+       <KeyWord name="DOWNCASE" func="yes">
+         <Overload retVal="string">
+           <Param name="string" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DQUOTE" func="yes">
+         <Overload retVal="string">
+           <Param name="string" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DROUND" func="yes">
+         <Overload retVal="double">
+           <Param name="double val" />
+         </Overload>
+         <Overload retVal="double">
+           <Param name="double val" />
+           <Param name="int precision" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="DTX" />
+       <KeyWord name="EBCDIC" func="yes">
+         <Overload retVal="string ebcdic">
+           <Param name="string ascii" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="ECHO" />
+       <KeyWord name="ELSE" />
+       <KeyWord name="END" />
+       <KeyWord name="ENTER" />
+       <KeyWord name="EQ" />
+       <KeyWord name="EQS" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray expr1" />
+           <Param name="dynArray expr2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="EQU" />
+       <KeyWord name="EQUATE" />
+       <KeyWord name="EREPLACE" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string oldTxt" />
+           <Param name="string newTxt" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string oldTxt" />
+           <Param name="string newTxt" />
+           <Param name="int occurance" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string oldTxt" />
+           <Param name="string newTxt" />
+           <Param name="int occurance" />
+           <Param name="int begin" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="EXECUTE" />
+       <KeyWord name="EXECUTESQL" />
+       <KeyWord name="EXIT" />
+       <KeyWord name="EXP" func="yes">
+         <Overload retVal="double">
+           <Param name="int exponent" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="EXTRACT" func="yes">
+         <Overload retVal="string">
+           <Param name="string dynArray" />
+           <Param name="int attribute" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string dynArray" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string dynArray" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+           <Param name="int subValue" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="FIELD" func="yes">
+         <Overload retVal="string">
+           <Param name="string expr" />
+           <Param name="string delim" />
+           <Param name="int field" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string expr" />
+           <Param name="string delim" />
+           <Param name="int field" />
+           <Param name="int count" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="FIELDS" />
+       <KeyWord name="FIELDSTORE" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string delim" />
+           <Param name="int position" />
+           <Param name="int option" />
+           <Param name="string newText" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="FILEINFO" func="yes">
+         <Overload retVal="any">
+           <Param name="fileObject" />
+           <Param name="int dataCode" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="FILELOCK" />
+       <KeyWord name="FILEUNLOCK" />
+       <KeyWord name="FIND" />
+       <KeyWord name="FINDSTR" />
+       <KeyWord name="FIRST_ALT_KEY" />
+       <KeyWord name="FLUSH" />
+       <KeyWord name="FMT" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string pattern" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="FMTS" />
+       <KeyWord name="FOOTING" />
+       <KeyWord name="FOR" />
+       <KeyWord name="FORMLIST" />
+       <KeyWord name="FROM" />
+       <KeyWord name="FUNCTION" />
+       <KeyWord name="GARBAGECOLLECT" />
+       <KeyWord name="GE" />
+       <KeyWord name="GES" func="yes">
+         <Overload retVal="int[]">
+           <Param name="string dynArray1" />
+           <Param name="string dynArray2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GET" />
+       <KeyWord name="GETCOLUMNDATA" />
+       <KeyWord name="GETCOLUMNNAME" />
+       <KeyWord name="GETENV" func="yes">
+         <Overload retVal="string">
+           <Param name="string varName" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETERRMSG" />
+       <KeyWord name="getHTTPDefault" func="yes">
+         <Overload retVal="int">
+           <Param name="string option" />
+           <Param name="string value" />
+         </Overload>         
+       </KeyWord>
+       <KeyWord name="GETLIST" />
+       <KeyWord name="GETMSG" />
+       <KeyWord name="GETNEXTTUPLE" />
+       <KeyWord name="GETPTR" func="yes">
+         <Overload retVal="string">
+           <Param name="int unitNo" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETPU" func="yes">
+         <Overload retVal="string">
+           <Param name="int unitNo" />           
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETQUEUE" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETREADU" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="getResponseHeader" func="yes">
+         <Overload retVal="int">
+           <Param name="object request_handle" />
+           <Param name="string header_name" />
+           <Param name="string header_value" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="getSocketInformation" func="yes">
+         <Overload retVal="int">
+           <Param name="object socket_handle" />
+           <Param name="int self_or_peer" />
+           <Param name="dynArray socket_info" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="getSocketOptions" func="yes">
+         <Overload retVal="int">
+           <Param name="object socket_handle" />
+           <Param name="dynArray options" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETUSERGROUP" func="yes">
+         <Overload retVal="int">
+           <Param name="int uid" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETUSERID" func="yes">
+         <Overload retVal="int">
+           <Param name="string userName" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETUSERNAME" func="yes">
+         <Overload retVal="string">
+           <Param name="int uid" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GETX" />
+       <KeyWord name="GO" />
+       <KeyWord name="GOSUB" />
+       <KeyWord name="GOTO" />
+       <KeyWord name="GROUP" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string delim" />
+           <Param name="int start" />
+           <Param name="int count" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="GROUPSTORE" />
+       <KeyWord name="GT" />
+       <KeyWord name="GTS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="string dynArray1" />
+           <Param name="string dynArray2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="HASH" func="yes">
+         <Overload retVal="int">
+           <Param name="string recKey" />
+           <Param name="int modulo" />
+           <Param name="int type" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="HEADING" />
+       <KeyWord name="HELP" />
+       <KeyWord name="HUSH" />
+       <KeyWord name="ICONV" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string convFmt" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="ICONVS" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+           <Param name="string convFmt" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="IF" />
+       <KeyWord name="IN" func="yes">
+         <Overload retVal="string">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="INCLUDE" />
+       <KeyWord name="INDEX" func="yes">
+         <Overload retVal="int">
+           <Param name="string text" />
+           <Param name="string subText" />
+           <Param name="int occurance" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="INDEXS" />
+       <KeyWord name="INDICES" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="object file" />
+         </Overload>
+         <Overload retVal="dynArray">
+           <Param name="object file" />
+           <Param name="string indexName" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="initServerSocket" func="yes">
+         <Overload retVal="int">
+           <Param name="string host" />
+           <Param name="int port" />
+           <Param name="string backLog" />
+           <Param name="object svr_socket" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="INMAT" func="yes">
+         <Overload retVal="int">
+           <Param name="void" />
+         </Overload>
+         <Overload retVal="int">
+           <Param name="dynArray" />
+         </Overload>         
+       </KeyWord>
+       <KeyWord name="INPUT" />
+       <KeyWord name="INPUTCLEAR" />
+       <KeyWord name="INPUTERR" />
+       <KeyWord name="INPUTIF" />
+       <KeyWord name="INPUTNULL" />
+       <KeyWord name="INPUTTRAP" />
+       <KeyWord name="INS" />
+       <KeyWord name="INSERT" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+           <Param name="int subValue" />
+           <Param name="string newText" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="INT" func="yes">
+         <Overload retVal="int">
+           <Param name="number.expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="ISMB" func="yes">
+         <Overload retVal="int">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="ISNV" func="yes">
+         <Overload retVal="int">
+           <Param name="any expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="ISNVS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="ISOLATION" />
+       <KeyWord name="ITYPE" func="yes">
+         <Overload retVal="string">
+           <Param name="string dictItem" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="JRNL_STATUS" />
+       <KeyWord name="LAST_ALT_KEY" />
+       <KeyWord name="LE" />
+       <KeyWord name="LEN" func="yes">
+         <Overload retVal="int">
+           <Param name="string text" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="LENGTH" />
+       <KeyWord name="LENS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="LES" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray data1" />
+           <Param name="dynArray data2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="LINEMARK" />
+       <KeyWord name="LN" func="yes">
+         <Overload retVal="number">         
+           <Param name="number naturalLog" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="LOCATE" />
+       <KeyWord name="LOCK" />
+       <KeyWord name="LOCKED" />
+       <KeyWord name="LOOP" />
+       <KeyWord name="LOWER" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="LT" />
+       <KeyWord name="LTS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray data1" />
+           <Param name="dynArray data2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="MAT" />
+       <KeyWord name="MATBUILD" />
+       <KeyWord name="MATCH" />
+       <KeyWord name="MATCHES" />
+       <KeyWord name="MATCHFIELD" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="string pattern" />
+           <Param name="int field" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="MATPARSE" />
+       <KeyWord name="MATREAD" />
+       <KeyWord name="MATREADL" />
+       <KeyWord name="MATREADU" />
+       <KeyWord name="MATWRITE" />
+       <KeyWord name="MATWRITEU" />
+       <KeyWord name="MAXIMUM" func="yes">
+         <Overload retVal="int">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="MBLEN" func="yes">
+         <Overload retVal="int">
+           <Param name="string text" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="MDPERFORM" />
+       <KeyWord name="MINIMUM" func="yes">
+         <Overload retVal="int">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="MOD" func="yes">
+         <Overload retVal="number">
+           <Param name="number num1" />
+           <Param name="number num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="NE" />
+       <KeyWord name="NEG" func="yes">
+         <Overload retVal="number">
+           <Param name="number num" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="NES" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray data1" />
+           <Param name="dynArray data2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="NEXT" />
+       <KeyWord name="NOCONVERT" />
+       <KeyWord name="NODELAY" />
+       <KeyWord name="NOT" func="yes">
+         <Overload retVal="int">
+           <Param name="bool expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="NOTS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="NULL" />
+       <KeyWord name="NULLVAL_ALT_KEY" />
+       <KeyWord name="NUM" func="yes">
+         <Overload retVal="int">
+           <Param name="any expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="NUMS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="OCONV" func="yes">
+         <Overload retVal="">
+           <Param name="string expr" />
+           <Param name="string convFmt" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="OCONVS" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray expr" />
+           <Param name="string convFmt" />
+         </Overload>
+       </KeyWord>]
+       <KeyWord name="OFF" />
+       <KeyWord name="ON" />
+       <KeyWord name="OPEN" />
+       <KeyWord name="OPENSEQ" />
+       <KeyWord name="openSocket" func="yes">
+         <Overload retVal="int">
+           <Param name="string host" />
+           <Param name="int port" />
+           <Param name="int mode" />
+           <Param name="int timeout" />
+           <Param name="object socket_handle" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="OR" />
+       <KeyWord name="OSBREAD" />
+       <KeyWord name="OSBWRITE" />
+       <KeyWord name="OSCLOSE" />
+       <KeyWord name="OSDELETE" />
+       <KeyWord name="OSOPEN" />
+       <KeyWord name="OSREAD" />
+       <KeyWord name="OSWRITE" />
+       <KeyWord name="PAGE" />
+       <KeyWord name="PASSCOM" />
+       <KeyWord name="PASSCOMMON" />
+       <KeyWord name="PASSLIST" />
+       <KeyWord name="PAUSE" />
+       <KeyWord name="PCPERFORM" />
+       <KeyWord name="PERFORM" />
+       <KeyWord name="PRECISION" />
+       <KeyWord name="PRINT" />
+       <KeyWord name="PRINTER" />
+       <KeyWord name="PRINTERR" />
+       <KeyWord name="PRIOR" />
+       <KeyWord name="PROCREAD" />
+       <KeyWord name="PROCWRITE" />
+       <KeyWord name="PROGRAM" />
+       <KeyWord name="PROMPT" />
+       <KeyWord name="protocolLogging" func="yes">
+         <Overload retVal="int">
+           <Param name="string log_file" />
+           <Param name="string log_action" />
+           <Param name="int log_level" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="PWR" func="yes">
+         <Overload retVal="int">
+           <Param name="number num1" />
+           <Param name="number num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="QUOTE" func="yes">
+         <Overload retVal="string">
+           <Param name="string expr" />
+         </Overload>
+       </KeyWord>
+        <KeyWord name="RAISE" func="yes">
+         <Overload retVal="string">
+           <Param name="string expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="READ" />
+       <KeyWord name="READBCK" />
+       <KeyWord name="READBCKL" />
+       <KeyWord name="READBCKU" />
+       <KeyWord name="READFWD" />
+       <KeyWord name="READFWDL" />
+       <KeyWord name="READFWDU" />
+       <KeyWord name="READL" />
+       <KeyWord name="READLIST" />
+       <KeyWord name="READNEXT" />
+       <KeyWord name="READNEXTTUPLE" />
+       <KeyWord name="READONLY" />
+       <KeyWord name="READSEQ" />
+       <KeyWord name="readSocket" func="yes">
+         <Overload retVal="int">
+           <Param name="object socket_handle" />
+           <Param name="string socket_data" />
+           <Param name="int max_read_size" />
+           <Param name="int timeout" />
+           <Param name="int blocking_mode" />
+           <Param name="int actual_read_size" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="READT" />
+       <KeyWord name="READU" />
+       <KeyWord name="READV" />
+       <KeyWord name="READVL" />
+       <KeyWord name="READVU" />
+       <KeyWord name="READWRITE" />
+       <KeyWord name="READXBCK" />
+       <KeyWord name="READXFWD" />
+       <KeyWord name="RECORDLOCKED" func="yes">
+         <Overload retVal="int">
+           <Param name="object file" />
+           <Param name="string recID" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="RECORDLOCKL" />
+       <KeyWord name="RECORDLOCKU" />
+       <KeyWord name="RELATIVE" />
+       <KeyWord name="RELEASE" />
+       <KeyWord name="REM" />
+       <KeyWord name="REMOVE" />
+       <KeyWord name="REMOVE" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+           <Param name="int delim" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="REPEAT" />
+       <KeyWord name="REPLACE" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+           <Param name="int subValue" />
+           <Param name="string newText" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="RESIZET" />
+       <KeyWord name="RETURN" />
+       <KeyWord name="RETURNING" />
+       <KeyWord name="REUSE" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="REWIND" />
+       <KeyWord name="RND" func="yes">
+         <Overload retVal="int">
+           <Param name="number num" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="RNDSEED" />
+       <KeyWord name="RQM" />
+       <KeyWord name="RTNLIST" />
+       <KeyWord name="SADD" func="yes">
+         <Overload retVal="string">
+           <Param name="string num1" />
+           <Param name="string num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SCMP" func="yes">
+         <Overload retVal="int">
+           <Param name="any num1" />
+           <Param name="any num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SDIV" func="yes">
+         <Overload retVal="string">
+           <Param name="string num1" />
+           <Param name="string num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SELECT" />
+       <KeyWord name="SELECTINDEX" />
+       <KeyWord name="SELECTINFO" func="yes">
+         <Overload retVal="int">
+           <Param name="int listNum" />
+           <Param name="int code ('1')" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SEND" />
+       <KeyWord name="SENDX" />
+       <KeyWord name="SEQ" func="yes">
+         <Overload retVal="int">
+           <Param name="char asciiChar" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SEQS" func="yes">
+         <Overload retVal="int[]">
+           <Param name="dynArray charArray" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="setHTTPDefault" func="yes">
+         <Overload retVal="int">
+           <Param name="string option" />
+           <Param name="string value" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SETINDEX" />
+       <KeyWord name="SETMARK" />
+       <KeyWord name="setRequestHeader" func="yes">
+         <Overload retVal="int">
+           <Param name="object request_handle" />
+           <Param name="string header_name" />
+           <Param name="string header_value" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SETROW" />
+       <KeyWord name="setSocketOptions" func="yes">
+         <Overload retVal="int">
+           <Param name="object socket_handle" />
+           <Param name="dynArray options" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SETTABLE" />
+       <KeyWord name="SETTING" />
+       <KeyWord name="SIN" func="yes">
+         <Overload retVal="int">
+           <Param name="number num" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SLEEP" />
+       <KeyWord name="SMUL" func="yes">
+         <Overload retVal="string">
+           <Param name="string num1" />
+           <Param name="string num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SOUNDEX" func="yes">
+        <Overload retVal="int">
+          <Param name="string expr" />
+        </Overload>
+       </KeyWord>
+       <KeyWord name="SPACE" func="yes">
+         <Overload retVal="string">
+           <Param name="int num" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SPACES" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray numArray" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SPLICE" func="yes">
+         <Overload retVal="string">
+           <Param name="string expr1" />
+           <Param name="string insertText" />
+           <Param name="string expr2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLAllocConnect" func="yes">
+         <Overload retVal="int">
+           <Param name="object bciEnv" />
+           <Param name="object connectEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLAllocEnv" func="yes">
+         <Overload retVal="int">
+           <Param name="object bciEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLAllocStmt" func="yes">
+         <Overload retVal="int">
+           <Param name="object connectEnv" />
+           <Param name="object statementEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLBindCol" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int colNum" />
+           <Param name="string dataType" />
+           <Param name="object column" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLBindParamater" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int marker" />
+           <Param name="string dataType" />
+           <Param name="string sqlType" />
+           <Param name="int precision" />
+           <Param name="string scale" />
+           <Param name="string param" />
+         </Overload>
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int marker" />
+           <Param name="string dataType" />
+           <Param name="string sqlType" />
+           <Param name="int precision" />
+           <Param name="int scale" />
+           <Param name="string param" />
+           <Param name="string paramType" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLCancel" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLColAttributes" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int colNum" />
+           <Param name="string colAttribute" />
+           <Param name="string textVar" />
+           <Param name="number numVar" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLColumns" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="string schema" />
+           <Param name="string owner" />
+           <Param name="string tablename" />
+           <Param name="string columnname" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLConnect" func="yes">
+         <Overload retVal="int">
+           <Param name="object connectEnv" />
+           <Param name="string dataSource" />
+           <Param name="string login1" />
+           <Param name="string login2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLDescribeCol" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int colNum" />
+           <Param name="string colName" />
+           <Param name="string sqlType" />
+           <Param name="int precision" />
+           <Param name="int scale" />
+           <Param name="int null" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLDisconnect" func="yes">
+         <Overload retVal="int">
+           <param name="object connectEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLError" func="yes">
+         <Overload retVal="int">
+           <Param name="object bciEnv" />
+           <Param name="object connectEnv" />
+           <Param name="object statementEnv" />
+           <Param name="int sqlState" />
+           <Param name="int dbms.code" />
+           <Param name="string error" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLExecDirect" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="string statement" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLExecute" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLFetch" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLFreeConnect" func="yes">
+         <Overload retVal="int">
+           <Param name="object connectEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLFreeEnv" func="yes">
+         <Overload retVal="int">
+           <Param name="object bciEnv" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLFreeStmt" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int option" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLGetInfo" func="yes">
+         <Overload retVal="int">
+           <Param name="object connectEnv" />
+           <Param name="int infoType" />
+           <Param name="string infoValue" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLGetTypeInfo" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int sqlType" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLNumParams" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int parameters" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLNumResultCols" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int cols" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLParamOptions" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int option" />
+           <Param name="int value" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLPrepare" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="string statement" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLRowCount" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int rows" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLSetConnectOption" func="yes">
+         <Overload retVal="int">
+           <Param name="object connectEnv" />
+           <Param name="int option" />
+           <Param name="int value" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLSetParam" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int marker" />
+           <Param name="string dataType" />
+           <Param name="string sqlType" />
+           <Param name="int precision" />
+           <Param name="string scale" />
+           <Param name="string param" />
+         </Overload>
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int marker" />
+           <Param name="string dataType" />
+           <Param name="string sqlType" />
+           <Param name="int precision" />
+           <Param name="int scale" />
+           <Param name="string param" />
+           <Param name="string paramType" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLSpecialColumns" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="int colType" />
+           <Param name="string schema" />
+           <Param name="string owner" />
+           <param name="string tablename" />
+           <Param name="int IDScope" />
+           <Param name="int null" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLStatistics" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="string schema" />
+           <Param name="string owner" />
+           <Param name="string tablename" />
+           <Param name="int indexType" />
+           <Param name="int accuracy" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLTables" func="yes">
+         <Overload retVal="int">
+           <Param name="object statementEnv" />
+           <Param name="string schema" />
+           <Param name="string owner" />
+           <Param name="string tablename" />
+           <Param name="int type" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQLTransact" func="yes">
+         <Overload retVal="int">
+           <Param name="object bciEnv" />
+           <Param name="object connectEnv" />
+           <Param name="int type" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQRT" func="yes">
+         <Overload retVal="number">
+           <Param name="number num" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SQUOTE" func="yes">
+         <Overload retVal="string">
+           <Param name="string expr" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SSUB" func="yes">
+         <Overload retVal="string">
+           <Param name="string num1" />
+           <Param name="string num2" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="STATUS" func="yes">
+         <Overload retVal="int">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="STEP" />
+       <KeyWord name="STOP" />
+       <KeyWord name="STR" func="yes">
+         <Overload retVal="string">
+           <Param name="string expr" />
+           <Param name="int repetitions" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="STRS" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+           <Param name="int repetitions" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="submitRequest" func="yes">
+         <Overload retVal="int">
+           <Param name="object request_handle" />
+           <Param name="int timeout" />
+           <Param name="string postData" />
+           <Param name="dynArray responseHeaders" />
+           <Param name="object responseData" />
+           <Param name="dynArray http_status" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SUBROUTINE" />
+       <KeyWord name="SUBSTRINGS" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray data" />
+           <Param name="int startPos" />
+           <Param name="int len" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SUM" func="yes">
+         <Overload retVal="number">
+           <Param name="dynArray data" />
+         </Overload>
+         <Overload retVal="number">
+           <Param name="dynArray data" />
+           <Param name="int attribute" />
+         </Overload>
+         <Overload retVal="number">
+           <Param name="dynArray data" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+         </Overload>
+         <Overload retVal="number">
+           <Param name="dynArray data" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+           <Param name="int start" />
+         </Overload>
+         <Overload retVal="number">
+           <Param name="dynArray data" />
+           <Param name="int attribute" />
+           <Param name="int value" />
+           <Param name="int start" />
+           <Param name="int stop" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="SWAP" />
+       <KeyWord name="SYNC" />
+       <KeyWord name="SYSTEM" func="yes">
+         <Overload retVal="any">
+           <Param name="int" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="TAN" func="yes">
+         <Overload retVal="number">
+           <Param name="number num" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="THEN" />
+       <KeyWord name="TIME" func="yes">
+         <Overload retVal="int">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="TIMEDATE" func="yes">
+         <Overload retVal="string">
+           <Param name="void" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="TIMEOUT" />
+       <KeyWord name="TO" />
+       <KeyWord name="TRANSACTION" />
+       <KeyWord name="TRIM" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="char removeChar" />
+         </Overload>
+         <Overload retVal="string">
+           <Param name="string text" />
+           <Param name="char removeChar" />
+           <Param name="char type" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="TRIMB" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="TRIMF" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="TRIMS" func="yes">
+         <Overload retVal="dynArray">
+           <Param name="dynArray text" />
+         </Overload>
+         <Overload retVal="dynArray">
+           <Param name="dynArray text" />
+           <Param name="char removeChar" />
+         </Overload>
+         <Overload retVal="dynArray">
+           <Param name="dynArray text" />
+           <Param name="char removeChar" />
+           <Param name="char type" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="UDTEXECUTE" />
+       <KeyWord name="UNASSIGNED" func="yes">
+         <Overload retVal="int">
+           <Param name="object varName" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="UNFILTERED" />
+       <KeyWord name="UNLOCK" />
+       <KeyWord name="UNTILE" />
+       <KeyWord name="UPCASE" func="yes">
+         <Overload retVal="string">
+           <Param name="string text" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="USE" />
+       <KeyWord name="USING" />
+       <KeyWord name="VALIDATE.KEY" />
+       <KeyWord name="VERB" />
+       <KeyWord name="WAIT" />
+       <KeyWord name="WAITING" />
+       <KeyWord name="WAKE" />
+       <KeyWord name="WEOF" />
+       <KeyWord name="WEOFSEQ" />
+       <KeyWord name="WHILE" />
+       <KeyWord name="WITH" />
+       <KeyWord name="WRITE" />
+       <KeyWord name="WRITELIST" />
+       <KeyWord name="WRITEONLY" />
+       <KeyWord name="WRITESEQ" />
+       <KeyWord name="WRITESEQF" />
+       <KeyWord name="writeSocket" func="yes">
+         <Overload retVal="int">
+           <Param name="object socket_handle" />
+           <Param name="string socket_data" />
+           <Param name="int timeout" />
+           <Param name="int blocking_mode" />
+           <Param name="int actual_write_size" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="WRITET" />
+       <KeyWord name="WRITEU" />
+       <KeyWord name="WRITEV" />
+       <KeyWord name="WRITEVU" />
+       <KeyWord name="XLATE" func="yes">
+         <Overload retVal="int">
+           <Param name="string filename" />
+           <Param name="string recID" />
+           <Param name="int attribute" />
+           <Param name="char code" />
+         </Overload>
+       </KeyWord>
+       <KeyWord name="XTD" />
+    </AutoComplete>
+</NotepadPlus>

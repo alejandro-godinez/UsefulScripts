@@ -1,0 +1,82 @@
+syntax "unibasic" "\.SUBR$"
+#magic "unibasic"
+
+## ---------------------------------------------------------------------------------------------
+## TODO:
+## - Fix kewords followed by line terminator ";", regex lookaround does not seem to be
+##   supported, need to use alternative method. Or the programmer can simply add spacing
+##   between the keyword and the ";"
+##
+## - Fix numeric value detection so that partial highlighting doesn't happen on a multi decimal value
+##     example:  "1.2" is highlighted in value of "1.2.3.4" 
+## ---------------------------------------------------------------------------------------------
+
+
+## ---------------------------------------------------------------------------------------------
+## COLOR OPTIONS:  color fgcolor,bgcolor
+## Valid colors: white, black, red, blue, green, yellow, magenta, and cyan
+## - use prefix "bright" for a stronger color highlight for the foreground.
+## ----------------------------------------------------------------------------------------------
+
+
+## keyword highlighting, separated alphabetacilly due to large quantitY
+color cyan "(^|\s|\;)(ABORT|ABS|ABSOLUTE|acceptConnection|ACOS|addRequestParameter|ALPHA|AND|APPEND|AS|ASCII|ASIN|ASSIGN|ASYNC|AT|ATAN)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(BEFORE|BEGIN|BITAND|BITNOT|BITOR|BITXOR|BPIOCP|BPIOCPN|BREAK|BUFFER.KEYS|BY|BYTELEN)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(CALCULATE|CALL|CALLC|CALLING|CAPTURING|CASE|CAT|CATS|CHAIN|CHANGE|CHAR|CHARLEN|CHARS|CHECKSUM|CLEAR|CLEARCOM|CLEARCOMMON|CLEARDATA|CLEARFILE|CLEARINPUT|CLEARSELECT|CLEARSQL|CLOSE|CLOSESEQ|closeSocket|COL1|COL2|COM|COMMIT|COMMON|COMPILE.DICT.ITEM|CONNECT|CONTINUE|CONVERT|COS|COUNT|COUNTS|createRequest|CRT|CURRENT)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(DATA|DATE|DCOUNT|DEBUG|DECLARE|DEFFUN|DEL|DELETE|DELETELIST|DELETEU|DIM|DIMENSION|DIR|DISCONNECT|DISPLAY|DISPLAYWIDTH|DO|DOWNCASE|DQUOTE|DROUND|DTX)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(EBCDIC|ECHO|ELSE|END|ENTER|EQ|EQS|EQU|EQUATE|EREPLACE|EXECUTE|EXECUTESQL|EXIT|EXP|EXTRACT)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(FIELD|FIELDS|FIELDSTORE|FILEINFO|FILELOCK|FILEUNLOCK|FIND|FINDSTR|FIRST_ALT_KEY|FLUSH|FMT|FMTS|FOOTING|FORMLIST|FOR|FORMLIST|FROM|FUNCTION)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(GARBAGECOLLECT|GE|GES|GET|GETCOLUMNDATA|GETCOLUMNNAME|GETENV|GETERRMSG|getHTTPDefault|GETLIST|GETMSG|GETNEXTTUPLE|GETPTR|GETPU|GETQEUEUE|GETREADU|getResponseHeader|getSocketInformation|getSocketOptions|GETUSERGROUP|GETUSERID|GETUSERNAME|GETX|GO|GOSUB|GOTO|GROUP|GROUPSTORE|GT|GTS)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(HASH|HEADING|HELP|HUSH)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(ICONV|ICONVS|IF|IN|INDEX|INDEXS|INDICES|initServerSocket|INMAT|INPUT|INPUTCLEAR|INPUTERR|INPUTIF|INPUTNULL|INPUTTRAP|INS|INSERT|INT|ISMB|ISNV|ISNVS|ISOLATION|ITYPE)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(JRNL_STATUS)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(LAST_ALT_KEY|LE|LEN|LENGTH|LENS|LES|LINEMARK|LN|LOCATE|LOCK|LOCKED|LOOP|LOWER|LT|LTS)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(MAT|MATBUILD|MATCH|MATCHES|MATCHFIELD|MATPARSE|MATREAD|MATREADL|MATREADU|MATWRITE|MATWRITEU|MAXIMUM|MBLEN|MDPERFORM|MINIMUM|MOD)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(NE|NEG|NES|NEXT|NOCONVERT|NOT|NOTS|NULL|NULLVAL_ALT_KEY|NUM|NUMS)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(OCONV|OCONVS|OFF|ON|OPEN|OPENSEQ|openSocket|OR|OSBREAD|OSBWRITE|OSCLOSE|OSDELETE|OSOPEN|OSREAD|OSWRITE)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(PAGE|PASSCOM|PASSCOMMON|PASSLIST|PAUSE|PCPERFORM|PERFORM|PRECISION|PREVIOUS|PRINT|PRINTER|PRINTERR|PRIOR|PROCREAD|PROCWRITE|PROGRAM|PROMPT|protocolLogging|PWR)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(QUOTE)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(RAISE|READ|READBCK|READBCKL|READBCKU|READFWD|READFWDL|READFWDU|READL|READLIST|READNEXT|READNEXTTUPLE|READONLY|READSELECT|READSEQ|readSocket|READT|READU|READV|READVL|READVU|READXBCK|READXFWD|RECORDLOCKED|RECORDLOCKL|RECORDLOCKU|RELATIVE|RELEASE|REMOVE|REPEAT|REPLACE|RESIZET|RETURN|RETURNING|REUSE|REWIND|RND|RNDSEED|RQM|RTNLIST)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(SADD|SCMP|SDIV|SELECT|SELECTINDEX|SELECTINFO|SEND|SEQ|SEQS|setHTTPDefault|SETINDEX|setRequestHeader|setSocketOptions|SETINDEX|SETMARK|SETROW|SETTABLE|SETTING|SIN|SLEEP|SMUL|SOUNDEX|SPACE|SPACES|SPLICE|SQLAllocConnect|SQLAllocEnv|SQLAllocStmt|SQLBindCol|SQLBindParameter|SQLCancel|SQLColAttributes|SQLColumns|SQLConnect|SQLConnect|SQLDescribeCol|SQLDisconnect|SQLError|SQLExecDirect|SQLExecute|SQLFetch|SQLFreeConnect|SQLFreeEnv|SQLFreeStmt|SQLGetInfo|SQLGetTypeInfo|SQLNumParams|SQLNumResultCols|SQLParamOptions|SQLPrepare|SQLRowCount|SQLSetConnectOption|SQLSetParam|SQLSpecialColumns|SQLStatistics|SQLTables|SQLTransact|SQRT|SQUOTE|SSUB|STATUS|STEP|STOP|STR|STRS|submitRequest|SUBROUTINE|SUBSTRINGS|SUM|SWAP|SYNC|SYSTEM)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(TAN|THEN|TIME|TIMEDATE|TIMEOUT|TO|TRANSACTION|TRIM|TRIMB|TRIMF|TRIMS)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(UDTEXECUTE|UNASSIGNED|UNFILTERED|UNLOCK|UNTIL|UPCASE|USE|USING)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(VALIDATE.KEY|VERB)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(WAIT|WAITING|WAKE|WEOF|WEOFSEQ|WHILE|WITH|WRITE|WRITELIST|WRITEONLY|WRITESEQ|WRITESEQF|writeSocket|WRITET|WRITEU|WRITEV|WRITEVU)(\;|\s|\(|$)"
+color cyan "(^|\s|\;)(XLATE|XTD)(\;|\s|\(|$)"
+
+## unibasic environment (@) variables, methods
+color red "@(AM|FM|VM|SM|RM|TM|SVM)"
+color red "@(ACCOUNT|COMMAND|CONV|CRTHIGH|CRTWIDE|DATA|DAY|DICT|FORMAT|GID|HEADER|ID|LASTVERB|LEVEL|LOGNAME|LPTRHIGH|LPTRWIDE|MONTH|PARASENTENCE|PATH|RECORD|RECUR\d|SENTENCE|SYS\.BELL|SYSTEM\.RETURN\.CODE|TIME|TM|TRANSACTION|TTY|UDTNO|UID|USER\d|USERNO|USER\.RETURN\.CODE|USER\.TYPE|WHO|YEAR)"
+
+## CRT/Print position and special @ instructions
+color red "(^|\s|:)@\("
+
+## numerical values (integer, decimal) 
+#color brightyellow "(^|\s|=)-?[0-9]+(\.[0-9]+)?(\s|$)"
+
+## numerical values withing data value positions or parenthesis
+#color brightyellow "[<(]-?[0-9]+([,]\s?-?[0-9]+)*[>)]"
+
+## numerical values, try to match them all as long as they are not part of other text (variables)
+#color brightyellow "(^|\s|[(,=<+*\^\-\/])-?[0-9]+(\.[0-9]+)?($|\s|[)>,])"
+color brightyellow "[^a-zA-Z0-9\.]-?[0-9]+(\.[0-9]+)?"
+
+## parenthetical color
+color red "[(){}]" 
+
+## operator color
+color magenta "[=+*:\-\/\^]"
+
+## field and character position angle and square brackets
+color magenta "\[|\]|<|>"
+
+## revert comma and semicolon back to white if they were detect as part of another match
+color brightwhite "[,;]"
+
+## literal highlighting
+color yellow "["'][^'"]*["']"
+
+## comment highlighting
+color green "^\s*(\*).*"
+color green "(\*//).*"
+

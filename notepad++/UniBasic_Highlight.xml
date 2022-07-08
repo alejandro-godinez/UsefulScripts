@@ -1,0 +1,36 @@
+<NotepadPlus>
+    <UserLang name="UniBasic" ext="uni subr">
+        <Settings>
+            <Global caseIgnored="no" />
+            <TreatAsSymbol comment="no" commentLine="yes" />
+            <Prefix words1="no" words2="yes" words3="yes" words4="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Delimiters">&quot;&apos;0&quot;&apos;0</Keywords>
+            <Keywords name="Folder+">*REGION</Keywords>
+            <Keywords name="Folder-">*ENDREGION</Keywords>
+            <Keywords name="Operators">&apos; ! &quot; # ( ) , : ; [ \ ] + &lt; = &gt;</Keywords>
+            <Keywords name="Comment">1 2 0*// 0REM 0** 0***</Keywords>
+            <Keywords name="Words1">ABORT ABS ABSOLUTE acceptConnection ACOS addRequestParameter ALPHA AND APPEND AS ASCII ASIN ASSIGN ASYNC AT ATAN BEFORE BEGIN BITAND BITNOT BITOR BITXOR BPIOCP BPIOCPN BREAK BUFFER.KEYS BY BYTELEN CALCULATE CALL CALLC CALLING CAPTURING CASE CAT CATS CHAIN CHANGE CHAR CHARLEN CHARS CHECKSUM CLEAR CLEARCOM CLEARCOMMON CLEARDATA CLEARFILE CLEARINPUT CLEARSELECT CLEARSQL CLOSE CLOSESEQ closeSocket COL1 COL2 COM COMMIT COMMON COMPILE.DICT.ITEM CONNECT CONTINUE CONVERT COS COUNT COUNTS createRequest CRT CURRENT DATA DATE DCOUNT DEBUG DECLARE DEFFUN DEL DELETE DELETELIST DELETEU DIM DIMENSION DIR DISCONNECT DISPLAY DISPLAYWIDTH DO DOWNCASE DQUOTE DROUND DTX EBCDIC ECHO ELSE END ENTER EQ EQS EQU EQUATE EREPLACE EXECUTE EXECUTESQL EXIT EXP EXTRACT FIELD FIELDS FIELDSTORE FILEINFO FILELOCK FILEUNLOCK FIND FINDSTR FIRST_ALT_KEY FLUSH FMT FMTS FOOTING FORMLIST FOR FORMLIST FROM FUNCTION GARBAGECOLLECT GE GES GET GETCOLUMNDATA GETCOLUMNNAME GETENV GETERRMSG getHTTPDefault GETLIST GETMSG GETNEXTTUPLE GETPTR GETPU GETQEUEUE GETREADU getResponseHeader getSocketInformation getSocketOptions GETUSERGROUP GETUSERID GETUSERNAME GETX GO GOSUB GOTO GROUP GROUPSTORE GT GTS HASH HEADING HELP HUSH ICONV ICONVS IF IN INDEX INDEXS INDICES initServerSocket INMAT INPUT INPUTCLEAR INPUTERR INPUTIF INPUTNULL INPUTTRAP INS INSERT INT ISMB ISNV ISNVS ISOLATION ITYPE JRNL_STATUS LAST_ALT_KEY LE LEN LENGTH LENS LES LINEMARK LN LOCATE LOCK LOCKED LOOP LOWER LT LTS MAT MATBUILD MATCH MATCHES MATCHFIELD MATPARSE MATREAD MATREADL MATREADU MATWRITE MATWRITEU MAXIMUM MBLEN MDPERFORM MINIMUM MOD NE NEG NES NEXT NOCONVERT NOT NOTS NULL NULLVAL_ALT_KEY NUM NUMS OCONV OCONVS OFF ON OPEN OPENSEQ openSocket OR OSBREAD OSBWRITE OSCLOSE OSDELETE OSOPEN OSREAD OSWRITE PAGE PASSCOM PASSCOMMON PASSLIST PAUSE PCPERFORM PERFORM PRECISION PREVIOUS PRINT PRINTER PRINTERR PRIOR PROCREAD PROCWRITE PROGRAM PROMPT protocolLogging PWR QUOTE RAISE READ READBCK READBCKL READBCKU READFWD READFWDL READFWDU READL READLIST READNEXT READNEXTTUPLE READONLY READSELECT READSEQ readSocket READT READU READV READVL READVU READXBCK READXFWD RECORDLOCKED RECORDLOCKL RECORDLOCKU RELATIVE RELEASE REMOVE REPEAT REPLACE RESIZET RETURN RETURNING REUSE REWIND RND RNDSEED RQM RTNLIST SADD SCMP SDIV SELECT SELECTINDEX SELECTINFO SEND SEQ SEQS setHTTPDefault SETINDEX setRequestHeader setSocketOptions SETINDEX SETMARK SETROW SETTABLE SETTING SIN SLEEP SMUL SOUNDEX SPACE SPACES SPLICE SQLAllocConnect SQLAllocEnv SQLAllocStmt SQLBindCol SQLBindParameter SQLCancel SQLColAttributes SQLColumns SQLConnect SQLConnect SQLDescribeCol SQLDisconnect SQLError SQLExecDirect SQLExecute SQLFetch SQLFreeConnect SQLFreeEnv SQLFreeStmt SQLGetInfo SQLGetTypeInfo SQLNumParams SQLNumResultCols SQLParamOptions SQLPrepare SQLRowCount SQLSetConnectOption SQLSetParam SQLSpecialColumns SQLStatistics SQLTables SQLTransact SQRT SQUOTE SSUB STATUS STEP STOP STR STRS submitRequest SUBROUTINE SUBSTRINGS SUM SWAP SYNC SYSTEM TAN THEN TIME TIMEDATE TIMEOUT TO TRANSACTION TRIM TRIMB TRIMF TRIMS UDTEXECUTE UNASSIGNED UNFILTERED UNLOCK UNTIL UPCASE USE USING VALIDATE.KEY VERB WAIT WAITING WAKE WEOF WEOFSEQ WHILE WITH WRITE WRITELIST WRITEONLY WRITESEQ WRITESEQF writeSocket WRITET WRITEU WRITEV WRITEVU XLATE XTD</Keywords>
+            <Keywords name="Words2">@</Keywords>
+            <Keywords name="Words3">*TODO</Keywords>
+            <Keywords name="Words4"></Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" styleID="11" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" fontSize="8" />
+            <WordsStyle name="FOLDEROPEN" styleID="12" fgColor="009D00" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="FOLDERCLOSE" styleID="13" fgColor="009D00" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="KEYWORD1" styleID="5" fgColor="0000FF" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="KEYWORD2" styleID="6" fgColor="AEA04F" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="KEYWORD3" styleID="7" fgColor="FF2429" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="KEYWORD4" styleID="8" fgColor="0000FF" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="COMMENT" styleID="1" fgColor="000000" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="COMMENT LINE" styleID="2" fgColor="009D00" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="NUMBER" styleID="4" fgColor="000000" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="OPERATOR" styleID="10" fgColor="000000" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="DELIMINER1" styleID="14" fgColor="DC7D00" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="DELIMINER2" styleID="15" fgColor="DC7D00" bgColor="FFFFFF" fontName="Courier New" fontStyle="0" fontSize="8" />
+            <WordsStyle name="DELIMINER3" styleID="16" fgColor="000000" bgColor="FFFFFF" fontName="" fontStyle="0" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>
