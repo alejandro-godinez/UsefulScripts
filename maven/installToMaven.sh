@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 projVersion="1.0.0.0"
 projName=""
 artifactId=""
-groupId="starcrest"
+groupId=""
 
 #//check if project is installed in user's home maven repo
 mvnPath=~/.m2/repository/${groupId}/${artifactId}/${projVersion}/
