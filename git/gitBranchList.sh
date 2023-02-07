@@ -6,7 +6,6 @@
 #  version: 2023.2.7
 #
 #  TODO:
-#  - Define list of pottential main branchs instead of single 
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -23,14 +22,14 @@ NC='\033[0m' # No Color
 #//toggle debug output
 DEBUG=false 
 
-#//main branch name used
-MAIN_BRANCH="master"
-
 #//search depth
 MAX_DEPTH=1
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
+
+#//main branch names
+RGX_MAIN='^master|main|trunk$'
 
 function printHelp {
   echo "Usage: gitBranchList.sh [-h] [-v] [-d num]"
@@ -67,7 +66,8 @@ function printRepoBranch {
   echo -n "${repoDir} - "
   branch=$(git -C "${repoDir}" rev-parse --abbrev-ref HEAD)
   log "  Branch: ${branch}"
-  if [ "$branch" = "${MAIN_BRANCH}" ]; then
+  
+  if [[ $branch =~ $RGX_MAIN ]]; then
     echo -e "${GRN}${branch}${NC}"
   else
     echo -e "${YEL}${branch}${NC}"
