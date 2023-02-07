@@ -4,11 +4,9 @@
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
 #
-#  version: 2023.2.2
+#  version: 2023.2.7
 #
 #  TODO:
-#  - Add maxdepth variable and argument to control depth of search
-#  - Define list of pottential main branchs instead of single
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -23,16 +21,27 @@ NC='\033[0m' # No Color
 
 DEBUG=false #//toggle debug output
 
-#//main branch name used
-MAIN_BRANCH="master"
+#//prompt to perform pull on non main branches
+PULL_ALL=FALSE
+
+#//search depth
+MAX_DEPTH=1
+
+#//numeric regex
+RGX_NUM='^[0-9]+$'
+
+#//main branch names
+RGX_MAIN='^master|main|trunk$'
 
 function printHelp {
-  echo "Usage: gitPullMain.sh [-hv]"
+  echo "Usage: gitPullMain.sh [-h] [-v] [-a] [-d num]"
   echo "  Performs a pull on each git project directory that is in the main"
   echo ""
   echo "  Options:"
   echo "    -h      This help info"
   echo "    -v      Verbose/debug output"
+  echo "    -a      Prompt to pull for all ALL branches"
+  echo "    -d num    Search depth (default 1)"
 }
 
 function log {
@@ -46,7 +55,7 @@ function waitForInput {
   local branch=$2
 
   #//wait for input
-  if [ "$branch" = "${MAIN_BRANCH}" ]; then
+  if [[ $branch =~ $RGX_MAIN ]]; then
     echo -e "${repoDir} - ${GRN}${branch}${NC}"
   else
     echo -e "${repoDir} - ${YEL}${branch}${NC}"
@@ -78,7 +87,7 @@ function isGitDir {
   return 1
 }
 
-function gitPullMainOnly {
+function gitPull {
   local repoDir=$1
 
   #//get current working branch
@@ -86,9 +95,11 @@ function gitPullMainOnly {
   log "  Branch: ${branch}"
 
   #//skip if branch is not the main branch
-  if [ "$branch" != "${MAIN_BRANCH}" ]; then
-    log "Not ${MAIN_BRANCH}"
-    return 1
+  if [ ! "$PULL_ALL" = true ]; then
+    if [[ ! $branch =~ $RGX_MAIN ]]; then
+      log "  Not a main branch"
+      return
+    fi
   fi
 
   #//wait for input
@@ -107,18 +118,52 @@ function gitPullMainOnly {
 #-----------------------------
 
 #//check the command arguments
-for arg in "$@"
-do
-  log "Argument ${arg^^}"
-
+log "Arg Count: $#"
+while (( $# > 0 )); do
+  arg=$1
+  
+  #//check for verbose
   if [ "${arg^^}" = "-V" ]; then
     DEBUG=true
   fi
+  
+  log "Arg Count: $#"
+  log "Argument: ${arg^^}"
 
+  #//check for help
   if [ "${arg^^}" = "-H" ]; then
     printHelp
     exit 0
   fi
+  
+  #//check for ALL branch
+  if [ "${arg^^}" = "-A" ]; then
+    PULL_ALL=true
+  fi
+  
+  #//check for depth
+  if [ "${arg^^}" = "-D" ]; then
+  
+    #//check if there are still more arguments where the number could be provided
+    if (( $# > 1 )); then
+      #//check the depth number from next argument
+      numValue=$2
+      log "  Depth Value: $numValue"
+      
+      if [[ $numValue =~ $RGX_NUM ]]; then
+        MAX_DEPTH=$numValue
+        log "  Max Depth: $MAX_DEPTH"
+        
+        #//shift number argument so it is not processed on next iteration
+        shift
+      fi
+    else
+      log "  No more arguments for number to exist"
+    fi
+  fi
+  
+  #//shift to next argument
+  shift
 done
 
 #//identify if current directory is a git project directory
@@ -129,7 +174,7 @@ log "Checking current directory..."
 if isGitDir "${currDir}"; then
   #// pull main branch
   log "  Performing the pull..."
-  gitPullMainOnly "${currDir}"
+  gitPull "${currDir}"
 
   exit 0
 else
@@ -137,7 +182,8 @@ else
 fi
 
 #// get list of all directories at the current location
-for aDir in $( find -mindepth 1 -maxdepth 1 -type d )
+echo "Depth Search: $MAX_DEPTH"
+for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
   log "Directory: ${aDir}"
 
@@ -148,7 +194,7 @@ do
   fi
 
   #// pull main branch
-  gitPullMainOnly "${aDir}"
+  gitPull "${aDir}"
 
 done
 log "DONE"
