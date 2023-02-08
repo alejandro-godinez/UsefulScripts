@@ -4,6 +4,12 @@ An assortment of useful scripts from a wide variety of technologies.
 ### ANT
 - **build_junit.xml** - A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
 
+### Git
+- **gitBranchList.sh** - List the current branch name for git projects in the current directory
+- **gitPullMain.sh** - Prompts to perform a pull for git projects in the current directory
+- **gitStashList.sh** - Lists the stash enries for each project in the current directory
+- **gitTrimStash.sh** - Perform a trim (drop) of the oldes stash entries down to a set number of items.
+
 ### Linux
 - **avgFileSize.sh**  
 Get an average file size of all the files that meet the specified name filter.
