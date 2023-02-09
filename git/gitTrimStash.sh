@@ -30,6 +30,9 @@ RGX_NUM='^[0-9]+$'
 #//main branch names
 RGX_MAIN='^master|main|trunk$'
 
+#//trim size
+TRIM_SIZE=3
+
 
 function printHelp {
   echo "Usage: gitTrimStash.sh [-h] [-v] [-d num]"
@@ -104,16 +107,12 @@ function printStashList {
 function trimStash {
   local repoDir=$1
   local stashCount=$2
-
-  #//TODO: make trim size a command option/argument
-  #//the number of stash entries that should remain after trimming
-  local trimSize=3
     
   #//get the last index position
   local stashIdx="$(( stashCount-1 ))"
   
   #//loop as long as index is greater than or equal to trim size  (ex. when trim 3, stop at index 2)
-  while (( stashIdx >= trimSize )); do
+  while (( stashIdx >= TRIM_SIZE )); do
     echo "  Dropping index [$stashIdx]"
     
     #perform trim at current index
@@ -123,6 +122,34 @@ function trimStash {
     stashIdx="$(( stashIdx-1 ))"
   done
   
+}
+
+function processGitDirectory {
+  local repoDir=$1
+  
+  log "Getting the stash"
+  stashList=$(getStashList "${repoDir}")
+  
+  #//check for non-empty stash list and get a count of lines
+  stashCount=0
+  if [[ ! -z "${stashList// }" ]]; then
+    stashCount=$( echo "${stashList}" | wc -l )
+  fi
+  
+  #//check if stash has enough entries
+  if (( stashCount <= TRIM_SIZE )); then
+    log "  Not Enough Stash Entries"
+    return
+  fi
+  
+  log "Printing stash output"
+  printStashList "${repoDir}" "${stashList}" "${stashCount}"
+  
+  log "Prompting User:"
+  if waitForInput; then
+    log "Performing Trim"
+    trimStash "${repoDir}" "${stashCount}"
+  fi
 }
 
 #-------------------------------
@@ -180,60 +207,20 @@ log "Current Dir: ${currDir}"
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
 
-  log "Getting the stash"
-  stashList=$(getStashList "${currDir}")
-  
-  #//check for non-empty stash list and get a count of lines
-  stashCount=0
-  if [[ ! -z "${stashList// }" ]]; then
-    stashCount=$( echo "${stashList}" | wc -l )
-  fi
-  
-  #//check if stash is empty
-  if (( stashCount < 1 )); then
-    log "  No Stash Found"
-    exit 0
-  fi
-    
-  log "Printing stash output"
-  printStashList "${currDir}" "${stashList}" "${stashCount}"
-  
-  log "Prompting User:"
-  if waitForInput ; then
-    log "Performing Trim"
-    trimStash "${currDir}" "${stashCount}"
-  fi
+  log "Processing current directory..."
+  processGitDirectory "${currDir}"
 
   exit 0
 fi
 
 #//get list of all directories at the current location
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+for currDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
-  if isGitDir "${aDir}"; then
-    log "Getting the stash"
-    stashList=$(getStashList "${aDir}")
+  if isGitDir "${currDir}"; then
+  
+    log "Processing current directory..."
+    processGitDirectory "${currDir}"
     
-    #//check for non-empty stash list and get a count of lines
-    stashCount=0
-    if [[ ! -z "${stashList// }" ]]; then
-      stashCount=$( echo "${stashList}" | wc -l )
-    fi
-    
-    #//check if stash is empty
-    if (( stashCount < 1 )); then
-      log "No Stash Found"
-      continue
-    fi
-    
-    log "Printing stash output"
-    printStashList "${aDir}" "${stashList}" "${stashCount}"
-    
-    log "Prompting User:"
-    if waitForInput; then
-      log "Performing Trim"
-      trimStash "${aDir}" "${stashCount}"
-    fi
   fi
 done
 echo "DONE"
