@@ -3,7 +3,7 @@
 #  This script will trim the stash of entries from the end/oldest down to
 #  a specified number of entries.
 #  
-#  version: 2023.2.7
+#  version: 2023.2.9
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -35,13 +35,14 @@ TRIM_SIZE=3
 
 
 function printHelp {
-  echo "Usage: gitTrimStash.sh [-h] [-v] [-d num]"
+  echo "Usage: gitTrimStash.sh [-h] [-v] [-d num] [-t num]"
   echo "  Trims the stash list of entries from the end/oldest down to a specific number of entries"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -d num    Search depth (default 1)"
+  echo "    -t num    Trim Size (default 3)"
 }
 
 function log {
@@ -175,18 +176,22 @@ while (( $# > 0 )); do
     exit 0
   fi
   
-  #//check for depth
-  if [ "${arg^^}" = "-D" ]; then
+  #//check for options with numeric values
+  if [ "${arg^^}" = "-D" ] || [ "${arg^^}" = "-T" ]; then
   
     #//check if there are still more arguments where the number could be provided
     if (( $# > 1 )); then
       #//check the depth number from next argument
       numValue=$2
-      log "  Depth Value: $numValue"
       
       if [[ $numValue =~ $RGX_NUM ]]; then
-        MAX_DEPTH=$numValue
-        log "  Max Depth: $MAX_DEPTH"
+        if [ "${arg^^}" = "-D" ]; then
+          MAX_DEPTH=$numValue
+          log "  Max Depth: $MAX_DEPTH"
+        elif [ "${arg^^}" = "-T" ]; then
+          TRIM_SIZE=$numValue
+          log "  Trim Size: $TRIM_SIZE"
+        fi
         
         #//shift number argument so it is not processed on next iteration
         shift
