@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#--------------------------------------------------------------------------------
+#  Bash Notes:
+#    [@]   - expands values to separate words
+#    ${!   - the ! here expands the indices (keys) instead of the values
+#--------------------------------------------------------------------------------
+
+
 #//bash shell options
 set -u #//error on unset variable
 set -e #//exit on error
