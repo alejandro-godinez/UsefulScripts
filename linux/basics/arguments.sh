@@ -1,5 +1,13 @@
 #!/bin/bash
 
+#-----------------------------------------------------------------------------
+#  Bash Notes: 
+#    function   - keyword optional for readability in bash, for POSIX use
+#                 use parenthesis syntax instead "myfunc(){ }"
+#    shift      - drops the top most entry in the argument list
+#    ${var^^}   - get the capitalized value
+#-----------------------------------------------------------------------------
+
 #//bash shell options
 set -u #//error on unset variable
 set -e #//exit on error

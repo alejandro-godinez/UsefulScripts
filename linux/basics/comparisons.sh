@@ -1,5 +1,14 @@
 #!/bin/bash
 
+#-----------------------------------------------------------------------------
+#  Bash Notes: 
+#    (( ))   - arithmetic expresions
+#     [ ]    - POSIX test commands
+#    [[ ]]   - newer test commands with extended funcionality available in bash
+#    -z      - checks for empty string
+#    -n      - checks for non-empty string
+#-----------------------------------------------------------------------------
+
 #//bash shell options
 set -u #//error on unset variable
 set -e #//exit on error
