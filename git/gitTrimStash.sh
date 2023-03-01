@@ -3,7 +3,7 @@
 #  This script will trim the stash of entries from the end/oldest down to
 #  a specified number of entries.
 #  
-#  version: 2023.2.9
+#  version: 2023.3.1
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -20,6 +20,7 @@ NC='\033[0m' # No Color
 
 #//toggle debug output
 DEBUG=false 
+FORCE=false
 
 #//search depth
 MAX_DEPTH=1
@@ -35,12 +36,13 @@ TRIM_SIZE=3
 
 
 function printHelp {
-  echo "Usage: gitTrimStash.sh [-h] [-v] [-d num] [-t num]"
+  echo "Usage: gitTrimStash.sh [-h] [-v] [-f] [-d num] [-t num]"
   echo "  Trims the stash list of entries from the end/oldest down to a specific number of entries"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -f        Force trim without prompting"
   echo "    -d num    Search depth (default 1)"
   echo "    -t num    Trim Size (default 3)"
 }
@@ -53,7 +55,7 @@ function log {
 
 function waitForInput {
   #//wait for input 
-  read -p "Perform Trim? [Y/N] or Q to Quit: "
+  read -p "Perform Trim down to ${TRIM_SIZE}? [Y/N] or Q to Quit: "
   
   #//exit script if quit is entered
   log "  Input: ${REPLY}"
@@ -147,7 +149,7 @@ function processGitDirectory {
   printStashList "${repoDir}" "${stashList}" "${stashCount}"
   
   log "Prompting User:"
-  if waitForInput; then
+  if [ "$FORCE" = true ] || then waitForInput; then
     log "Performing Trim"
     trimStash "${repoDir}" "${stashCount}"
   fi
@@ -174,6 +176,11 @@ while (( $# > 0 )); do
   if [ "${arg^^}" = "-H" ]; then
     printHelp
     exit 0
+  fi
+  
+    #//check for force
+  if [ "${arg^^}" = "-F" ]; then
+    FORCE=true
   fi
   
   #//check for options with numeric values
