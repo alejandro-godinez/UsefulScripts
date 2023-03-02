@@ -44,7 +44,7 @@ function printHelp {
   echo "    -v        Verbose/debug output"
   echo "    -f        Force trim without prompting"
   echo "    -d num    Search depth (default 1)"
-  echo "    -t num    Trim Size (default 3)"
+  echo "    -t num    Trim Size (default 3), keeps most recent"
 }
 
 function log {
@@ -149,7 +149,7 @@ function processGitDirectory {
   printStashList "${repoDir}" "${stashList}" "${stashCount}"
   
   log "Prompting User:"
-  if [ "$FORCE" = true ] || then waitForInput; then
+  if [ "${FORCE}" = true ] || waitForInput; then
     log "Performing Trim"
     trimStash "${repoDir}" "${stashCount}"
   fi
