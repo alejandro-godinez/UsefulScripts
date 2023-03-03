@@ -1,0 +1,54 @@
+#-----------------------------------------------------------------------------
+#  Bash Notes: 
+#    - Alias retains ability to add argument to the command
+#      Example:
+#        gh "source"
+#        npp filePath
+#-----------------------------------------------------------------------------
+
+
+#//add additional applications to export
+export PATH=$PATH:/path/to/binary:/path/to/another/binary
+
+#//command with leading space or duplicates will not be added to history
+HISTCONTROL=ignoreboth
+
+#//set the Internal Field Separator to newline (useful for windows git bash)
+IFS=$'\n'
+
+#------------------------------------------------
+# Alias for confing of common files (i use nano)
+#------------------------------------------------
+#//config bash
+alias bashconfig='nano ~/.bashrc'
+#//config nano
+alias nanoconfig='nano ~/.nanorc'
+
+#------------------------------------------------
+# Shortcut to applications
+#------------------------------------------------
+#//shortcut command for notepad++
+alias npp='notepad++.exe'
+#//launch VSCode with current directory as project
+alias vsCodeHere='code . &'
+#------------------------------------------------
+# Aliases for modifications to common commands
+#------------------------------------------------
+#//better pwd to display logical and physical paths
+alias pwd='echo -n Logical:; pwd; echo -n Physical:; pwd -P; echo -n Windows:; pwd -W'
+#//shortcut to search command history (usage: gh <search term>
+alias gh='history|grep'
+#//list the directory in the current directory
+alias ld='ls -l | grep ^[d]'
+
+#------------------------------------------------
+# GIT commands
+#------------------------------------------------
+
+#//list five most recent log entries
+alias gitLog='git log -5'
+alias gitLogLines='git log -5 --pretty=online'
+#//list of local commits (HEAD) not pushed to origin
+alias gitLogLocal='git log ORIGIN..HEAD'
+alias gitLogLocalLines='git log ORIGIN..HEAD --pretty=oneline'
+
