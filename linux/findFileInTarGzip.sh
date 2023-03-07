@@ -17,7 +17,7 @@
 #-----------------------------------------------------------
 
 #//check if missing parameters or user specified 'help'
-if [[ -z "${1// }" || "${1}" == "help" ]]; then
+if [[ $# -eq 0 ]] || [[ -z "${1// }" || "${1}" == "help" ]]; then
   echo "This script will search the contents of any '.tar.gz' file"
   echo "in the specified directory for entries with matching"
   echo "specified search text"

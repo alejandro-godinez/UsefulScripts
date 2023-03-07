@@ -7,7 +7,7 @@
 #----------------------------------------------------------
 
 #//check if missing paramters or user specified 'help'
-if [[ -z "${1// }" || "${1}" == "help"  ]]; then
+if [[ $# -eq 0 ]] || [[ -z "${1// }" || "${1}" == "help"  ]]; then
   #//print usage info
   echo "This script will display the contents of the manifest"
   echo "file inside of the jar file specified."

@@ -7,7 +7,7 @@
 
 
 #//check if missing parameters or user specified 'help'
-if [[ -z "${1// }" || "${1}" == "help" ]]; then
+if [[ $# -eq 0 ]] || [[ -z "${1// }" || "${1}" == "help" ]]; then
 
   echo "Usage: "
   echo "  findFilesWithText.sh <search> [filter]"
