@@ -3,7 +3,7 @@
 #  This script will trim the stash of entries from the end/oldest down to
 #  a specified number of entries.
 #  
-#  version: 2023.3.1
+#  version: 2023.3.7
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -51,6 +51,60 @@ function log {
   if [ "$DEBUG" = true ]; then 
     echo "$1"
   fi
+}
+
+function processArgs {
+  log "Arg Count: $#"
+  while (( $# > 0 )); do
+    arg=$1
+    
+    #//check for verbose
+    if [ "${arg^^}" = "-V" ]; then
+      DEBUG=true
+    fi
+    
+    log "Arg Count: $#"
+    log "Argument: ${arg^^}"
+
+    #//check for help
+    if [ "${arg^^}" = "-H" ]; then
+      printHelp
+      exit 0
+    fi
+    
+      #//check for force
+    if [ "${arg^^}" = "-F" ]; then
+      FORCE=true
+    fi
+    
+    #//check for options with numeric values
+    if [ "${arg^^}" = "-D" ] || [ "${arg^^}" = "-T" ]; then
+    
+      #//check if there are still more arguments where the number could be provided
+      if (( $# > 1 )); then
+        #//check the depth number from next argument
+        numValue=$2
+        
+        if [[ $numValue =~ $RGX_NUM ]]; then
+          if [ "${arg^^}" = "-D" ]; then
+            MAX_DEPTH=$numValue
+            log "  Max Depth: $MAX_DEPTH"
+          elif [ "${arg^^}" = "-T" ]; then
+            TRIM_SIZE=$numValue
+            log "  Trim Size: $TRIM_SIZE"
+          fi
+          
+          #//shift number argument so it is not processed on next iteration
+          shift
+        fi
+      else
+        log "  No more arguments for number to exist"
+      fi
+    fi
+    
+    #//shift to next argument
+    shift
+  done
 }
 
 function waitForInput {
@@ -160,57 +214,7 @@ function processGitDirectory {
 #-------------------------------
 
 #//check the command arguments
-log "Arg Count: $#"
-while (( $# > 0 )); do
-  arg=$1
-  
-  #//check for verbose
-  if [ "${arg^^}" = "-V" ]; then
-    DEBUG=true
-  fi
-  
-  log "Arg Count: $#"
-  log "Argument: ${arg^^}"
-
-  #//check for help
-  if [ "${arg^^}" = "-H" ]; then
-    printHelp
-    exit 0
-  fi
-  
-    #//check for force
-  if [ "${arg^^}" = "-F" ]; then
-    FORCE=true
-  fi
-  
-  #//check for options with numeric values
-  if [ "${arg^^}" = "-D" ] || [ "${arg^^}" = "-T" ]; then
-  
-    #//check if there are still more arguments where the number could be provided
-    if (( $# > 1 )); then
-      #//check the depth number from next argument
-      numValue=$2
-      
-      if [[ $numValue =~ $RGX_NUM ]]; then
-        if [ "${arg^^}" = "-D" ]; then
-          MAX_DEPTH=$numValue
-          log "  Max Depth: $MAX_DEPTH"
-        elif [ "${arg^^}" = "-T" ]; then
-          TRIM_SIZE=$numValue
-          log "  Trim Size: $TRIM_SIZE"
-        fi
-        
-        #//shift number argument so it is not processed on next iteration
-        shift
-      fi
-    else
-      log "  No more arguments for number to exist"
-    fi
-  fi
-  
-  #//shift to next argument
-  shift
-done
+processArgs "$@"
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)
