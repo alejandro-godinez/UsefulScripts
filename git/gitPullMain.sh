@@ -4,7 +4,7 @@
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
 #
-#  version: 2023.2.7
+#  version: 2023.3.7
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -48,6 +48,57 @@ function log {
   if [ "$DEBUG" = true ]; then
     echo "$1"
   fi
+}
+
+#//process the arguments for the script
+function processArgs {
+  log "Arg Count: $#"
+  while (( $# > 0 )); do
+    arg=$1
+    
+    #//check for verbose
+    if [ "${arg^^}" = "-V" ]; then
+      DEBUG=true
+    fi
+    
+    log "Arg Count: $#"
+    log "Argument: ${arg^^}"
+
+    #//check for help
+    if [ "${arg^^}" = "-H" ]; then
+      printHelp
+      exit 0
+    fi
+    
+    #//check for ALL branch
+    if [ "${arg^^}" = "-A" ]; then
+      PULL_ALL=true
+    fi
+    
+    #//check for depth
+    if [ "${arg^^}" = "-D" ]; then
+    
+      #//check if there are still more arguments where the number could be provided
+      if (( $# > 1 )); then
+        #//check the depth number from next argument
+        numValue=$2
+        log "  Depth Value: $numValue"
+        
+        if [[ $numValue =~ $RGX_NUM ]]; then
+          MAX_DEPTH=$numValue
+          log "  Max Depth: $MAX_DEPTH"
+          
+          #//shift number argument so it is not processed on next iteration
+          shift
+        fi
+      else
+        log "  No more arguments for number to exist"
+      fi
+    fi
+    
+    #//shift to next argument
+    shift
+  done
 }
 
 function waitForInput {
@@ -118,53 +169,7 @@ function gitPull {
 #-----------------------------
 
 #//check the command arguments
-log "Arg Count: $#"
-while (( $# > 0 )); do
-  arg=$1
-  
-  #//check for verbose
-  if [ "${arg^^}" = "-V" ]; then
-    DEBUG=true
-  fi
-  
-  log "Arg Count: $#"
-  log "Argument: ${arg^^}"
-
-  #//check for help
-  if [ "${arg^^}" = "-H" ]; then
-    printHelp
-    exit 0
-  fi
-  
-  #//check for ALL branch
-  if [ "${arg^^}" = "-A" ]; then
-    PULL_ALL=true
-  fi
-  
-  #//check for depth
-  if [ "${arg^^}" = "-D" ]; then
-  
-    #//check if there are still more arguments where the number could be provided
-    if (( $# > 1 )); then
-      #//check the depth number from next argument
-      numValue=$2
-      log "  Depth Value: $numValue"
-      
-      if [[ $numValue =~ $RGX_NUM ]]; then
-        MAX_DEPTH=$numValue
-        log "  Max Depth: $MAX_DEPTH"
-        
-        #//shift number argument so it is not processed on next iteration
-        shift
-      fi
-    else
-      log "  No more arguments for number to exist"
-    fi
-  fi
-  
-  #//shift to next argument
-  shift
-done
+processArgs "$@"
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)
