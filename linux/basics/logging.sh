@@ -4,7 +4,7 @@
 #  Bash Notes: 
 #    function   - keyword optional for readability in bash, for POSIX use
 #                 use parenthesis syntax instead "myfunc(){ }"
-#    ${var^^}   - get the capitalized value
+#    date -I    - date with ISO8601 format value
 #-----------------------------------------------------------------------------
 
 #//bash shell options
