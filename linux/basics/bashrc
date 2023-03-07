@@ -52,3 +52,12 @@ alias gitLogLines='git log -5 --pretty=online'
 alias gitLogLocal='git log ORIGIN..HEAD'
 alias gitLogLocalLines='git log ORIGIN..HEAD --pretty=oneline'
 
+#------------------------------------------------
+# SSH commands
+#------------------------------------------------
+#//start ssh agent if not already running
+alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); fi'
+#//adds key from default home .ssh directory
+alias addSSHKey='ssh-add'
+#//add specific key file to agent
+alias addSSHKey='ssh-add ~/.ssh/id_ed25519'
