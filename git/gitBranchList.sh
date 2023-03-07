@@ -126,7 +126,7 @@ function printRepoBranch {
 #-------------------------------
 
 #//process arguments
-processArgs $@
+processArgs "$@"
 
 
 #//identify if current directory is a git project directory
