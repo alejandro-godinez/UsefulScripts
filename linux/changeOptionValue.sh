@@ -13,7 +13,7 @@
 
 #//check if missing paramters or user specified 'help'
 file=$1
-if [[ -z "${file// }" || "$file" == "help"  ]]; then
+if [[ $# -eq 0 ]] || [[ -z "${file// }" || "$file" == "help"  ]]; then
   #//print usage info
   echo "This script will change the value of a standard 'name=value' pair"
   echo "such as ini or config files."
