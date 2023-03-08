@@ -3,8 +3,6 @@
 # This script will get an average file size of all the file
 # that meet the specified name filter.
 #
-# version: 2023.3.8
-#
 # Usage:
 #   avgFileSize.sh <search> [dir]
 #
@@ -14,6 +12,8 @@
 #
 # Example:  avgFileSize.sh "*.tar.gz"
 #     - gets average file size for all '.tar.gz' files in the current directory
+#
+# version: 2023.3.8
 #----------------------------------------------------------------------------
 
 set -u #//error on unset variable
