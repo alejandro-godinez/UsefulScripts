@@ -7,6 +7,7 @@
 #    [[ ]]   - newer test commands with extended funcionality available in bash
 #    -z      - checks for empty string
 #    -n      - checks for non-empty string
+#    -v      - checks for allocated variable/array
 #-----------------------------------------------------------------------------
 
 #//bash shell options
@@ -19,12 +20,12 @@ IFS=$'\n'
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
-
 myNum=3
 myText="test"
 emptyString=""
 longString="One Two Three"
-
+declare -a unboundArray
+declare -a boundArray=("temp")
 echo "Numeric Comparisons"
 #//numeric comparison
 if (( myNum == 3 )); then 
@@ -82,4 +83,15 @@ fi
 
 if [[ ! "$myText" =~ $RGX_NUM ]]; then
   echo "  Regex Not Match"
+fi
+
+echo "Array Initialized"
+#//check for 
+if [[ -v boundArray ]]; then
+  echo "  Bound Array"
+fi
+
+#//check for unbound array
+if [[ ! -v unboundArray ]]; then
+  echo "  Unbound Array"
 fi
