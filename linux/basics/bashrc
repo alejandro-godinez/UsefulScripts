@@ -35,7 +35,7 @@ alias vsCodeHere='code . &'
 # Aliases for modifications to common commands
 #------------------------------------------------
 #//better pwd to display logical and physical paths
-alias pwd='echo -n Logical:; pwd; echo -n Physical:; pwd -P; echo -n Windows:; pwd -W'
+alias pwdd='echo -n Logical:; pwd; echo -n Physical:; pwd -P; echo -n Windows:; pwd -W'
 #//shortcut to search command history (usage: gh <search term>
 alias gh='history|grep'
 #//list the directory in the current directory
