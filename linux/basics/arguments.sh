@@ -24,6 +24,9 @@ DEBUG=true
 #//max number from argument
 MAX_NUMBER=0
 
+#//indexed array of arguments that are not options/flags
+declare -a ARG_VALUES
+
 #//function that will echo only if verbose option was provided
 function log {
   if [ "$DEBUG" = true ]; then 
@@ -38,19 +41,22 @@ function processArgs {
     arg=$1
     log "  Argument: ${arg}"
     
+    #//the arguments to the next item
+    shift 
+    
     #//check for verbose
     if [ "${arg^^}" = "-V" ]; then
       DEBUG=true
+      continue
     fi
       
     #//check for depth
     if [ "${arg^^}" = "-D" ]; then
     
       #//check if there are still more arguments where the number could be provided
-      if (( $# > 1 )); then
-      
+      if (( $# > 0 )); then
         #//check the depth number from next argument
-        numValue=$2
+        numValue=$1
         log "    Number Value: $numValue"
         
         if [[ $numValue =~ $RGX_NUM ]]; then
@@ -65,23 +71,22 @@ function processArgs {
       else
         log "    No more arguments for number to exist"
       fi
+      continue
     fi
     
-    #//shift to next argument
-    shift
+    #//keep arguments that are not options or values from the option
+    log "    > Adding $arg to rem arg list"
+    ARG_VALUES+=("$arg")
   done
 }
 
 log "Calling process args function"
 processArgs "$@"
 
-#//print out the args, note they were not consumed by function
-log "List Args In Main"
-log "  Arg Count: $#"
-while (( $# > 0 )); do
-  arg=$1
-  echo "  Argument: ${arg}"
-  
-  #//shift to next argument
-  shift
-done
+#//print out the list of args that were not consumed by function (non-flag arguments)
+if [[ -v ARG_VALUES ]]; then
+  log "List Remaining Args: ${#ARG_VALUES[@]}"
+  for item in "${ARG_VALUES[@]}"; do echo "  ${item}"; done
+else
+  log "NO Remaining Args"
+fi
