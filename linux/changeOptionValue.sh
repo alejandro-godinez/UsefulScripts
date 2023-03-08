@@ -9,6 +9,8 @@
 #    file        - the file which contains name=value data
 #    optionName  - the name of the option to change
 #    optionValue - the new value to update into the option
+#
+# version: 2023.3.8
 #----------------------------------------------------------
 
 set -u #//error on unset variable
