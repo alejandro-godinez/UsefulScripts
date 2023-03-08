@@ -33,7 +33,7 @@ function printHelp {
   echo "that meet the specified name filter."
   echo ""
   echo "Usage: "
-  echo "  avgFileSize.sh <search> [dir] [-v] [-h]"
+  echo "  avgFileSize.sh [OPTION] <search> [dir]"
   echo ""
   echo "  search - The filter to use when listing files"
   echo "           NOTE: add quotes to the pattern"
