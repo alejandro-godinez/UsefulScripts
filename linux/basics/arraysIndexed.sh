@@ -45,6 +45,12 @@ myArr[3]="four"
 for index in "${!myArr[@]}"; do echo "  $index -> ${myArr[$index]}"; done
 echo ""
 
+#//append single item with shorthand
+echo "Add single entry, shorthand (SINGLE)"
+myArr+=("SINGLE")
+for index in "${!myArr[@]}"; do echo "  $index -> ${myArr[$index]}"; done
+echo ""
+
 #//append multiple to existing array
 echo "Add multiple entries in one go (A, B, C)"
 myArr=("${myArr[@]}" "A" "B" "C")
