@@ -10,9 +10,17 @@ set -u #//error on unset variable
 set -e #//exit on error
 
 #//import logging functionality
+if [[ ! -f ~/lib/logging.sh ]]; then
+  echo "ERROR: Missing logging.sh library"
+  exit
+fi
 source ~/lib/logging.sh
 
 #//import git functionality
+if [[ ! -f ~/lib/git_lib.sh ]]; then
+  echo "ERROR: Missing git_lib.sh library"
+  exit
+fi
 source ~/lib/git_lib.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
