@@ -11,6 +11,12 @@
 set -u #//error on unset variable
 set -e #//exit on error
 
+#//import logging functionality
+source ~/lib/logging.sh
+
+#//import git functionality
+source ~/lib/git_lib.sh
+
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
 
@@ -18,9 +24,6 @@ IFS=$'\n'
 GRN='\033[0;32m'
 YEL='\033[1;33m'
 NC='\033[0m' # No Color
-
-#//toggle debug output
-DEBUG=false 
 
 #//search depth
 MAX_DEPTH=1
@@ -39,12 +42,6 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -d num    Search depth (default 1)"
-}
-
-function log {
-  if [ "$DEBUG" = true ]; then 
-    echo "$1"
-  fi
 }
 
 #//process the arguments for the script
@@ -94,24 +91,12 @@ function processArgs {
   done
 }
 
-#// check if a directory is a git working directory
-function isGitDir {
-  local theDir=$1
-  log "  The Dir: ${theDir}"
-  if [ -d "${theDir}" ] && [ -d "${theDir}/.git" ]; then
-    log "  Is Git Directory: TRUE"
-    return 0
-  fi
-  log "  Is Git Directory: FALSE"
-  return 1
-}
-
 function printRepoBranch {
   local repoDir=$1
 
   #//print out the repot path and branch
   echo -n "${repoDir} - "
-  branch=$(git -C "${repoDir}" rev-parse --abbrev-ref HEAD)
+  branch=$(gitBranchName ${repoDir})
   log "  Branch: ${branch}"
   
   if [[ $branch =~ $RGX_MAIN ]]; then
