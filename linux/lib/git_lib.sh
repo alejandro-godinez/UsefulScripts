@@ -3,12 +3,9 @@
 #// check if a directory is a git working directory
 function isGitDir {
   local theDir=$1
-  #log "  The Dir: ${theDir}"
   if [ -d "${theDir}" ] && [ -d "${theDir}/.git" ]; then
-    #log "  Is Git Directory: TRUE"
     return 0
   fi
-  #log "  Is Git Directory: FALSE"
   return 1
 }
 
@@ -18,4 +15,11 @@ function gitBranchName {
   if (( $# > 0 )); then
     echo $(git -C "${1}" rev-parse --abbrev-ref HEAD)
   fi  
+}
+
+#//perform a git pull on the repo
+function gitPull {
+  if (( $# > 0 )); then
+    git -C "${1}" pull
+  fi
 }
