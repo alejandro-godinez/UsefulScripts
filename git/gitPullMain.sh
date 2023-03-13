@@ -4,7 +4,7 @@
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
 #
-#  version: 2023.3.7
+#  version: 2023.3.13
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -33,9 +33,6 @@ MAX_DEPTH=1
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
-
-#//main branch names
-RGX_MAIN='^master|main|trunk$'
 
 function printHelp {
   echo "Usage: gitPullMain.sh [-h] [-v] [-a] [-d num]"

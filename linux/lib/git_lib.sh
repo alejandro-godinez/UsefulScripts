@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#//main branch name regex
+RGX_MAIN='^master|main|trunk$'
+
+#//stash trim size
+TRIM_SIZE=3
+
 #// check if a directory is a git working directory
 function isGitDir {
   local theDir=$1
@@ -22,4 +28,32 @@ function gitPull {
   if (( $# > 0 )); then
     git -C "${1}" pull
   fi
+}
+
+#// perform the stash list command and ouputs to standard output
+#//   you can capture output using command substitution "$( getStashList )"
+function gitStashList {
+  if (( $# > 0 )); then
+    git -C "${1}" stash list
+  fi
+}
+
+#//trim stash entries from the end of the list down to the stash count specified
+function trimStash {
+  local repoDir=$1
+  local stashCount=$2
+    
+  #//get the last index position
+  local stashIdx="$(( stashCount-1 ))"
+  
+  #//loop as long as index is greater than or equal to trim size  (ex. when trim 3, stop at index 2)
+  while (( stashIdx >= TRIM_SIZE )); do
+    echo "  Dropping index [$stashIdx]"
+    
+    #perform trim at current index
+    git -C "${repoDir}" stash drop "stash@{${stashIdx}}"
+  
+    #//subtract one from the count to get to the next index to drop
+    stashIdx="$(( stashIdx-1 ))"
+  done
 }

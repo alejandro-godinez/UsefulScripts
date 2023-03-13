@@ -3,11 +3,17 @@
 #  This script will trim the stash of entries from the end/oldest down to
 #  a specified number of entries.
 #  
-#  version: 2023.3.7
+#  version: 2023.3.13
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
 set -e #//exit on error
+
+#//import logging functionality
+source ~/lib/logging.sh
+
+#//import git functionality
+source ~/lib/git_lib.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
@@ -18,8 +24,7 @@ YEL='\033[1;33m'
 RED='\033[1;31m'
 NC='\033[0m' # No Color
 
-#//toggle debug output
-DEBUG=false 
+#//force trim without prompting
 FORCE=false
 
 #//search depth
@@ -27,13 +32,6 @@ MAX_DEPTH=1
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
-
-#//main branch names
-RGX_MAIN='^master|main|trunk$'
-
-#//trim size
-TRIM_SIZE=3
-
 
 function printHelp {
   echo "Usage: gitTrimStash.sh [-h] [-v] [-f] [-d num] [-t num]"
@@ -45,12 +43,6 @@ function printHelp {
   echo "    -f        Force trim without prompting"
   echo "    -d num    Search depth (default 1)"
   echo "    -t num    Trim Size (default 3), keeps most recent"
-}
-
-function log {
-  if [ "$DEBUG" = true ]; then 
-    echo "$1"
-  fi
 }
 
 function processArgs {
@@ -123,25 +115,6 @@ function waitForInput {
   fi
 }
 
-#// check if a directory is a git working directory
-function isGitDir {
-  local theDir=$1
-  log "The Dir: ${theDir}"
-  if [ -d "${theDir}" ] && [ -d "${theDir}/.git" ]; then
-    log "  Is Git Directory: TRUE"
-    return 0
-  fi
-  log "  Is Git Directory: FALSE"
-  return 1
-}
-
-#// perform the stash list command and ouputs to standard output
-#//   you can capture output using command substitution "$( getStashList )"
-function getStashList {
-  local repoDir=$1
-  git -C "${repoDir}" stash list
-}
-
 function printStashList {
   local repoDir=$1
   local stashList=$2
@@ -161,31 +134,11 @@ function printStashList {
   echo "${stashList}"
 }
 
-function trimStash {
-  local repoDir=$1
-  local stashCount=$2
-    
-  #//get the last index position
-  local stashIdx="$(( stashCount-1 ))"
-  
-  #//loop as long as index is greater than or equal to trim size  (ex. when trim 3, stop at index 2)
-  while (( stashIdx >= TRIM_SIZE )); do
-    echo "  Dropping index [$stashIdx]"
-    
-    #perform trim at current index
-    git -C "${repoDir}" stash drop "stash@{${stashIdx}}"
-  
-    #//subtract one from the count to get to the next index to drop
-    stashIdx="$(( stashIdx-1 ))"
-  done
-  
-}
-
 function processGitDirectory {
   local repoDir=$1
   
   log "Getting the stash"
-  stashList=$(getStashList "${repoDir}")
+  stashList=$(gitStashList "${repoDir}")
   
   #//check for non-empty stash list and get a count of lines
   stashCount=0

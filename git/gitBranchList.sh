@@ -3,7 +3,7 @@
 #  This script will list the current branch for each of the git project folders 
 #  in the current directory.
 #
-#  version: 2023.3.7
+#  version: 2023.3.13
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -30,9 +30,6 @@ MAX_DEPTH=1
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
-
-#//main branch names
-RGX_MAIN='^master|main|trunk$'
 
 function printHelp {
   echo "Usage: gitBranchList.sh [-h] [-v] [-d num]"
