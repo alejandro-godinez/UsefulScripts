@@ -19,8 +19,12 @@
 set -u #//error on unset variable
 set -e #//exit on error
 
-#//toggle debug output
-DEBUG=false
+#//import logging functionality
+if [[ ! -f ~/lib/logging.sh ]]; then
+  echo "ERROR: Missing logging.sh library"
+  exit
+fi
+source ~/lib/logging.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
@@ -46,12 +50,6 @@ function printHelp {
   echo "Example:  avgFileSize.sh '*.tar.gz\'"
   echo "  - gets an average file size for all '.tar.gz' files in the current directory"
   echo ""
-}
-
-function log {
-  if [ "$DEBUG" = true ]; then 
-    echo "$1"
-  fi
 }
 
 #//process the arguments for the script
