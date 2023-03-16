@@ -61,3 +61,5 @@ alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}
 alias addSSHKey='ssh-add'
 #//add specific key file to agent
 alias addSSHKey='ssh-add ~/.ssh/id_ed25519'
+#//stop ssh-agent (add to .bash_logout)
+alias stopSSHAgent='ssh-agent -k'
