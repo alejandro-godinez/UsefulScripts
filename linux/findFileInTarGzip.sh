@@ -46,6 +46,7 @@ function printHelp {
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -d num    Search depth (default 1)"
   echo ""
   echo "Example: findFileInTarGzip.sh test.txt 2018"
   echo "  - this will list '*2018*.tar.gz' files and search entries containing 'test.txt'"
