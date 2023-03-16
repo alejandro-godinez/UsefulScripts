@@ -144,7 +144,7 @@ filterCommand=("find" "-mindepth" "1" "-maxdepth" "${MAX_DEPTH}" "-type" "f" )
 if (( argCount > 1 )); then
   filterCommand+=("-name" "${ARG_VALUES[1]}")
 fi
-log "File Filter: ${filterCommand[@]}"
+log "File Filter: ${filterCommand[*]}"
 
 for f in $(${filterCommand[@]})
 do 
