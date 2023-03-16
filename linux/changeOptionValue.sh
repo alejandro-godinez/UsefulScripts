@@ -1,22 +1,29 @@
 #!/bin/bash
-#----------------------------------------------------------
-# This script will change the value of a standard
-# name=value pair such as ini or config files.
+#-----------------------------------------------------------------------
+# This script will change the value of a standard name=value pair file
+# such as ini or config files. 
 #
-#Usage:
-#  changeOptionValue.sh <file> <optionName> <optionValue>
+#   Note: this is a simple implementation where properties need to be
+#         at the start of the line
 #
-#    file        - the file which contains name=value data
-#    optionName  - the name of the option to change
-#    optionValue - the new value to update into the option
 #
-# version: 2023.3.8
-#----------------------------------------------------------
+# Dependencies: 
+#   ../UsefulScripts/linux/lib/logging.sh
+#
+# TODO:
+#   - improve to support indented properties
+#
+# version: 2023.3.16
+#-----------------------------------------------------------------------
 
 set -u #//error on unset variable
 
-#//toggle debug output
-DEBUG=false
+#//import logging functionality
+if [[ ! -f ~/lib/logging.sh ]]; then
+  echo "ERROR: Missing logging.sh library"
+  exit
+fi
+source ~/lib/logging.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
@@ -39,12 +46,6 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo ""
-}
-
-function log {
-  if [ "$DEBUG" = true ]; then 
-    echo "$1"
-  fi
 }
 
 #//process the arguments for the script
