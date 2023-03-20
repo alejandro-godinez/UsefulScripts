@@ -4,7 +4,7 @@
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
 #
-#  version: 2023.3.13
+#  version: 2023.3.20
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -33,8 +33,12 @@ GRN='\033[0;32m'
 YEL='\033[1;33m'
 NC='\033[0m' # No Color
 
+#//indexed array of arguments that are not options/flags
+declare -a ARG_VALUES
+
 #//prompt to perform pull on non main branches
 PULL_ALL=FALSE
+FORCE_PULL=FALSE
 
 #//search depth
 MAX_DEPTH=1
@@ -50,6 +54,7 @@ function printHelp {
   echo "    -h      This help info"
   echo "    -v      Verbose/debug output"
   echo "    -a      Prompt to pull for all ALL branches"
+  echo "    -f      Don't prompt for pull (force)"
   echo "    -d num    Search depth (default 1)"
 }
 
@@ -58,15 +63,17 @@ function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
     arg=$1
+    log "  Argument: ${arg}"
+    
+    #//the arguments to the next item
+    shift 
     
     #//check for verbose
     if [ "${arg^^}" = "-V" ]; then
       DEBUG=true
+      continue
     fi
     
-    log "Arg Count: $#"
-    log "Argument: ${arg^^}"
-
     #//check for help
     if [ "${arg^^}" = "-H" ]; then
       printHelp
@@ -76,15 +83,22 @@ function processArgs {
     #//check for ALL branch
     if [ "${arg^^}" = "-A" ]; then
       PULL_ALL=true
+      continue
+    fi
+    
+    #//check for ALL branch
+    if [ "${arg^^}" = "-F" ]; then
+      FORCE_PULL=true
+      continue
     fi
     
     #//check for depth
     if [ "${arg^^}" = "-D" ]; then
     
       #//check if there are still more arguments where the number could be provided
-      if (( $# > 1 )); then
+      if (( $# > 0 )); then
         #//check the depth number from next argument
-        numValue=$2
+        numValue=$1
         log "  Depth Value: $numValue"
         
         if [[ $numValue =~ $RGX_NUM ]]; then
@@ -97,10 +111,13 @@ function processArgs {
       else
         log "  No more arguments for number to exist"
       fi
+      
+      continue
     fi
     
-    #//shift to next argument
-    shift
+    #//keep arguments that are not options or values from the option
+    log "    > Adding $arg to rem arg list"
+    ARG_VALUES+=("$arg")
   done
 }
 
@@ -144,11 +161,13 @@ function gitPullMain {
     fi
   fi
 
-  #//wait for input
-  if ! waitForInput "${repoDir}" "${branch}"; then
-    echo "  Skipped"
-    return
-  fi
+  #//wait for input, unless force option was specified
+  if [ ! "$FORCE_PULL" = true ]; then
+    if ! waitForInput "${repoDir}" "${branch}"; then
+      echo "  Skipped"
+      return
+    fi
+  fi 
 
   #//perform the git pull
   log "  Performing the pull..."
@@ -161,6 +180,14 @@ function gitPullMain {
 
 #//check the command arguments
 processArgs "$@"
+
+#//print out the list of args that were not consumed by function (non-flag arguments)
+argCount=0
+if [[ -v ARG_VALUES ]]; then
+  argCount=${#ARG_VALUES[@]}
+  log "List Remaining Args: ${argCount}"
+  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
+fi
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)
