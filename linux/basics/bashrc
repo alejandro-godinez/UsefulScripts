@@ -40,6 +40,7 @@ alias pwdd='echo -n Logical:; pwd; echo -n Physical:; pwd -P; echo -n Windows:; 
 alias gh='history|grep'
 #//list the directory in the current directory
 alias ld='ls -l | grep ^[d]'
+alias isodate='date -Iseconds'
 
 #------------------------------------------------
 # GIT commands
