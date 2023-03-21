@@ -148,7 +148,8 @@ function waitForInput {
 
 function gitPullMain {
   local repoDir=$1
-
+  logAll "Repo Dir: ${repoDir}"
+  
   #//get current working branch
   branch=$(gitBranchName $repoDir)
   log "  Branch: ${branch}"
@@ -208,7 +209,7 @@ fi
 echo "Depth Search: $MAX_DEPTH"
 for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
-  echo "Directory: ${aDir}"
+  log "Directory: ${aDir}"
 
   #//skip directories that are not git projects
   if ! isGitDir "${aDir}"; then
