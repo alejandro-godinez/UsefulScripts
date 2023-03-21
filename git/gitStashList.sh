@@ -3,7 +3,7 @@
 #  This script will list the stash entries of each of the git project folders 
 #  in the current directory.
 #  
-#  version: 2023.3.13
+#  version: 2023.3.21
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -34,19 +34,24 @@ YEL='\033[1;33m'
 RED='\033[1;31m'
 NC='\033[0m' # No Color
 
+#//indexed array of arguments that are not options/flags
+declare -a ARG_VALUES
+
 #//search depth
 MAX_DEPTH=1
+GIT_SHOW=false
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
 function printHelp {
-  echo "Usage: gitStashList.sh [-h] [-v]"
+  echo "Usage: gitStashList.sh [-h] [-v] [-s]"
   echo "  Prints the stash list of each git project directory"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -s        perform a stash show for each line"
 }
 
 #//process the arguments for the script
@@ -54,19 +59,27 @@ function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
     arg=$1
+    log "  Argument: ${arg}"
+    
+    #//the arguments to the next item
+    shift 
     
     #//check for verbose
     if [ "${arg^^}" = "-V" ]; then
       DEBUG=true
+      continue
     fi
     
-    log "Arg Count: $#"
-    log "Argument: ${arg^^}"
-
     #//check for help
     if [ "${arg^^}" = "-H" ]; then
       printHelp
       exit 0
+    fi
+    
+        #//check for help
+    if [ "${arg^^}" = "-S" ]; then
+      GIT_SHOW=true
+      continue
     fi
     
     #//check for depth
@@ -90,8 +103,9 @@ function processArgs {
       fi
     fi
     
-    #//shift to next argument
-    shift
+    #//keep arguments that are not options or values from the option
+    log "    > Adding $arg to rem arg list"
+    ARG_VALUES+=("$arg")
   done
 }
 
@@ -116,8 +130,21 @@ function printStashList {
     log "  Stash is Empty"
     return
   fi
-
-  echo "${stashList}"
+  
+  #//if the show option was specified perform a stash show for each stash line
+  if [ "$GIT_SHOW" = true ]; then
+    stashNo=0
+    while IFS= read -r line ; do
+      echo "${line}"
+      gitStashShow "${repoDir}" "${stashNo}"
+      stashNo=$((stashNo+1))
+      echo ""
+    done <<< "${stashList}"
+  else
+    echo "${stashList}"
+  fi
+  
+  
 }
 
 #-------------------------------
@@ -136,7 +163,7 @@ if isGitDir "${currDir}"; then
 
   log "  Getting the stash"
   stashList=$(gitStashList "${currDir}")
-
+  
   log "  Printing stash output"
   printStashList "${currDir}" "${stashList}"
 

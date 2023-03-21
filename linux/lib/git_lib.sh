@@ -51,6 +51,19 @@ function gitApply {
   fi
 }
 
+#// perform a stash show show the git stash
+#   you can capture output using substitution "$( getStashShow )"
+function gitStashShow {
+  if (( $# > 1 )); then
+    git -C "${1}" stash show "stash@{${2}}"
+    return
+  fi
+  
+  if (( $# > 0 )); then
+    git -C "${1}" stash show
+  fi
+}
+
 #//trim stash entries from the end of the list down to the stash count specified
 function trimStash {
   local repoDir=$1
