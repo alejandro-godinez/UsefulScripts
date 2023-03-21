@@ -191,7 +191,7 @@ fi
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)
-log "Current Dir: ${currDir}"
+echo "Current Dir: ${currDir}"
 
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
@@ -208,7 +208,7 @@ fi
 echo "Depth Search: $MAX_DEPTH"
 for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
-  log "Directory: ${aDir}"
+  echo "Directory: ${aDir}"
 
   #//skip directories that are not git projects
   if ! isGitDir "${aDir}"; then
