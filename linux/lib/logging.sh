@@ -28,3 +28,12 @@ function log {
     echo "$( date -Iseconds ) - $1" >> ${LOGFILE}
   fi
 }
+
+#//function to console log all
+function logAll {
+  echo "$1"
+  if [ "$WRITELOG" = true ]; then 
+    echo "$( date -Iseconds ) - $1" >> ${LOGFILE}
+  fi
+}
+

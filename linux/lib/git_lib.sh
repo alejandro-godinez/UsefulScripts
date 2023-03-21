@@ -38,6 +38,19 @@ function gitStashList {
   fi
 }
 
+#// perform a stash of code
+function gitStash {
+  if (( $# > 1 )); then
+    git -C "${1}" stash -m "${2}"
+  fi
+}
+
+function gitApply {
+  if (( $# > 0 )); then
+    git -C "${1}" stash apply
+  fi
+}
+
 #//trim stash entries from the end of the list down to the stash count specified
 function trimStash {
   local repoDir=$1
