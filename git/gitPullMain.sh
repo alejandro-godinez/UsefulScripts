@@ -4,7 +4,7 @@
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
 #
-#  version: 2023.3.20
+#  version: 2023.4.7
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -32,6 +32,7 @@ IFS=$'\n'
 GRN='\033[0;32m'
 YEL='\033[1;33m'
 NC='\033[0m' # No Color
+U_CYN='\033[4;36m'       # Cyan
 
 #//indexed array of arguments that are not options/flags
 declare -a ARG_VALUES
@@ -148,7 +149,7 @@ function waitForInput {
 
 function gitPullMain {
   local repoDir=$1
-  logAll "Repo Dir: ${repoDir}"
+  logAll "${U_CYN}Repo Dir: ${repoDir}${NC}"
   
   #//get current working branch
   branch=$(gitBranchName $repoDir)
@@ -178,6 +179,7 @@ function gitPullMain {
 #-----------------------------
 # Main
 #-----------------------------
+escapesOn
 
 #//check the command arguments
 processArgs "$@"
