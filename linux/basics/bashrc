@@ -1,5 +1,8 @@
 #-----------------------------------------------------------------------------
 #  Bash Notes: 
+#    - The .bashrc file normally exists in you home directory
+#        Path: ~/.bashrc
+#
 #    - Alias retains ability to add argument to the command
 #      Example:
 #        gh "source"
@@ -21,6 +24,7 @@ IFS=$'\n'
 #------------------------------------------------
 #//config bash
 alias bashconfig='nano ~/.bashrc'
+alias logoutconfig='nano ~/.bash_logout'
 #//config nano
 alias nanoconfig='nano ~/.nanorc'
 

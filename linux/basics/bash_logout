@@ -1,0 +1,9 @@
+#-----------------------------------------------------------------------------
+#  Bash Notes: 
+#    - The .bash_logout file normally exists in you home directory
+#        Path: ~/.bash_logout
+#    - bash_logout is executed every time a login shell exists
+#-----------------------------------------------------------------------------
+
+#// stop ssh-agent if it is running, prevents cached passphrase from persisting (better security)
+ssh-agent -k
