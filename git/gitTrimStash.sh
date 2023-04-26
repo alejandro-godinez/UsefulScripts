@@ -43,7 +43,8 @@ RGX_NUM='^[0-9]+$'
 
 function printHelp {
   echo "Usage: gitTrimStash.sh [-h] [-v] [-f] [-d num] [-t num]"
-  echo "  Trims the stash list of entries from the end/oldest down to a specific number of entries"
+  echo "  Trims the stash list of entries from the oldest (end) down to a specific number of entries."
+  echo "  Use the trim size option to adjust number of remaining entries."
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"

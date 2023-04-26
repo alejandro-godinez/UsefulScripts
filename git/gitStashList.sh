@@ -45,13 +45,15 @@ GIT_SHOW=false
 RGX_NUM='^[0-9]+$'
 
 function printHelp {
-  echo "Usage: gitStashList.sh [-h] [-v] [-s]"
-  echo "  Prints the stash list of each git project directory"
+  echo "Usage: gitStashList.sh [-h] [-v] [-s] [-d num]"
+  echo "  Prints the stash list of each git project in the current directory."
+  echo "  You can get detailed list of files changed by using the 'show' option."
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -s        perform a stash show for each line"
+  echo "    -d num    Search depth (default 1)"
 }
 
 #//process the arguments for the script
@@ -76,7 +78,7 @@ function processArgs {
       exit 0
     fi
     
-        #//check for help
+    #//check for show option
     if [ "${arg^^}" = "-S" ]; then
       GIT_SHOW=true
       continue

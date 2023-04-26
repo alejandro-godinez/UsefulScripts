@@ -49,7 +49,9 @@ RGX_NUM='^[0-9]+$'
 
 function printHelp {
   echo "Usage: gitPullMain.sh [-h] [-v] [-a] [-d num]"
-  echo "  Performs a pull on each git project directory that is in the main"
+  echo "  Performs a pull on each git project in the current directory that is"
+  echo "  is in a known 'main' branch (main, master, trunk, etc...).  You can"
+  echo "  target all branchs by using the 'all' option."
   echo ""
   echo "  Options:"
   echo "    -h      This help info"
