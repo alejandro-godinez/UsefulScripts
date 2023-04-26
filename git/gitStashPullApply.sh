@@ -38,7 +38,8 @@ RGX_NUM='^[0-9]+$'
 
 function printHelp {
   echo "Usage: gitStashPullApply.sh [-h] [-v] <message>"
-  echo "  Perform a stash-pull-apply sequence of operations"
+  echo "  Perform a 'stash-pull-apply' sequence of operations to bring your branch"
+  echo "  up to date and continue working on same change."
   echo ""
   echo "  message - the stash message"
   echo ""
@@ -63,9 +64,6 @@ function processArgs {
       continue
     fi
     
-    log "Arg Count: $#"
-    log "Argument: ${arg^^}"
-
     #//check for help
     if [ "${arg^^}" = "-H" ]; then
       printHelp
