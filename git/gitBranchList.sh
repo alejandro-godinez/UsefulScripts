@@ -3,7 +3,7 @@
 #  This script will list the current branch for each of the git project folders 
 #  in the current directory.
 #
-#  version: 2023.3.13
+#  version: 2023.5.4
 #
 #  TODO:
 #-------------------------------------------------------------------------------
@@ -105,15 +105,16 @@ function printRepoBranch {
   log "  Branch: ${branch}"
   
   if [[ $branch =~ $RGX_MAIN ]]; then
-    echo -e "${GRN}${branch}${NC}"
+    logAll "${GRN}${branch}${NC}"
   else
-    echo -e "${YEL}${branch}${NC}"
+    logAll "${YEL}${branch}${NC}"
   fi
 }
 
 #-------------------------------
 # Main
 #-------------------------------
+escapesOn
 
 #//process arguments
 processArgs "$@"
@@ -124,12 +125,12 @@ currDir=$(pwd)
 log "Current Dir: ${currDir}"
 if isGitDir "${currDir}"; then
   printRepoBranch "${currDir}"
-  echo "DONE"
+  logAll "DONE"
   exit 0
 fi
 
 #//get list of all directories at the current location
-echo "Depth Search: $MAX_DEPTH"
+logAll "Depth Search: $MAX_DEPTH"
 for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
   log "Directory: ${aDir}"
@@ -137,4 +138,4 @@ do
     printRepoBranch "${aDir}"
   fi
 done
-echo "DONE"
+logAll "DONE"
