@@ -1,4 +1,18 @@
 #!/bin/bash
+#-------------------------------------------------------------------------------
+#  Library of common GIT functionality.
+#
+#  Import Sample Code:
+#      if [[ ! -f ~/lib/git_lib.sh ]]; then
+#        echo "ERROR: Missing git_lib.sh library"
+#        exit
+#      fi
+#      source ~/lib/git_lib.sh
+#
+#
+#  version: 2023.5.5
+#  project:  https://github.com/alejandro-godinez/UsefulScripts
+#-------------------------------------------------------------------------------
 
 #//main branch name regex
 RGX_MAIN='^master|main|trunk$'
@@ -6,7 +20,9 @@ RGX_MAIN='^master|main|trunk$'
 #//stash trim size
 TRIM_SIZE=3
 
-#// check if a directory is a git working directory
+# Check if a directory is a git working directory
+#
+# @param $1 - the path to check for git project
 function isGitDir {
   local theDir=$1
   if [ -d "${theDir}" ] && [ -d "${theDir}/.git" ]; then
@@ -15,7 +31,9 @@ function isGitDir {
   return 1
 }
 
-#//get the current repo branch name
+# Get the current repo branch name
+#
+# @param $1 - path to the local git project
 function gitBranchName {
   #//check if there are still more arguments where the number could be provided
   if (( $# > 0 )); then
@@ -23,36 +41,49 @@ function gitBranchName {
   fi  
 }
 
-#//perform a git pull on the repo
+# Perform a git pull on the repo
+#
+# @param $1 - path to the local git project
 function gitPull {
   if (( $# > 0 )); then
     git -C "${1}" pull
   fi
 }
 
-#// perform the stash list command and ouputs to standard output
-#//   you can capture output using command substitution "$( getStashList )"
+# Perform the stash list command and ouputs to standard output.
+# You can capture output using command substitution "$( getStashList )"
+#
+# @param $1 - path to the local git project
 function gitStashList {
   if (( $# > 0 )); then
     git -C "${1}" stash list
   fi
 }
 
-#// perform a stash of code
+# Perform a stash of code
+#
+# @param $1 - path to the local git project
+# @param $2 - message for the stash entry
 function gitStash {
   if (( $# > 1 )); then
     git -C "${1}" stash -m "${2}"
   fi
 }
 
+# Perform a stash apply
+#
+# @param $1 - path to the local git project
 function gitApply {
   if (( $# > 0 )); then
     git -C "${1}" stash apply
   fi
 }
 
-#// perform a stash show show the git stash
-#   you can capture output using substitution "$( getStashShow )"
+# perform a stash show show the git stash.
+# You can capture output using substitution "$( getStashShow )"
+#
+# @param $1 - path to the local git project
+# @param $2 - optional index number of stash entry to show
 function gitStashShow {
   if (( $# > 1 )); then
     git -C "${1}" stash show "stash@{${2}}"
@@ -64,7 +95,10 @@ function gitStashShow {
   fi
 }
 
-#//trim stash entries from the end of the list down to the stash count specified
+# Trim stash entries from the end of the list down to the stash count specified
+#
+# @param $1 - the path to the local project
+# @param $2 - the number of stash entries that should remain after trim
 function trimStash {
   local repoDir=$1
   local stashCount=$2
