@@ -99,7 +99,7 @@ fi
 #//check to make sure expected number of arguments were specified
 log "Checking correct number of arguments..."
 if (( argCount < 3 )); then
-  echo "  ERROR: Missing arguments"
+  logAll "  ERROR: Missing arguments"
   exit 0
 fi
 
@@ -107,35 +107,35 @@ fi
 log "Checking if the file exists..."
 file="${ARG_VALUES[0]}"
 if [[ ! -f  $file ]]; then
-  echo "  ERROR: File specified was not found"
+  logAll "  ERROR: File specified was not found"
   exit 1
 fi
-echo "FILE: ${file}"
+logAll "FILE: ${file}"
 
 #//get and check if the option name was specified
 log "Checking the option name..."
 optionName="${ARG_VALUES[1]}"
 if [[ -z "${optionName// }" ]]; then
-  echo "Option name no specified."
+  logAll "Option name no specified."
   exit 1
 fi
-echo "Option Name: ${optionName}"
+logAll "Option Name: ${optionName}"
 
 #//get and check if the option value was specified
 log "Checking the option value..."
 optionValue="${ARG_VALUES[2]}"
 if [[ -z "${optionValue// }" ]]; then
-  echo "Option value not specified."
+  logAll "Option value not specified."
   exit 1
 fi
-echo "Option Value: ${optionValue}"
+logAll "Option Value: ${optionValue}"
 
 #//check to see if the specified option name exists
 log "Check if the option name exists..."
 optionExists=$(grep -c "^${optionName}=" "${file}")
 log "Option Exists: ${optionExists}"
 if (( optionExists == 0 )); then
-  echo "  ERROR: The specified option name was not found."
+  logAll "  ERROR: The specified option name was not found."
   exit 1
 fi
 
@@ -144,21 +144,21 @@ log "Check if the option already has the same value..."
 alreadySet=$(grep -c "^${optionName}=${optionValue}$" "${file}")
 log "Already Exists: ${alreadySet}"
 if (( alreadySet == 1 )); then
-  echo "The option already has the value specified."
+  logAll "The option already has the value specified."
   exit 0
 else
-  echo "Updating the option..."
+  logAll "Updating the option..."
   sed -i "s/^${optionName}=.*/${optionName}=${optionValue}/" "${file}"
 fi
 
 #//check if the value was changed
-echo "Checking if value was changed..."
+logAll "Checking if value was changed..."
 alreadySet=$(grep -c "^${optionName}=${optionValue}" "${file}")
 if (( alreadySet == 0 )); then
   alreadyset="No"
 else
   alreadySet="Yes"
 fi
-echo "Changed?: $alreadySet"
+logAll "Changed?: $alreadySet"
 
-echo "Done"
+logAll "Done"

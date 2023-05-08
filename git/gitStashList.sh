@@ -123,11 +123,11 @@ function printStashList {
   
   log "  Stash Count: ${stashCount}"
   if (( stashCount > 5 )); then
-    echo -e "${RED}${repoDir}${NC}"
+    logAll "${RED}${repoDir}${NC}"
   elif (( stashCount > 3 )); then
-    echo -e "${YEL}${repoDir}${NC}"
+    logAll "${YEL}${repoDir}${NC}"
   elif (( stashCount > 0 )); then
-    echo -e "${GRN}${repoDir}${NC}"
+    logAll "${GRN}${repoDir}${NC}"
   else
     log "  Stash is Empty"
     return
@@ -137,13 +137,13 @@ function printStashList {
   if [ "$GIT_SHOW" = true ]; then
     stashNo=0
     while IFS= read -r line ; do
-      echo "${line}"
+      logAll "${line}"
       gitStashShow "${repoDir}" "${stashNo}"
       stashNo=$((stashNo+1))
-      echo ""
+      logAll ""
     done <<< "${stashList}"
   else
-    echo "${stashList}"
+    logAll "${stashList}"
   fi
   
   
@@ -152,6 +152,8 @@ function printStashList {
 #-------------------------------
 # Main
 #-------------------------------
+#//enable logging library escapes
+escapesOn
 
 #//check the command arguments
 processArgs "$@"

@@ -103,7 +103,7 @@ fi
 #//get and check for valid line range
 lineRange=${ARG_VALUES[0]}
 if [[ ! "$lineRange" =~ $RGX_RANGE ]]; then
-  echo "  ERROR: Range value is invalid: \"$lineRange\""
+  logAll "  ERROR: Range value is invalid: \"$lineRange\""
   exit 1
 fi
 log "Range: ${lineRange}"
@@ -111,7 +111,7 @@ log "Range: ${lineRange}"
 #//get and check if specified file does not exist
 file=${ARG_VALUES[1]}
 if [[ ! -f  $file ]]; then
-  echo "  ERROR: File specified was not found"
+  logAll "  ERROR: File specified was not found"
   exit 1
 fi
 log "FILE: ${file}"

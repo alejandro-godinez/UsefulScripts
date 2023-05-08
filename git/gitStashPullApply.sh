@@ -117,7 +117,7 @@ if isGitDir "${currDir}"; then
   
   exit 0
 else
-  echo "  ERROR: Not a git directory"
+  logAll "  ERROR: Not a git directory"
 fi
 
-echo "DONE"
+logAll "DONE"

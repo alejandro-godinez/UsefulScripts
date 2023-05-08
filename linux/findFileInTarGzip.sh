@@ -128,13 +128,13 @@ fi
 #//check to make sure expected number of arguments were specified
 log "Checking correct number of arguments..."
 if (( argCount < 1 )); then
-  echo "  ERROR: Missing arguments"
+  logAll "  ERROR: Missing arguments"
   exit 0
 fi
 
 #//get and check for valid line range
 search="${ARG_VALUES[0]}"
-echo "Search: ${search}"
+logAll "Search: ${search}"
 
 
 #//if filter is not supplied default to all '.tar.gz' files
@@ -147,15 +147,15 @@ log "FILTER: ${tgzFilter}"
 
 #//obtain the current working directory
 dir=$( pwd )
-echo "DIR: ${dir}"
+logAll "DIR: ${dir}"
 if [[ ! -d $dir ]]; then
-  echo "  ERROR: Specified path is not a directory."
+  logAll "  ERROR: Specified path is not a directory."
   exit 1
 fi
 
 #//list all file using the filter and loop through them
 iter=0
-echo "Depth Search: $MAX_DEPTH"
+logAll "Depth Search: $MAX_DEPTH"
 for f in $( find ${dir} -mindepth 1 -maxdepth $MAX_DEPTH -name "${tgzFilter}" -type f )
 do 
   #//keep track of iteration count and print status update indicator
@@ -169,12 +169,12 @@ do
 
   #//check if grep found something (success)
   if [[ $? -eq 0 ]]; then
-    echo ""
-    echo "${f}"
-    echo "${result}"
+    logAll ""
+    logAll "${f}"
+    logAll "${result}"
   fi
 
 done
 
-echo ""
-echo "DONE"
+logAll ""
+logAll "DONE"

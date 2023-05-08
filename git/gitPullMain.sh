@@ -130,9 +130,9 @@ function waitForInput {
 
   #//wait for input
   if [[ $branch =~ $RGX_MAIN ]]; then
-    echo -e "${repoDir} - ${GRN}${branch}${NC}"
+    logAll "${repoDir} - ${GRN}${branch}${NC}"
   else
-    echo -e "${repoDir} - ${YEL}${branch}${NC}"
+    logAll "${repoDir} - ${YEL}${branch}${NC}"
   fi
 
   read -p "  Perform Pull? [Y/N] or Q to Quit: "
@@ -140,7 +140,7 @@ function waitForInput {
   #//exit script if quit is entered
   log "  Input: ${REPLY}"
   if [ "${REPLY^^}" = "Q" ];  then
-    echo "Quitting Script"
+    logAll "Quitting Script"
     exit 0
   elif [ "${REPLY^^}" = "Y" ];  then
     return 0
@@ -168,7 +168,7 @@ function gitPullMain {
   #//wait for input, unless force option was specified
   if [ ! "$FORCE_PULL" = true ]; then
     if ! waitForInput "${repoDir}" "${branch}"; then
-      echo "  Skipped"
+      logAll "  Skipped"
       return
     fi
   fi 
@@ -181,6 +181,7 @@ function gitPullMain {
 #-----------------------------
 # Main
 #-----------------------------
+#//enable logging library escapes
 escapesOn
 
 #//check the command arguments
@@ -196,7 +197,7 @@ fi
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)
-echo "Current Dir: ${currDir}"
+logAll "Current Dir: ${currDir}"
 
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
@@ -210,7 +211,7 @@ else
 fi
 
 #// get list of all directories at the current location
-echo "Depth Search: $MAX_DEPTH"
+logAll "Depth Search: $MAX_DEPTH"
 for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
   log "Directory: ${aDir}"

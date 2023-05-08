@@ -96,7 +96,7 @@ fi
 
 #//get the serach term from the first argument
 search="${ARG_VALUES[0]}"
-echo "Search: ${search}"
+logAll "Search: ${search}"
 
 #//if the directory is not supplied default to current work directory
 if (( argCount > 1 )); then
@@ -104,11 +104,11 @@ if (( argCount > 1 )); then
 else
   dir="$(pwd)/"
 fi
-echo "Dir: ${dir}"
+logAll "Dir: ${dir}"
 
 #//check if the specified path is actually a directory
 if [[ ! -d $dir ]]; then
-  echo "Specified path is not a directory: $dir"
+  logAll "Specified path is not a directory: $dir"
   exit 1
 fi
 
