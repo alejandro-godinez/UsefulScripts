@@ -130,7 +130,7 @@ log "DIR: ${dir}"
 
 #// check if the directory exists
 if [[ ! -d $dir ]]; then
-  echo "Specified path is not a directory: $dir"
+  logAll "Specified path is not a directory: $dir"
   exit 1
 fi
 

@@ -129,7 +129,7 @@ fi
 #//check to make sure expected number of arguments were specified
 log "Checking correct number of arguments..."
 if (( argCount < 1 )); then
-  echo "  ERROR: Missing arguments"
+  logAll "  ERROR: Missing arguments"
   exit 0
 fi
 
@@ -150,9 +150,9 @@ log "File Filter: ${filterCommand[*]}"
 
 #//obtain the current working directory
 dir=$( pwd )
-echo "DIR: ${dir}"
+logAll "DIR: ${dir}"
 if [[ ! -d $dir ]]; then
-  echo "Specified path is not a directory."
+  logAll "Specified path is not a directory."
   exit 1
 fi
 
@@ -172,12 +172,12 @@ do
 
   #//check if grep found something (success)
   if [[ $? -eq 0 ]]; then
-    echo ""
-    echo "${f}"
-    echo "${result}"
+    logAll ""
+    logAll "${f}"
+    logAll "${result}"
   fi
 
 done
 
-echo ""
-echo "DONE"
+logAll ""
+logAll "DONE"

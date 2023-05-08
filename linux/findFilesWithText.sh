@@ -129,7 +129,7 @@ fi
 #//check to make sure expected number of arguments were specified
 log "Checking correct number of arguments..."
 if (( argCount < 1 )); then
-  echo "  ERROR: Missing arguments"
+  logAll "  ERROR: Missing arguments"
   exit 0
 fi
 
@@ -151,8 +151,8 @@ do
   #//perform grep search on file and capture the located lines
   result=$( grep -m 1 "${search}" ${f} )
   if [ ! -z "${result// }" ]; then
-    echo "${f}"
+    logAll "${f}"
   fi
 done
 
-echo "DONE"
+logAll "DONE"

@@ -100,7 +100,7 @@ function printRepoBranch {
   local repoDir=$1
 
   #//print out the repot path and branch
-  echo -n "${repoDir} - "
+  logAll -n "${repoDir} - "
   branch=$(gitBranchName ${repoDir})
   log "  Branch: ${branch}"
   
@@ -114,6 +114,7 @@ function printRepoBranch {
 #-------------------------------
 # Main
 #-------------------------------
+#//enable logging library escapes
 escapesOn
 
 #//process arguments

@@ -115,7 +115,7 @@ function waitForInput {
   #//exit script if quit is entered
   log "  Input: ${REPLY}"
   if [ "${REPLY^^}" = "Q" ];  then
-    echo "Quitting Script"
+    logAll "Quitting Script"
     exit 0
   elif [ "${REPLY^^}" = "Y" ];  then
     return 0
@@ -130,17 +130,17 @@ function printStashList {
   local stashCount=$3
   
   if (( stashCount > 5 )); then
-    echo -e "${RED}${repoDir}${NC}"
+    logAll "${RED}${repoDir}${NC}"
   elif (( stashCount > 3 )); then
-    echo -e "${YEL}${repoDir}${NC}"
+    logAll "${YEL}${repoDir}${NC}"
   elif (( stashCount > 0 )); then
-    echo -e "${GRN}${repoDir}${NC}"
+    logAll "${GRN}${repoDir}${NC}"
   else
     log "  Stash is Empty"
     return
   fi
 
-  echo "${stashList}"
+  logAll "${stashList}"
 }
 
 function processGitDirectory {
@@ -174,6 +174,8 @@ function processGitDirectory {
 #-------------------------------
 # Main
 #-------------------------------
+#//enable logging library escapes
+escapesOn
 
 #//check the command arguments
 processArgs "$@"
@@ -201,4 +203,4 @@ do
     
   fi
 done
-echo "DONE"
+logAll "DONE"
