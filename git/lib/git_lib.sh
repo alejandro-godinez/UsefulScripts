@@ -10,12 +10,12 @@
 #      source ~/lib/git_lib.sh
 #
 #
-#  version: 2023.5.5
+#  version: 2023.5.11
 #  project:  https://github.com/alejandro-godinez/UsefulScripts
 #-------------------------------------------------------------------------------
 
 #//main branch name regex
-RGX_MAIN='^master|main|trunk$'
+RGX_MAIN='^(master|main|trunk)$'
 
 #//stash trim size
 TRIM_SIZE=3
