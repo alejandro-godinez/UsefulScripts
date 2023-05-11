@@ -36,6 +36,9 @@ ESCAPES=false
 #prefix that will be applied to every log output
 LOGPREFIX=""
 
+#toggle if log uses -n option (no newline)
+NO_NEW_LINE=false
+
 #enable debug/verbose mode
 function debugOn {
   DEBUG=true
