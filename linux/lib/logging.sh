@@ -17,7 +17,7 @@
 #      source ~/lib/logging.sh
 #
 #
-#  version: 2023.5.5
+#  version: 2023.5.11
 #  project:  https://github.com/alejandro-godinez/UsefulScripts
 #-------------------------------------------------------------------------------
 
@@ -104,15 +104,30 @@ function log {
   fi
   
   if [ "$DEBUG" = true ]; then 
-    if [ "$ESCAPES" = true ]; then 
-      echo -e "$content"
-    else
-      echo "$content"
+    logAll "$1"
+  else 
+    if [ "$WRITELOG" = true ]; then 
+      if [ "$NO_NEW_LINE" = true ]; then
+        echo -n "$( date -Iseconds ) - $content" >> ${LOGFILE}
+      else
+        echo "$( date -Iseconds ) - $content" >> ${LOGFILE}
+      fi
     fi
   fi
-  if [ "$WRITELOG" = true ]; then 
-    echo "$( date -Iseconds ) - $content" >> ${LOGFILE}
-  fi
+}
+
+# Performs console output of content with no newline only if debug is on.
+# Writes to file when file logging is on.
+# Adds prefix to content if supplied.
+# 
+#
+# @param $1 - the text content to log/output
+function logN {
+  NO_NEW_LINE=true
+  
+  log "$1"
+  
+  NO_NEW_LINE=false
 }
 
 # Performs console output of content always.
@@ -126,12 +141,38 @@ function logAll {
   if [ ! -z "$LOGPREFIX" ]; then
     content="${LOGPREFIX}${1}"
   fi
-  if [ "$ESCAPES" = true ]; then 
-    echo -e "$content"
+  if [ "$ESCAPES" = true ]; then
+    if [ "$NO_NEW_LINE" = true ]; then
+      echo -e -n "$content"
+    else
+      echo -e "$content"
+    fi
   else
-    echo "$content"
+    if [ "$NO_NEW_LINE" = true ]; then
+      echo -n "$content"
+    else
+      echo "$content"
+    fi
   fi
   if [ "$WRITELOG" = true ]; then 
-    echo "$( date -Iseconds ) - $content" >> ${LOGFILE}
+    if [ "$NO_NEW_LINE" = true ]; then
+      echo -n "$( date -Iseconds ) - $content" >> ${LOGFILE}
+    else
+      echo "$( date -Iseconds ) - $content" >> ${LOGFILE}
+    fi
   fi
+}
+
+# Performs console output of content always with no newline.
+# Writes to file when file logging is on.
+# Adds prefix to content if supplied.
+# 
+#
+# @param $1 - the text content to log/output
+function logAllN {
+  NO_NEW_LINE=true
+  
+  logAll "$1"
+  
+  NO_NEW_LINE=false
 }
