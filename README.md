@@ -2,13 +2,24 @@
 An assortment of useful scripts from a wide variety of technologies.
 
 ### ANT
-- **build_junit.xml** - A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
+- **build_junit.xml**  
+A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
 
 ### Git
-- **gitBranchList.sh** - List the current branch name for git projects in the current directory
-- **gitPullMain.sh** - Prompts to perform a pull for git projects in the current directory
-- **gitStashList.sh** - Lists the stash entries for each project in the current directory
-- **gitTrimStash.sh** - Perform a trim (drop) of the oldes stash entries down to a set number of items.
+- **gitBranchList.sh**  
+List the current branch name for git projects in the current directory
+
+- **gitPullMain.sh**  
+Prompts to perform a pull for git projects in the current directory
+
+- **gitStashList.sh**  
+Lists the stash entries for each project in the current directory
+
+- **gitTrimStash.sh**  
+Perform a trim (drop) of the oldes stash entries down to a set number of items.
+
+- **Libraries**  
+    - **git_lib.sh** - Various GIT functions to obtain repo information or perform operations.
 
 ### Linux
 - **avgFileSize.sh**  
@@ -40,6 +51,9 @@ Move all files in the working directory into a sub-folder of the year equal to t
 
 - **unzipAll.sh**  
 Extract all '.tar.gz' file into the working directory.
+
+- **Libraries**  
+    - **logging.sh** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
 
 
 ### Maven  
