@@ -1,9 +1,10 @@
 ## Installation Note
-As is common you can post scripts in your home bin folder so that they are available anywhere in bash.  Most if not all of the git scripts in this section make use of re-usable git library script therefore it is required to also install to you home lib folder.
+As is common you can post scripts in your home bin folder so that they are available anywhere in bash. Most if not all of the git scripts in this section make use of library scripts, make sure to also install dependencies.
 
 **Dependencies**  
-  _Include the following in you bash home lib folder_  
+  _Include the following in a lib folder in your bash home directory_  
   - [git_lib.sh](lib/git_lib.sh)
+  - [logging.sh](../linux/lib/logging.sh)
 
 <br><br>
 
