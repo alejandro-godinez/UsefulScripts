@@ -163,7 +163,7 @@ do
   #//keep track of iteration count and print status update indicator
   iter=$(( iter+1 ))
   if [[ $(( $iter%50 )) -eq 0 ]]; then
-    echo -n "."
+    logAllN "."
   fi 
 
   #//perform grep serch on the tar listing output and capture the located lines
