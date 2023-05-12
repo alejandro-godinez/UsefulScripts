@@ -182,7 +182,7 @@
     <jar jarfile="${dirRelease}/${ant.project.name}-${version.no}.jar">
       <manifest>
         <attribute name="Built-By" value="${user.name}"/>
-        <attribute name="Main-Class" value="com.JUniConnectTools.main.Main"/>
+        <attribute name="Main-Class" value="com.myapp.main.Main"/>
         <attribute name="Class-Path" value="${classpath.bin}"/>
       </manifest>
       <fileset dir="${dirReleaseBin}" />
