@@ -41,6 +41,16 @@ function gitBranchName {
   fi  
 }
 
+# Get the main branch name used by the specified repo
+# note: checks for one of (main, master, or trunk)
+#
+#  @param $1 - path to the local git project
+function gitMainBranch {
+  if (( $# > 0 )); then
+    echo $(git -C "${1}" branch -l master main trunk | sed 's/^[* ] //')
+  fi
+}
+
 # Perform a git pull on the repo
 #
 # @param $1 - path to the local git project
@@ -116,4 +126,29 @@ function trimStash {
     #//subtract one from the count to get to the next index to drop
     stashIdx="$(( stashIdx-1 ))"
   done
+}
+
+# Get revision counts comparing current working branch against the local master
+# or if you specify the remote orign master.
+#
+# @param $1 - the path to the local project
+# @param $2 - ["remote"] optional to indicate counts against remote, local otherwise
+# @return - two tab separated count numbers, indicating revision ahead and behind
+function gitRevisionCounts {
+  local repoDir=$1
+  local doRemote=false
+  
+  #//check for remote option
+  if (( $# > 1 )) && [ "${2^^}" = "REMOTE" ]; then
+    doRemote=true
+  fi
+  
+  #//get the repo's main branch
+  local mainBranch=$(gitMainBranch "$1")
+  
+  if [ "$doRemote" = true ]; then 
+    git rev-list --left-right --count HEAD..."origin/${mainBranch}"
+  else
+    git rev-list --left-right --count HEAD..."${mainBranch}"
+  fi
 }
