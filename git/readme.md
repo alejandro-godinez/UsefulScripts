@@ -38,6 +38,20 @@ Repo Dir: ./userDefinedLanguages
   Skipped
 ```
 
+# [gitRevCount.sh](gitRevCount.sh)
+This script will get a count of revisions ahead and behind from master both against local and remote. You should perform a fetch so that your working directory is up to date and counts are accurate. When in the "main" branch the local compare is not done as it will always be zeros.
+```
+$ gitRevCount.sh
+Ahead   Behind  Branch
+1       0       trunk->origin/trunk
+
+$ gitRevCount.sh
+Ahead   Behind  Branch
+0       1       featureBranch->trunk
+0       0       featureBranch->origin/trunk
+```
+_Note: in the example above local trunk has a commit and featureBranch is 1 commit behind._
+
 # [gitStashList.sh](gitStashList.sh)
 This script will list the stash entries of each of the git project folders in the current directory.
 
