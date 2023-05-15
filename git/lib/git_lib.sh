@@ -89,7 +89,7 @@ function gitApply {
   fi
 }
 
-# perform a stash show show the git stash.
+# Perform a git stash show.
 # You can capture output using substitution "$( getStashShow )"
 #
 # @param $1 - path to the local git project
