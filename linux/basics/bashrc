@@ -56,9 +56,6 @@ alias gitLogLines='git log -5 --pretty=online'
 #//list of local commits (HEAD) not pushed to origin
 alias gitLogLocal='git log ORIGIN..HEAD'
 alias gitLogLocalLines='git log ORIGIN..HEAD --pretty=oneline'
-#//git count of revisions behind and forward
-alias gitRevCount='git rev-list --left-right --count master...HEAD'
-alias gitRevCountRemote='git rev-list --left-right --count origin/master...HEAD'
 
 #------------------------------------------------
 # SSH commands
