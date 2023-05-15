@@ -104,7 +104,7 @@ escapesOn
 #//check the command arguments
 processArgs "$@"
 
-logAll "${YEL}Important: Perform a fetch for this to be acurate${NC}"
+logAll "${YEL}TIP: Perform a fetch for counts to be acurate${NC}"
 logAll ""
 
 #//identify if current directory is a git project directory
@@ -112,14 +112,21 @@ currDir=$(pwd)
 log "Current Dir: ${currDir}"
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
-  #//print value column headers
-  logAll "${U_CYN}\tAhead\tBehind${NC}"
+  mainBranch=$(gitMainBranch .)
+  log "Main Branch: ${mainBranch}"
+  branch=$(gitBranchName $currDir)
+  log "Current Branch: ${branch}"
   
-  #//get and print local counts
-  localCounts=$(gitRevisionCounts .)
-  logAll "Local\t${localCounts}"
+  #//print value column headers
+  logAll "${U_CYN}Ahead\tBehind\tBranch${NC}"
+  
+  #//print local counts if current branch is not main
+  if ! [[ $branch =~ $RGX_MAIN ]]; then
+    localCounts=$(gitRevisionCounts .)
+    logAll "${localCounts}\t${branch}->${mainBranch}"
+  fi
   
   #//get and print remote counts
   remoteCounts=$(gitRevisionCounts . remote)
-  logAll "Remote\t${remoteCounts}"
+  logAll "${remoteCounts}\t${branch}->origin/${mainBranch}"
 fi
