@@ -34,6 +34,9 @@ NC='\033[0m' # No Color
 #//indexed array of arguments that are not options/flags
 declare -a ARG_VALUES
 
+#//search depth
+MAX_DEPTH=1
+
 
 function printHelp {
   echo "Usage: gitRevCount.sh [-h] [-v] [-d num]"
@@ -95,6 +98,28 @@ function processArgs {
   done
 }
 
+# Get rev count for a specific repo directory
+#
+# @param $1 - the local repo directory
+function processRepo {
+  local repoDir=$1
+  
+  mainBranch=$(gitMainBranch $repoDir)
+  log "Main Branch: ${mainBranch}"
+  branch=$(gitBranchName $repoDir)
+  log "Current Branch: ${branch}"
+  
+  #//print local counts if current branch is not main
+  if ! [[ $branch =~ $RGX_MAIN ]]; then
+    localCounts=$(gitRevisionCounts $repoDir)
+    logAll "${localCounts}\t${branch}->${mainBranch}  ${repoDir}"
+  fi
+  
+  #//get and print remote counts
+  remoteCounts=$(gitRevisionCounts $repoDir remote)
+  logAll "${remoteCounts}\t${branch}->origin/${mainBranch}  ${repoDir}"
+}
+
 #-------------------------------
 # Main
 #-------------------------------
@@ -107,26 +132,22 @@ processArgs "$@"
 logAll "${YEL}TIP: Perform a fetch for counts to be acurate${NC}"
 logAll ""
 
+logAll "${U_CYN}Ahead\tBehind\tBranch${NC}"
+
 #//identify if current directory is a git project directory
 currDir=$(pwd)
 log "Current Dir: ${currDir}"
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
-  mainBranch=$(gitMainBranch .)
-  log "Main Branch: ${mainBranch}"
-  branch=$(gitBranchName $currDir)
-  log "Current Branch: ${branch}"
-  
-  #//print value column headers
-  logAll "${U_CYN}Ahead\tBehind\tBranch${NC}"
-  
-  #//print local counts if current branch is not main
-  if ! [[ $branch =~ $RGX_MAIN ]]; then
-    localCounts=$(gitRevisionCounts .)
-    logAll "${localCounts}\t${branch}->${mainBranch}"
-  fi
-  
-  #//get and print remote counts
-  remoteCounts=$(gitRevisionCounts . remote)
-  logAll "${remoteCounts}\t${branch}->origin/${mainBranch}"
+  processRepo ${currDir}
 fi
+
+log "Depth Search: $MAX_DEPTH"
+for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+do
+  if isGitDir "${aDir}"; then
+    processRepo ${aDir}
+  fi
+done
+logAll ""
+logAll "DONE"
