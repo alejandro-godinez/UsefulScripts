@@ -51,6 +51,15 @@ function gitMainBranch {
   fi
 }
 
+# Perform a fetch
+#
+# @param $1 - path to the local git project
+function gitFetch {
+  if (( $# > 0 )); then
+    git -C "${1}" fetch
+  fi
+}
+
 # Perform a git pull on the repo
 #
 # @param $1 - path to the local git project
@@ -147,8 +156,8 @@ function gitRevisionCounts {
   local mainBranch=$(gitMainBranch "$1")
   
   if [ "$doRemote" = true ]; then 
-    git rev-list --left-right --count HEAD..."origin/${mainBranch}"
+    git -C "${repoDir}" rev-list --left-right --count HEAD..."origin/${mainBranch}"
   else
-    git rev-list --left-right --count HEAD..."${mainBranch}"
+    git -C "${repoDir}" rev-list --left-right --count HEAD..."${mainBranch}"
   fi
 }

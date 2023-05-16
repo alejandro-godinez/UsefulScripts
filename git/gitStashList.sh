@@ -175,7 +175,7 @@ if isGitDir "${currDir}"; then
 fi
 
 #//get list of all directories at the current location
-echo "Depth Search: $MAX_DEPTH"
+log "Depth Search: $MAX_DEPTH"
 for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
 do
   if isGitDir "${aDir}"; then
@@ -186,4 +186,4 @@ do
     printStashList "${aDir}" "${stashList}"
   fi
 done
-echo "DONE"
+log "DONE"
