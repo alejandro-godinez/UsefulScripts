@@ -20,6 +20,16 @@ Depth Search: 1
 DONE
 ```
 
+# [gitFetch.sh](gitFetch.sh)
+This script will perform a fetch on each of the git project folders in the current directory. When already inside a git project folder it will perform fetch on only that project.
+
+**Sample:**
+```
+$ gitFetch.sh
+./UsefulScripts
+./userDefinedLanguages
+```
+
 # [gitPullMain.sh](gitPullMain.sh)
 This script will perform a pull on each of the git project folders in the current directory if it is pointing to the main branch.  The user will be interrogated to confirm pull.
 

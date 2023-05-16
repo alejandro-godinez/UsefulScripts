@@ -29,6 +29,14 @@ Arguments
 
 **Returns:** the main branch that that is used by the project
 
+## **gitFetch** (repoDir)
+Perform a fetch
+
+Arguments
+1. repoDir - Path to the git project
+
+**Returns:** standard output from 'git fetch' command
+
 ## **gitPull** (repoDir)
 Perform a git pull on the repo
 
