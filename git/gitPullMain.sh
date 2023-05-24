@@ -29,6 +29,7 @@ source ~/lib/git_lib.sh
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
 
+#//echo print colors
 GRN='\033[0;32m'
 YEL='\033[1;33m'
 NC='\033[0m' # No Color
@@ -151,7 +152,7 @@ function waitForInput {
 
 function gitPullMain {
   local repoDir=$1
-  logAll "${U_CYN}Repo Dir: ${repoDir}${NC}"
+  logAll "${U_CYN}${repoDir}${NC}"
   
   #//get current working branch
   branch=$(gitBranchName $repoDir)
