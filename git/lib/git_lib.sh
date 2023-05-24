@@ -10,12 +10,15 @@
 #      source ~/lib/git_lib.sh
 #
 #
-#  version: 2023.5.11
+#  version: 2023.5.24
 #  project:  https://github.com/alejandro-godinez/UsefulScripts
 #-------------------------------------------------------------------------------
 
 #//main branch name regex
 RGX_MAIN='^(master|main|trunk)$'
+
+#//array of main branch names
+declare -a MAIN_BRANCHES=("master" "main" "trunk")
 
 #//stash trim size
 TRIM_SIZE=3
@@ -46,9 +49,22 @@ function gitBranchName {
 #
 #  @param $1 - path to the local git project
 function gitMainBranch {
-  if (( $# > 0 )); then
-    echo $(git -C "${1}" branch -l master main trunk | sed 's/^[* ] //')
+
+  #//check for missing argument
+  if (( $# == 0 )); then
+    return 1
   fi
+  
+  #//test each branch name
+  local branchName=""
+  for branch in ${MAIN_BRANCHES[@]}; do
+    branchName=$(git -C "${1}" branch -l "${branch}" | sed 's/^[* ] //')
+    #//check for non-empty string
+    if [[ -n "${branchName}" ]]; then
+      echo "${branchName}"
+      return 0
+    fi
+  done
 }
 
 # Perform a fetch
