@@ -1,11 +1,11 @@
 # UsefulScripts
 An assortment of useful scripts from a wide variety of technologies.
 
-### ANT
-- **[build_junit.xml](ant/build_junit.xml)**  
+### [ANT](ant/readme.md)
+- **build_junit.xml**  
 A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
 
-### Git
+### [Git](git/readme.md)
 - **gitBranchList.sh**  
 List the current branch name for git projects in the current directory
 
@@ -21,7 +21,7 @@ Perform a trim (drop) of the oldes stash entries down to a set number of items.
 - **Libraries**  
     - **git_lib.sh** - Various GIT functions to obtain repo information or perform operations.
 
-### Linux
+### [Linux](linux/readme.md)
 - **avgFileSize.sh**  
 Get an average file size of all the files that meet the specified name filter.
 
