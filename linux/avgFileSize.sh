@@ -13,9 +13,13 @@
 set -u #//error on unset variable
 set -e #//exit on error
 
+#//echo print colors
+NC='\033[0m' # No Color
+RED='\033[0;31m'
+
 #//import logging functionality
 if [[ ! -f ~/lib/logging.sh ]]; then
-  echo "ERROR: Missing logging.sh library"
+  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
   exit
 fi
 source ~/lib/logging.sh
