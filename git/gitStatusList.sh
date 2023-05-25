@@ -9,26 +9,27 @@
 set -u #//error on unset variable
 set -e #//exit on error
 
+#//echo print colors
+NC='\033[0m' # No Color
+RED='\033[1;31m'
+U_CYN='\033[4;36m'       # Cyan
+
 #//import logging functionality
 if [[ ! -f ~/lib/logging.sh ]]; then
-  echo "ERROR: Missing logging.sh library"
+  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
   exit
 fi
 source ~/lib/logging.sh
 
 #//import git functionality
 if [[ ! -f ~/lib/git_lib.sh ]]; then
-  echo "ERROR: Missing git_lib.sh library"
+  echo "${RED}ERROR: Missing git_lib.sh library${NC}"
   exit
 fi
 source ~/lib/git_lib.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
-
-#//echo print colors
-NC='\033[0m' # No Color
-U_CYN='\033[4;36m'       # Cyan
 
 #//search depth
 MAX_DEPTH=1

@@ -11,14 +11,14 @@ set -e #//exit on error
 
 #//import logging functionality
 if [[ ! -f ~/lib/logging.sh ]]; then
-  echo "ERROR: Missing logging.sh library"
+  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
   exit
 fi
 source ~/lib/logging.sh
 
 #//import git functionality
 if [[ ! -f ~/lib/git_lib.sh ]]; then
-  echo "ERROR: Missing git_lib.sh library"
+  echo "${RED}ERROR: Missing git_lib.sh library${NC}"
   exit
 fi
 source ~/lib/git_lib.sh
