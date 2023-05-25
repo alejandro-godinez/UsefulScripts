@@ -24,6 +24,7 @@ IFS=$'\n'
 #------------------------------------------------
 #//config bash
 alias bashconfig='nano ~/.bashrc'
+alias profileconfig='nano ~/.bash_profile'
 alias logoutconfig='nano ~/.bash_logout'
 #//config nano
 alias nanoconfig='nano ~/.nanorc'
@@ -35,6 +36,7 @@ alias nanoconfig='nano ~/.nanorc'
 alias npp='notepad++.exe'
 #//launch VSCode with current directory as project
 alias vsCodeHere='code . &'
+
 #------------------------------------------------
 # Aliases for modifications to common commands
 #------------------------------------------------
