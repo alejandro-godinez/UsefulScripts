@@ -3,24 +3,31 @@
 # This script will change the value of a standard name=value pair file
 # such as ini or config files. 
 #
-#   Note: this is a simple implementation where properties need to be
-#         at the start of the line
+#   Note: This is a simple implementation sections are not yet supported.
+#         Duplicate keys under different sections will all be changed.
 #
 #
 # Dependencies: 
 #   ../UsefulScripts/linux/lib/logging.sh
 #
 # TODO:
-#   - improve to support indented properties
+#   - improve support for targetting values under sections
 #
-# version: 2023.3.16
+# version: 2023.5.25
 #-----------------------------------------------------------------------
 
 set -u #//error on unset variable
 
+#//echo print colors
+NC='\033[0m'       # No Color
+GRN='\033[0;32m'
+YEL='\033[1;33m'
+RED='\033[0;31m'
+U_CYN='\033[4;36m'       # Cyan
+
 #//import logging functionality
 if [[ ! -f ~/lib/logging.sh ]]; then
-  echo "ERROR: Missing logging.sh library"
+  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
   exit
 fi
 source ~/lib/logging.sh
@@ -79,6 +86,8 @@ function processArgs {
 #-------------------------------
 # Main
 #-------------------------------
+#//enable logging library escapes
+escapesOn
 
 #//process arguments
 log "Processing input arguments..."
@@ -99,7 +108,9 @@ fi
 #//check to make sure expected number of arguments were specified
 log "Checking correct number of arguments..."
 if (( argCount < 3 )); then
-  logAll "  ERROR: Missing arguments"
+  logAll "  ${RED}ERROR: Missing arguments${NC}"
+  logAll ""
+  printHelp
   exit 0
 fi
 
@@ -107,10 +118,11 @@ fi
 log "Checking if the file exists..."
 file="${ARG_VALUES[0]}"
 if [[ ! -f  $file ]]; then
-  logAll "  ERROR: File specified was not found"
+  logAll "  ${YEL}ERROR: File specified was not found${NC}"
+  logAll "  ${YEL}FILE: ${file}${NC}"
   exit 1
 fi
-logAll "FILE: ${file}"
+logAll "${U_CYN}FILE:${NC} ${file}"
 
 #//get and check if the option name was specified
 log "Checking the option name..."
@@ -119,7 +131,7 @@ if [[ -z "${optionName// }" ]]; then
   logAll "Option name no specified."
   exit 1
 fi
-logAll "Option Name: ${optionName}"
+logAll "${U_CYN}Option Name:${NC} ${optionName}"
 
 #//get and check if the option value was specified
 log "Checking the option value..."
@@ -128,37 +140,35 @@ if [[ -z "${optionValue// }" ]]; then
   logAll "Option value not specified."
   exit 1
 fi
-logAll "Option Value: ${optionValue}"
+logAll "${U_CYN}Option Value:${NC} ${optionValue}"
 
 #//check to see if the specified option name exists
 log "Check if the option name exists..."
-optionExists=$(grep -c "^${optionName}=" "${file}")
+optionExists=$(grep -cE "^(\s*)${optionName}=" "${file}")
 log "Option Exists: ${optionExists}"
 if (( optionExists == 0 )); then
-  logAll "  ERROR: The specified option name was not found."
+  logAll "  ${YEL}ERROR: The specified option name was not found.${NC}"
   exit 1
 fi
 
 #//check to see if the specified option already is already set to the same value
 log "Check if the option already has the same value..."
-alreadySet=$(grep -c "^${optionName}=${optionValue}$" "${file}")
-log "Already Exists: ${alreadySet}"
+alreadySet=$(grep -cE "^(\s*)${optionName}=${optionValue}$" "${file}")
+log "Already Set: ${alreadySet}"
 if (( alreadySet == 1 )); then
   logAll "The option already has the value specified."
   exit 0
 else
   logAll "Updating the option..."
-  sed -i "s/^${optionName}=.*/${optionName}=${optionValue}/" "${file}"
+  sed -E -i "s/^(\s*)${optionName}=.*/\1${optionName}=${optionValue}/" "${file}"
 fi
 
 #//check if the value was changed
 logAll "Checking if value was changed..."
-alreadySet=$(grep -c "^${optionName}=${optionValue}" "${file}")
+alreadySet=$(grep -cE "^(\s*)${optionName}=${optionValue}" "${file}")
 if (( alreadySet == 0 )); then
-  alreadyset="No"
+  alreadyset="${RED}NO${NC}"
 else
-  alreadySet="Yes"
+  alreadySet="${GRN}YES${NC}"
 fi
 logAll "Changed?: $alreadySet"
-
-logAll "Done"
