@@ -36,7 +36,7 @@ This script will perform a pull on each of the git project folders in the curren
 **Sample:**
 ```
 $ gitPullMain.sh
-Current Dir: /c/Users/agodinez/Dev/devMisc
+Current Dir: /c/Users/alex/dev
 Depth Search: 1
 Repo Dir: ./UsefulScripts
 ./UsefulScripts - trunk
@@ -101,7 +101,7 @@ This script will trim the stash of entries from the end/oldest down to a specifi
 **Sample:**
 ```
 $ gitTrimStash.sh -t 2
-/c/Users/agodinez/Dev/devMisc/UsefulScripts
+/c/Users/alex/dev/UsefulScripts
 stash@{0}: WIP on trunk: d954b20 Changed default placeholder manifext main class
 stash@{1}: On trunk: Updating master before commit
 stash@{2}: WIP on trunk: d954b20 Changed default placeholder manifext main class
@@ -111,5 +111,4 @@ Perform Trim down to 2? [Y/N] or Q to Quit: Y
 Dropped stash@{3} (893d7bf9f1d9a1105f4fc22f1d674011576ea721)
   Dropping index [2]
 Dropped stash@{2} (357d2c1e1853fb6ce3d3a0039dab68a0d24c0cee)
-
 ```
