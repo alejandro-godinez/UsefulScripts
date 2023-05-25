@@ -91,7 +91,7 @@ argCount=0
 if [[ -v ARG_VALUES ]]; then
   argCount=${#ARG_VALUES[@]}
   log "List Remaining Args: ${argCount}"
-  for item in "${ARG_VALUES[@]}"; do echo "  ${item}"; done
+  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
 else
   #log "No Process Arguments Identified"
   printHelp
