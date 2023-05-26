@@ -71,6 +71,7 @@ echo "--------------------------------"
 # [findFileInTarGzip.sh](findFileInTarGzip.sh)
 This script will search the contents of any '.tar.gz' file in the specified directory for entries with matching specified search text.
 
+**Sample:**
 ```
 $ findFileInTarGzip.sh "script3"
 Search: script3
@@ -96,6 +97,7 @@ This script will find the largest files for the specified directory recursively.
 # [jarinfo.sh](jarinfo.sh)
 This script will display the contents of the manifest file inside of the jar file specified.
 
+**Sample:**
 ```
 $ jarinfo.sh pdfbox-app-2.0.27.jar
 JAR File: pdfbox-app-2.0.27.jar
