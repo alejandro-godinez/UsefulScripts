@@ -18,7 +18,12 @@ lineNoPadded="000"
 while IFS= read -r line; do
   #//count number of lines
   lineNo=$((++lineNo))
+  
+  #pad line number with spaces
   lineNoPadded=$(printf %4d $lineNo)
+  
+  #pad line number with zeros
+  #lineNoPadded=$(printf %04d $lineNo)
   
   #//print line content with line number
   echo "$lineNoPadded: $line"
