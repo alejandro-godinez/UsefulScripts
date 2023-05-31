@@ -1,7 +1,7 @@
-# logging.sh
+# [logging.sh](logging.sh)
 This library bash script is a collection of common debug/logging functionality.  The intended purpose is to be able to keep all console output in a bash script but only display in debug/verbose mode.
 
-| function | description |
+| Function | Description |
 |----------|-------------|
 | debugOn  | Enable debug mode, all log() calls will output to standard output. |
 | debugOff | Disable debug mode, only logAll() calls will output to standard output. |
