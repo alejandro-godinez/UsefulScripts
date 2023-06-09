@@ -98,7 +98,7 @@ else
   exit 0
 fi
 
-#//get the serach term from the first argument
+#//get the search term from the first argument
 search="${ARG_VALUES[0]}"
 logAll "Search: ${search}"
 
