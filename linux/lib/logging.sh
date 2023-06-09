@@ -66,12 +66,12 @@ function resetLogFile {
 
 # enable logging to file
 function logFileOn {
-  LOGFILE=true
+  WRITELOG=true
 }
 
 # disable logging to file
 function logFileOff {
-  LOGFILE=false
+  WRITELOG=false
 }
 
 # turn on interpretation of escapes
