@@ -106,6 +106,20 @@ function isFunction {
   return 1
 }
 
+function getFunction {
+  # Match the regex against the string
+  local match=$(echo "$1" | grep -oP "$rgxFunction")
+
+  # Extract the capture groups from the match
+  capture_groups=($match)
+
+  # Print the capture groups
+  for capture_group in "${capture_groups[@]}"; do
+    log "  Capture group: $capture_group"
+  done
+}
+
+
 #-------------------------------
 # Main
 #-------------------------------
@@ -142,6 +156,14 @@ fi
 lineNo=0
 lineNoPadded="000"
 
+# Reset the otuput file
+outputFile="${inputFile}.md"
+log "Output File: $outputFile"
+if [ -f ${outputFile} ]; then
+  rm ${outputFile}
+fi
+touch ${outputFile}
+
 # Read the file line by line
 while IFS= read -r line; do
   # count number of lines
@@ -155,10 +177,12 @@ while IFS= read -r line; do
 
   # detect if this is a comment line
   if isComment "$line"; then
-    logAll "[$lineNoPadded] - "${GRN}Comment:${NC}": $line"
+    logAll "[$lineNoPadded] - ${GRN}Comment:${NC} $line"
 
   elif isFunction "$line"; then
-    logAll "[$lineNoPadded] - "${BLU}Function:${NC}": $line"
+    logAll "[$lineNoPadded] - ${BLU}Function:${NC} $line"
+
+    getFunction "$line"
   fi
 
 done < $inputFile
