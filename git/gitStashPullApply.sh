@@ -3,8 +3,6 @@
 #  This script will perform a stash-pull-apply sequence of operations.
 #  
 #  version: 2023.3.21
-#
-#  TODO:
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -36,6 +34,7 @@ IFS=$'\n'
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitStashPullApply.sh [-h] [-v] <message>"
   echo "  Perform a 'stash-pull-apply' sequence of operations to bring your branch"
@@ -48,7 +47,11 @@ function printHelp {
   echo "    -v        Verbose/debug output"
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -76,9 +79,7 @@ function processArgs {
   done
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
 
 #//check the command arguments
 processArgs "$@"

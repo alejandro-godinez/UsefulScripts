@@ -37,7 +37,7 @@ declare -a ARG_VALUES
 #//search depth
 MAX_DEPTH=1
 
-
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitFetch.sh [-h] [-v] [-d num]"
   echo "  Performs a fetch on each git project in the current directory."
@@ -49,7 +49,11 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -98,8 +102,8 @@ function processArgs {
   done
 }
 
-# Get rev count for a specific repo directory
-#
+# Perform a git fetch for the specific repo directory
+# 
 # @param $1 - the local repo directory
 function processRepo {
   local repoDir=$1
@@ -110,9 +114,8 @@ function processRepo {
   gitFetch $repoDir
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
+
 #//enable logging library escapes
 escapesOn
 

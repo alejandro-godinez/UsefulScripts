@@ -41,6 +41,7 @@ MAX_DEPTH=1
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitTrimStash.sh [-h] [-v] [-f] [-d num] [-t num]"
   echo "  Trims the stash list of entries from the oldest (end) down to a specific number of entries."
@@ -54,6 +55,11 @@ function printHelp {
   echo "    -t num    Trim Size (default 3), keeps most recent"
 }
 
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -108,6 +114,7 @@ function processArgs {
   done
 }
 
+# Prompt user with option to perform trim, skip, or quit
 function waitForInput {
   #//wait for input 
   read -p "Perform Trim down to ${TRIM_SIZE}? [Y/N] or Q to Quit: "
@@ -124,6 +131,11 @@ function waitForInput {
   fi
 }
 
+# Print out the stash list with color highliting depending on the amount of entries
+# 
+# @param $1 - the local repo directory
+# @param $2 - the stash list array
+# @param $3 - number of stash entries
 function printStashList {
   local repoDir=$1
   local stashList=$2
@@ -143,6 +155,9 @@ function printStashList {
   logAll "${stashList}"
 }
 
+# Perform all the processing for a single repository
+# 
+# @param $1 - local repo directory
 function processGitDirectory {
   local repoDir=$1
   
@@ -171,9 +186,8 @@ function processGitDirectory {
   fi
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
+
 #//enable logging library escapes
 escapesOn
 
