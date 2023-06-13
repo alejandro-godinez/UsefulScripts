@@ -1,17 +1,18 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
 #  Library of common GIT functionality.
-#
+#  
 #  Import Sample Code:
+#      <pre>
 #      if [[ ! -f ~/lib/git_lib.sh ]]; then
 #        echo "ERROR: Missing git_lib.sh library"
 #        exit
 #      fi
 #      source ~/lib/git_lib.sh
-#
-#
-#  version: 2023.5.24
-#  project:  https://github.com/alejandro-godinez/UsefulScripts
+#      </pre>  
+#  
+#  version: 2023.5.24  
+#  project:  https://github.com/alejandro-godinez/UsefulScripts  
 #-------------------------------------------------------------------------------
 
 #//main branch name regex
@@ -24,7 +25,7 @@ declare -a MAIN_BRANCHES=("master" "main" "trunk")
 TRIM_SIZE=3
 
 # Check if a directory is a git working directory
-#
+# 
 # @param $1 - the path to check for git project
 function isGitDir {
   local theDir=$1
@@ -35,7 +36,7 @@ function isGitDir {
 }
 
 # Get the current repo branch name
-#
+# 
 # @param $1 - path to the local git project
 function gitBranchName {
   #//check if there are still more arguments where the number could be provided
@@ -46,8 +47,8 @@ function gitBranchName {
 
 # Get the main branch name used by the specified repo
 # note: checks for one of (main, master, or trunk)
-#
-#  @param $1 - path to the local git project
+# 
+# @param $1 - path to the local git project
 function gitMainBranch {
 
   #//check for missing argument
@@ -68,7 +69,7 @@ function gitMainBranch {
 }
 
 # Perform a fetch
-#
+# 
 # @param $1 - path to the local git project
 function gitFetch {
   if (( $# > 0 )); then
@@ -77,7 +78,7 @@ function gitFetch {
 }
 
 # Perform a git pull on the repo
-#
+# 
 # @param $1 - path to the local git project
 function gitPull {
   if (( $# > 0 )); then
@@ -87,7 +88,7 @@ function gitPull {
 
 # Perform the stash list command and ouputs to standard output.
 # You can capture output using command substitution "$( getStashList )"
-#
+# 
 # @param $1 - path to the local git project
 function gitStashList {
   if (( $# > 0 )); then
@@ -96,7 +97,7 @@ function gitStashList {
 }
 
 # Perform a stash of code
-#
+# 
 # @param $1 - path to the local git project
 # @param $2 - message for the stash entry
 function gitStash {
@@ -106,7 +107,7 @@ function gitStash {
 }
 
 # Perform a stash apply
-#
+# 
 # @param $1 - path to the local git project
 function gitApply {
   if (( $# > 0 )); then
@@ -116,7 +117,7 @@ function gitApply {
 
 # Perform a git stash show.
 # You can capture output using substitution "$( getStashShow )"
-#
+# 
 # @param $1 - path to the local git project
 # @param $2 - optional index number of stash entry to show
 function gitStashShow {
@@ -131,7 +132,7 @@ function gitStashShow {
 }
 
 # Trim stash entries from the end of the list down to the stash count specified
-#
+# 
 # @param $1 - the path to the local project
 # @param $2 - the number of stash entries that should remain after trim
 function trimStash {
@@ -155,7 +156,7 @@ function trimStash {
 
 # Get revision counts comparing current working branch against the local master
 # or if you specify the remote orign master.
-#
+# 
 # @param $1 - the path to the local project
 # @param $2 - ["remote"] optional to indicate counts against remote, local otherwise
 # @return - two tab separated count numbers, indicating revision ahead and behind

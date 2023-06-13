@@ -10,15 +10,16 @@
 #
 #
 #  Import Sample Code:
+#      <pre>
 #      if [[ ! -f ~/lib/logging.sh ]]; then
 #        echo "ERROR: Missing logging.sh library"
 #        exit
 #      fi
 #      source ~/lib/logging.sh
+#      </pre>
 #
-#
-#  version: 2023.5.11
-#  project:  https://github.com/alejandro-godinez/UsefulScripts
+#  version: 2023.5.11  
+#  project:  https://github.com/alejandro-godinez/UsefulScripts  
 #-------------------------------------------------------------------------------
 
 #toggle debug output
@@ -39,7 +40,7 @@ LOGPREFIX=""
 #toggle if log uses -n option (no newline)
 NO_NEW_LINE=false
 
-#enable debug/verbose mode
+# enable debug/verbose mode
 function debugOn {
   DEBUG=true
 }
@@ -50,7 +51,7 @@ function debugOff {
 }
 
 # set the log file path
-#
+# 
 # @param $1 - path to log file
 function setLogFile {
   LOGFILE=$1
@@ -85,6 +86,8 @@ function escapesOff {
 }
 
 # set the prefix variable
+# 
+# @param $1 - the prefix text
 function logPrefix {
   LOGPREFIX="$1"
 }
@@ -98,7 +101,6 @@ function clearPrefix {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-#
 # @param $1 - the text content to log/output
 function log {
   local content="$1"
@@ -123,7 +125,6 @@ function log {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-#
 # @param $1 - the text content to log/output
 function logN {
   NO_NEW_LINE=true
@@ -137,7 +138,6 @@ function logN {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-#
 # @param $1 - the text content to log/output
 function logAll {
   local content="$1"
@@ -170,7 +170,6 @@ function logAll {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-#
 # @param $1 - the text content to log/output
 function logAllN {
   NO_NEW_LINE=true

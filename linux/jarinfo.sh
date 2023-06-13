@@ -1,8 +1,8 @@
 #!/bin/bash
 #----------------------------------------------------------
 # This script will display the contents of the manifest
-# file inside of the jar file specified.
-#
+# file inside of the jar file specified.  
+# 
 # Version: 2021.12.3
 #----------------------------------------------------------
 

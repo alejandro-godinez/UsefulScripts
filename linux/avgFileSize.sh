@@ -2,11 +2,11 @@
 #---------------------------------------------------------------------------
 # This script will get an average file size of all the file
 # that meet the specified name filter.
-#
-#
-# Dependencies: 
-#   ../UsefulScripts/linux/lib/logging.sh
-#
+# 
+# 
+# Dependencies:  
+#   ../UsefulScripts/linux/lib/logging.sh  
+# 
 # version: 2023.3.16
 #----------------------------------------------------------------------------
 
@@ -30,6 +30,7 @@ source ~/lib/logging.sh
 #//indexed array of arguments that are not options/flags
 declare -a ARG_VALUES
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will get an average file size of all the file"
   echo "that meet the specified name filter."
@@ -50,7 +51,11 @@ function printHelp {
   echo ""
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   #//check the command arguments
   log "Arg Count: $#"
@@ -79,9 +84,7 @@ function processArgs {
   done
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
 
 #//process arguments
 processArgs "$@"
