@@ -5,6 +5,12 @@ Parse documentation comments from bash script and generate markdown
 
 @version 1.0.0
 
+Supported Function Formats:
+- name() { }
+- function name { }
+- function name() { }
+
+
 Supported Keywords:<br>
 - @param - Specifies the parameters of a method.<br>
 
@@ -17,6 +23,20 @@ TODO:<br>
 - @version - Specifies the version of the class, method, or field.
 - @return - Specifies the return value of a method.
 - @see - Specifies a link to another class, method, or field.
+
+Sample:
+<pre>
+#!/bin/bash
+#-------------------------------------------
+# This is the script description section
+#-------------------------------------------
+
+# This function does work
+# @param $1 - the first parameter
+function doWork() {
+}
+
+</pre>
 
 
 ## Functions:
