@@ -2,19 +2,16 @@
 #-------------------------------------------------------------------------------
 # Parse documentation comments from bash script and generate markdown
 # 
-# Supported Keywords
-#   @param: Specifies the parameters of a method.
-#
-# TODO: 
-#   //other commonly used keywords
-#   @author: Specifies the author of the class, method, or field.
-#   @version: Specifies the version of the class, method, or field.
-#   
-#   @return: Specifies the return value of a method.
-#   @throws: Specifies the exceptions that may be thrown by a method.
-#   @see: Specifies a link to another class, method, or field.
-#   @since: Specifies the release of Java in which the class, method, or field was first introduced.
-#   @deprecated: Specifies that the class, method, or field is deprecated and should not be used.
+# @version 1.0.0
+# 
+# Supported Keywords:<br>
+# - @param - Specifies the parameters of a method.<br>
+# 
+# TODO:<br>
+# - @author - Specifies the author of the class, method, or field.
+# - @version - Specifies the version of the class, method, or field.
+# - @return - Specifies the return value of a method.
+# - @see - Specifies a link to another class, method, or field.
 #-------------------------------------------------------------------------------
 
 set -u # error on unset variable
@@ -41,9 +38,9 @@ source ~/lib/logging.sh
 declare -a ARG_VALUES
 
 # Line regular expressions
-rgxComment="^[#][^!][ ]*(.*)$"
-rgxHeader="^[#][-]{3}"
-rgxKeyword="^[@]([a-zA-Z0-9_]+)[ -]+(.+)"
+rgxComment="^[#][^!]([ ]*(.*))$"
+rgxHeader="^[-]{5}"
+rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)[ -]+(.+)"
 rgxFunction="^function ([a-zA-Z0-9_]+)[ ]?[{]"
 
 
@@ -65,9 +62,9 @@ function printHelp {
 
 # Process and capture the common execution options from the arguments used when
 # running the script. All other arguments specific to the script are retained
-# in list variable.
+# in array variable.
 #
-# @param $1 - list of argument values provided when calling the script
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   # check the command arguments
   log "Arg Count: $#"
@@ -96,7 +93,7 @@ function processArgs {
   done
 }
 
-# Determine if provided text is a comment
+# Determine if text is a comment
 #
 # @param $1 - text to test with regex for match
 function isComment {
@@ -106,7 +103,7 @@ function isComment {
   return 1
 }
 
-# Determine if provided text is a special header section indicator
+# Determine if text is a special header section indicator
 #
 # @param $1 - text to test with regex for match
 function isHeader {
@@ -116,7 +113,7 @@ function isHeader {
   return 1
 }
 
-# Determine if provided text is one a keyword
+# Determine if text is one a keyword
 #
 # @param $1 - text to test with regex for match
 function isKeyword {
@@ -126,7 +123,7 @@ function isKeyword {
   return 1
 }
 
-# Determine if provided text is a function signaure
+# Determine if text is a function
 #
 # @param $1 - text to test with regex for match
 function isFunction {
@@ -134,6 +131,74 @@ function isFunction {
     return 0
   fi
   return 1
+}
+
+# Replace newline characters (cr and lf) to space
+#
+# @param $1 - text to perform replacement
+# @param $2 - other
+# @param $3 - another
+function newLinesToSpace {
+  echo "$1" | tr "\r\n" " "
+}
+function writeComments {
+  for index in "${!commentArr[@]}"; do
+    echo -n "${commentArr[$index]}" >> $outputFile
+  done
+}
+
+# Write the accumulated comments to the output file trimmed of any newline
+function writeCommentsFlat {
+  for index in "${!commentArr[@]}"; do 
+    commentLine=$(newLinesToSpace "${commentArr[$index]}" )
+    logAll "${GRN}Comment:${NC}${commentArr[$index]}"
+    echo -n "${commentLine}" >> $outputFile
+  done
+}
+
+# write out the accumulated function parameters
+function writeFunctionParameters {
+  local isFirstParam=true
+  for index in "${!paramArr[@]}"; do 
+    paramLine="${paramArr[$index]}"
+    logAll "${YEL}Param Line:${NC}${paramLine}"
+
+    # perform keyword match to get capture groups
+    if isKeyword "$paramLine"; then
+      keywordName="${BASH_REMATCH[2]}"
+      log "Keyword Name:$keywordName"
+
+      log "IsFirstParam:$isFirstParam"
+      if [ "$isFirstParam" = false ]; then
+        echo -n "," >> $outputFile
+      fi
+      isFirstParam=false
+      echo -n "${keywordName}" >> $outputFile
+    fi
+  done
+}
+
+# write out the paramaters formatted for description in table
+function writeParameterDescription {
+  local paramCount=${#paramArr[@]}
+  if (( paramCount > 0 )); then
+    echo -n "<br><br><u>Args:</u><br>" >> $outputFile
+  else
+    return 0
+  fi
+
+  for index in "${!paramArr[@]}"; do 
+    paramLine="${paramArr[$index]}"
+
+    # perform keyword match to get capture groups
+    if isKeyword "$paramLine"; then
+      keywordName="${BASH_REMATCH[2]}"
+      keywordDesc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
+      log "Keyword Name:$keywordName"
+      log "Keyword Desc:$keywordDesc"
+      echo -n "${keywordName} - ${keywordDesc}<br>" >> $outputFile
+    fi
+  done
 }
 
 #< - - - Main - - - >
@@ -170,7 +235,7 @@ fi
 lineNo=0
 lineNoPadded="000"
 
-# Reset the otuput file
+# Reset the output file
 outputFile="${inputFile}.md"
 log "Output File: $outputFile"
 if [ -f ${outputFile} ]; then
@@ -178,14 +243,15 @@ if [ -f ${outputFile} ]; then
 fi
 touch ${outputFile}
 
-# add autogenerated commnent
-echo "<!-- Autogenerated using bashdoc.sh -->" >> $outputFile
+# add auto-generated comment
+echo "<!-- Auto-generated using bashdoc.sh -->" >> $outputFile
 
 # add file title header
 echo "# ${inputFile}" >> $outputFile
 
 # declare an array to store comments before function
 declare -a commentArr=()
+declare -a paramArr=()
 isFirstFunction=true
 
 
@@ -197,28 +263,32 @@ while IFS= read -r line; do
   # pad line number with spaces
   lineNoPadded=$(printf %4d $lineNo)
 
-  # print line content with line number
-  #log "[$lineNoPadded]: $line"
-
   # detect if this is a comment line
   if isComment "$line"; then
-    #logAll "[$lineNoPadded] - ${GRN}Comment:${NC} $line"
+    log "[$lineNoPadded] - Comment: $line"
 
     # get the comment text
+    #commentText=$( newLinesToSpace "${BASH_REMATCH[1]}" )
     commentText="${BASH_REMATCH[1]}"
+    log "  Comment Text:$commentText"
 
-    # if this is a header indictor line output as description
-    if isHeader "$line"; then
-
-      # write out accumenated description comments
-      for index in "${!commentArr[@]}"; do
-        commentLine=$( echo -e "${commentArr[$index]}" | tr '\n' ' ' | tr '\r' ' ' )
-        echo -n "$commentLine" >> $outputFile
-      done
+    # if this is a header indicator line output as description
+    if isHeader "$commentText"; then
+      # write out accumulated description comments, keep the newlines
+      log "Writing out comments..."
+      writeComments
       echo "" >> $outputFile
 
+    elif isKeyword "$commentText"; then
+      keywordType="${BASH_REMATCH[1]}"
+      log "  Keyword Type:$keywordType"
+      if [ "$keywordType" = "param" ]; then
+        log "Adding parameter to list..."
+        paramArr+=("$commentText")
+      fi
     else
       # add comment line to array
+      log "Adding comment to list..."
       commentArr+=("$commentText")
     fi
 
@@ -236,41 +306,30 @@ while IFS= read -r line; do
     # get the function name from first group capture
     functionName="${BASH_REMATCH[1]}"
 
-    echo -n "| ${functionName} | " >> $outputFile
+    # write function with open parenthesis
+    logAll "${BLU}Function:${NC}${functionName}"
+    echo -n "| ${functionName}(" >> $outputFile
 
-    #logAll "[$lineNoPadded] - ${BLU}Function:${NC} $line"
-    logAll "${BLU}Function:${NC} $functionName"
+    # write out the parameters if any
+    writeFunctionParameters
 
-    #TODO: get function description
+    # close the function
+    echo -n ") | " >> $outputFile
 
-
-    #TODO: get function parameters
-
-
-    # Print the capture groups
-    for index in "${!commentArr[@]}"; do 
-      #commentLine="${commentArr[$index]}"
-      #commentLine="${commentLine//$'\n'/ }"
-      commentLine=$( echo -e "${commentArr[$index]}" | tr '\n' ' ' | tr '\r' ' ' )
-
-      logAll "${GRN}Comment:${NC} ${commentArr[$index]}"
-      #echo "  $index -> ${commentArr[$index]}"
-
-      # parse the keywords
-      if isKeyword "$commentLine"; then
-        logAll "${YEL}Keyword:${NC} ${commentLine}"
-      else
-        echo -n "${commentLine}" >> $outputFile
-      fi
-    done
+    # write out the accumulated comments
+    writeCommentsFlat
+    writeParameterDescription
 
     echo " |" >> $outputFile
     
-    # clear the comment array
+    # clear arrays for next function
     commentArr=()
+    paramArr=()
   else
-    # clear the comment array
+    # clear arrays when we encounter break in expected continuous comment/function
     commentArr=()
+    paramArr=()
   fi
 
 done < $inputFile
+
