@@ -34,7 +34,7 @@ function log {
   fi
 }
 
-#//function to process the arguments
+# function to process the arguments
 function processArgs {
   log "  Arg Count: $#"
   while (( $# > 0 )); do

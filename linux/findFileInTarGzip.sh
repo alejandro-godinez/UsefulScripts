@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #-----------------------------------------------------------
-#This script will search the contents of any '.tar.gz' file
-#in the specified directory for entries with matching
-#specified search text.
-#
-# Dependencies: 
-#   ../UsefulScripts/linux/lib/logging.sh
-#
+# This script will search the contents of any '.tar.gz' file
+# in the specified directory for entries with matching
+# specified search text.
+# 
+# Dependencies:  
+#   ../UsefulScripts/linux/lib/logging.sh  
+# 
 # version: 2023.3.16
 #-----------------------------------------------------------
 
@@ -32,6 +32,7 @@ MAX_DEPTH=1
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will search the contents of any '.tar.gz' file"
   echo "in the specified directory for entries with matching"
@@ -53,7 +54,11 @@ function printHelp {
   echo ""
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -105,9 +110,7 @@ function processArgs {
   done
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
 
 #//process arguments
 log "Processing input arguments..."

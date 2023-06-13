@@ -1,13 +1,13 @@
 #!/bin/bash
 #-----------------------------------------------------------
-#This script will search the contents of file in
-#sub-directories from the working path for content that
-#matches the specified search text.
-#
-#
-# Dependencies: 
-#   ../UsefulScripts/linux/lib/logging.sh
-#
+# This script will search the contents of file in
+# sub-directories from the working path for content that
+# matches the specified search text.
+# 
+# 
+# Dependencies:  
+#   ../UsefulScripts/linux/lib/logging.sh  
+# 
 # version: 2023.3.16
 #-----------------------------------------------------------
 
@@ -33,6 +33,7 @@ MAX_DEPTH=1
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will search the contents of file in"
   echo "sub-directories from the working path for content that"
@@ -54,7 +55,11 @@ function printHelp {
   echo ""
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -106,9 +111,7 @@ function processArgs {
   done
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
 
 #//process arguments
 log "Processing input arguments..."

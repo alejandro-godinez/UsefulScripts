@@ -1,16 +1,16 @@
 #!/bin/bash
 #------------------------------------------------------------------------
 # This script will add a comment "#" to the start of the line number(s)
-# specified.
-#
-#
-# Dependencies: 
-#   ../UsefulScripts/linux/lib/logging.sh
-#
-# TODO:
-#   - don't add comment to line that already has comment
-#   - add option to remove comment from lines
-#
+# specified.  
+# 
+# 
+# Dependencies:  
+#   ../UsefulScripts/linux/lib/logging.sh  
+# 
+# TODO:  
+#   - don't add comment to line that already has comment  
+#   - add option to remove comment from lines  
+# 
 # version: 2023.3.16
 #-------------------------------------------------------------------------
 
@@ -32,6 +32,7 @@ declare -a ARG_VALUES
 #//number range values
 RGX_RANGE='^[0-9]+([,][0-9]+)?$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will add a comment to the start of the line number(s) specified"
   echo ""
@@ -52,7 +53,11 @@ function printHelp {
   echo ""
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -80,9 +85,7 @@ function processArgs {
   done
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
 
 #//process arguments
 log "Processing input arguments..."

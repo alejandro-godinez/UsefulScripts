@@ -1,18 +1,18 @@
 #!/bin/bash
 #-----------------------------------------------------------------------
 # This script will change the value of a standard name=value pair file
-# such as ini or config files. 
-#
-#   Note: This is a simple implementation sections are not yet supported.
+# such as ini or config files.  
+# 
+#   Note: This is a simple implementation sections are not yet supported.  
 #         Duplicate keys under different sections will all be changed.
-#
-#
-# Dependencies: 
-#   ../UsefulScripts/linux/lib/logging.sh
-#
-# TODO:
-#   - improve support for targetting values under sections
-#
+# 
+# 
+# Dependencies:  
+#   ../UsefulScripts/linux/lib/logging.sh  
+# 
+# TODO:  
+#   - improve support for targetting values under sections  
+# 
 # version: 2023.5.25
 #-----------------------------------------------------------------------
 
@@ -38,6 +38,7 @@ source ~/lib/logging.sh
 #//indexed array of arguments that are not options/flags
 declare -a ARG_VALUES
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will change the value of a standard 'name=value' pair"
   echo "such as ini or config files."
@@ -55,7 +56,11 @@ function printHelp {
   echo ""
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -83,9 +88,8 @@ function processArgs {
   done
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
+
 #//enable logging library escapes
 escapesOn
 
