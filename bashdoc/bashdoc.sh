@@ -4,6 +4,12 @@
 # 
 # @version 1.0.0
 # 
+# Supported Function Formats:
+# - name() { }
+# - function name { }
+# - function name() { }
+#
+#
 # Supported Keywords:<br>
 # - @param - Specifies the parameters of a method.<br>
 #
@@ -16,6 +22,20 @@
 # - @version - Specifies the version of the class, method, or field.
 # - @return - Specifies the return value of a method.
 # - @see - Specifies a link to another class, method, or field.
+# 
+# Sample:
+# <pre>
+# #!/bin/bash
+# #-------------------------------------------
+# # This is the script description section
+# #-------------------------------------------
+# 
+# # This function does work
+# # @param $1 - the first parameter
+# function doWork() {
+# }
+#
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u # error on unset variable
@@ -45,7 +65,7 @@ declare -a ARG_VALUES
 rgxComment="^[#][^!/]([ ]*(.*))$"
 rgxHeader="^[-]{5}"
 rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)[ -]+(.+)"
-rgxFunction="^function ([a-zA-Z0-9_]+)[ ]?[{]"
+rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
 
 # Print the usage information for this script to standard output.
@@ -142,7 +162,7 @@ function isFunction {
 # @param $1 - text to perform replacement
 # @param $2 - other
 # @param $3 - another
-function newLinesToSpace {
+function newLinesToSpace() {
   echo "$1" | tr "\r\n" " "
 }
 
@@ -211,7 +231,7 @@ function writeParameterDescription {
 
 #< - - - Main - - - >
 
-#//enable logging library escapes
+# enable logging library escapes
 escapesOn
 
 # process arguments
@@ -311,7 +331,7 @@ while IFS= read -r line; do
     fi
 
     # get the function name from first group capture
-    functionName="${BASH_REMATCH[1]}"
+    functionName="${BASH_REMATCH[2]}"
 
     # write function with open parenthesis
     logAll "${BLU}Function:${NC}${functionName}"
