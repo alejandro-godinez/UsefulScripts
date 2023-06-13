@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------------------
 #  This script will show the current status, in short form of each of the 
 #  project in the current directory
-#
+#  
 #  version: 2023.5.23
 #-------------------------------------------------------------------------------
 
@@ -37,6 +37,7 @@ MAX_DEPTH=1
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitStatusList.sh [-h] [-v] [-d num]"
   echo "  Prints the current status in short form for each of the projects found in the current directory"
@@ -47,7 +48,11 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   #//check the command arguments
   log "Arg Count: $#"
@@ -94,7 +99,9 @@ function processArgs {
   done
 }
 
-#//print the status of an individual repo
+# print the git status of the local repository
+# 
+# @param $1 - the local repo directory
 function printStatus {
   local repoDir=$1
   
@@ -102,11 +109,8 @@ function printStatus {
   git -C "${repoDir}" status -s
 }
 
+#< - - - Main - - - >
 
-
-#-------------------------------
-# Main
-#-------------------------------
 #//enable logging library escapes
 escapesOn
 

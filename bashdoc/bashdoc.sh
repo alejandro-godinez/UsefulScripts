@@ -6,6 +6,10 @@
 # 
 # Supported Keywords:<br>
 # - @param - Specifies the parameters of a method.<br>
+#
+# Limitation Notes:
+# - Comments lines cannot be empty, add a space to signal continuation of content 
+#
 # 
 # TODO:<br>
 # - @author - Specifies the author of the class, method, or field.
@@ -38,7 +42,7 @@ source ~/lib/logging.sh
 declare -a ARG_VALUES
 
 # Line regular expressions
-rgxComment="^[#][^!]([ ]*(.*))$"
+rgxComment="^[#][^!/]([ ]*(.*))$"
 rgxHeader="^[-]{5}"
 rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)[ -]+(.+)"
 rgxFunction="^function ([a-zA-Z0-9_]+)[ ]?[{]"
@@ -63,7 +67,7 @@ function printHelp {
 # Process and capture the common execution options from the arguments used when
 # running the script. All other arguments specific to the script are retained
 # in array variable.
-#
+# 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
   # check the command arguments
@@ -141,16 +145,20 @@ function isFunction {
 function newLinesToSpace {
   echo "$1" | tr "\r\n" " "
 }
+
+# Write the accumulated comments to the output file
 function writeComments {
+  log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do
-    echo -n "${commentArr[$index]}" >> $outputFile
+    echo "${commentArr[$index]}" >> $outputFile
   done
 }
 
 # Write the accumulated comments to the output file trimmed of any newline
 function writeCommentsFlat {
+  log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do 
-    commentLine=$(newLinesToSpace "${commentArr[$index]}" )
+    commentLine=$(newLinesToSpace "${commentArr[$index]}")
     logAll "${GRN}Comment:${NC}${commentArr[$index]}"
     echo -n "${commentLine}" >> $outputFile
   done
@@ -161,7 +169,7 @@ function writeFunctionParameters {
   local isFirstParam=true
   for index in "${!paramArr[@]}"; do 
     paramLine="${paramArr[$index]}"
-    logAll "${YEL}Param Line:${NC}${paramLine}"
+    logAll "${YEL}Param:${NC}${paramLine}"
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
@@ -247,7 +255,7 @@ touch ${outputFile}
 echo "<!-- Auto-generated using bashdoc.sh -->" >> $outputFile
 
 # add file title header
-echo "# ${inputFile}" >> $outputFile
+echo "# [${inputFile}](${inputFile})" >> $outputFile
 
 # declare an array to store comments before function
 declare -a commentArr=()
@@ -268,7 +276,6 @@ while IFS= read -r line; do
     log "[$lineNoPadded] - Comment: $line"
 
     # get the comment text
-    #commentText=$( newLinesToSpace "${BASH_REMATCH[1]}" )
     commentText="${BASH_REMATCH[1]}"
     log "  Comment Text:$commentText"
 
@@ -283,12 +290,12 @@ while IFS= read -r line; do
       keywordType="${BASH_REMATCH[1]}"
       log "  Keyword Type:$keywordType"
       if [ "$keywordType" = "param" ]; then
-        log "Adding parameter to list..."
+        log "  Adding parameter to list..."
         paramArr+=("$commentText")
       fi
     else
       # add comment line to array
-      log "Adding comment to list..."
+      log "  Adding comment to list..."
       commentArr+=("$commentText")
     fi
 
@@ -311,22 +318,28 @@ while IFS= read -r line; do
     echo -n "| ${functionName}(" >> $outputFile
 
     # write out the parameters if any
+    log "Writing function parameters..."
     writeFunctionParameters
 
     # close the function
     echo -n ") | " >> $outputFile
 
     # write out the accumulated comments
+    log "Writing comments flat..."
     writeCommentsFlat
+
+    log "Writing parameter descriptions..."
     writeParameterDescription
 
     echo " |" >> $outputFile
     
     # clear arrays for next function
+    log "Clearing arrays..."
     commentArr=()
     paramArr=()
   else
     # clear arrays when we encounter break in expected continuous comment/function
+    log "Clearing arrays..."
     commentArr=()
     paramArr=()
   fi

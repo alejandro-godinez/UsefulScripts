@@ -1,11 +1,9 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will list the current branch for each of the git project folders 
+#  This script will list the current branch for each of the git project folders
 #  in the current directory.
-#
+# 
 #  version: 2023.5.4
-#
-#  TODO:
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -32,7 +30,7 @@ fi
 source ~/lib/git_lib.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-IFS=$'\n'
+#IFS=$'\n'
 
 #//search depth
 MAX_DEPTH=1
@@ -40,6 +38,7 @@ MAX_DEPTH=1
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitBranchList.sh [-h] [-v] [-d num]"
   echo "  Prints the current branch of each git project found in the current directory"
@@ -50,7 +49,11 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   #//check the command arguments
   log "Arg Count: $#"
@@ -97,6 +100,8 @@ function processArgs {
   done
 }
 
+# Print the current branch of the specified directory
+# @param $1 - repo directory
 function printRepoBranch {
   local repoDir=$1
 
@@ -112,9 +117,8 @@ function printRepoBranch {
   fi
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
+
 #//enable logging library escapes
 escapesOn
 

@@ -3,10 +3,8 @@
 #  This script will perform a pull on each of the git project folders in the
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
-#
+#  
 #  version: 2023.4.7
-#
-#  TODO:
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -52,6 +50,7 @@ MAX_DEPTH=1
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitPullMain.sh [-h] [-v] [-a] [-d num]"
   echo "  Performs a pull on each git project in the current directory that is"
@@ -66,7 +65,11 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -129,6 +132,10 @@ function processArgs {
   done
 }
 
+# Ask user if they would like to perform pull for the repository/branch specified
+# 
+# param $1 - the local repo directory
+# param $2 - the branch of the repo directory
 function waitForInput {
   local repoDir=$1
   local branch=$2
@@ -154,6 +161,10 @@ function waitForInput {
   fi
 }
 
+# Perform a git pull on the speicified local repository if it is the main branch.
+# Other branches are allowed if the 'All' (-a) option was specified when executing.
+# 
+# @param $1 - the local repo directory
 function gitPullMain {
   local repoDir=$1
   logAll "${U_CYN}${repoDir}${NC}"
@@ -183,9 +194,8 @@ function gitPullMain {
   gitPull $repoDir
 }
 
-#-----------------------------
-# Main
-#-----------------------------
+#< - - - Main - - - >
+
 #//enable logging library escapes
 escapesOn
 

@@ -4,7 +4,7 @@
 #  in the current directory.
 #  
 #  version: 2023.3.21
-#
+#  
 #  TODO:
 #-------------------------------------------------------------------------------
 
@@ -44,6 +44,7 @@ GIT_SHOW=false
 #//numeric regex
 RGX_NUM='^[0-9]+$'
 
+# Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitStashList.sh [-h] [-v] [-s] [-d num]"
   echo "  Prints the stash list of each git project in the current directory."
@@ -56,7 +57,11 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-#//process the arguments for the script
+# Process and capture the common execution options from the arguments used when
+# running the script. All other arguments specific to the script are retained
+# in array variable.
+# 
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   log "Arg Count: $#"
   while (( $# > 0 )); do
@@ -111,6 +116,10 @@ function processArgs {
   done
 }
 
+# Print out the stash list with color highliting depending on the amount of entries
+# 
+# @param $1 - the local repo directory
+# @param $2 - the stash list array
 function printStashList {
   local repoDir=$1
   local stashList=$2
@@ -149,9 +158,8 @@ function printStashList {
   
 }
 
-#-------------------------------
-# Main
-#-------------------------------
+#< - - - Main - - - >
+
 #//enable logging library escapes
 escapesOn
 
