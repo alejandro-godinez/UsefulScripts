@@ -5,6 +5,9 @@ An assortment of useful scripts from a wide variety of technologies.
 - **build_junit.xml**  
 A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
 
+### [BashDoc](bashdoc/bashdoc.sh.md)
+Parse documentation comments from bash script and generate markdown
+
 ### [Git](git/readme.md)
 - **gitBranchList.sh**  
 List the current branch name for git projects in the current directory
