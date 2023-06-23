@@ -13,6 +13,9 @@ set -e #//exit on error
 #//echo print colors
 NC='\033[0m'       # No Color
 RED='\033[0;31m'
+GRN='\033[0;32m'
+YEL='\033[1;33m'
+U_CYN='\033[4;36m'
 
 #//import logging functionality
 if [[ ! -f ~/lib/logging.sh ]]; then
@@ -30,12 +33,6 @@ source ~/lib/git_lib.sh
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
-
-#//echo print colors
-GRN='\033[0;32m'
-YEL='\033[1;33m'
-NC='\033[0m' # No Color
-U_CYN='\033[4;36m'       # Cyan
 
 #//indexed array of arguments that are not options/flags
 declare -a ARG_VALUES

@@ -48,7 +48,7 @@ function doWork() {
 | isHeader($1) | Determine if text is a special header section indicator   <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br> |
 | isKeyword($1) | Determine if text is one a keyword   <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br> |
 | isFunction($1) | Determine if text is a function   <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br> |
-| newLinesToSpace($1,$2,$3) | Replace newline characters (cr and lf) to space   <br><br><u>Args:</u><br>$1 - text to perform replacement  <br>$2 - other  <br>$3 - another  <br> |
+| newLinesToSpace($1) | Replace newline characters (cr and lf) to space   <br><br><u>Args:</u><br>$1 - text to perform replacement  <br> |
 | writeComments() | Write the accumulated comments to the output file   |
 | writeCommentsFlat() | Write the accumulated comments to the output file trimmed of any newline   |
 | writeFunctionParameters() | write out the accumulated function parameters   |
