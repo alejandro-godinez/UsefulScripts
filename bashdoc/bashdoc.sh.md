@@ -1,9 +1,11 @@
 <!-- Auto-generated using bashdoc.sh -->
 # [bashdoc.sh](bashdoc.sh)
 
-Parse documentation comments from bash script and generate markdown
+Parse documentation comments from bash script and generate markdown. The output file will
+be saved in the same directory unless the optional output directory option is
+specified.  The output file name will be the name of the script with '.md' extension.
 
-@version 1.0.0
+@version 2023.6.23
 
 Supported Function Formats:
 - name() { }
@@ -15,8 +17,8 @@ Supported Keywords:<br>
 - @param - Specifies the parameters of a method.<br>
 
 Limitation Notes:
-- Comments lines cannot be empty, add a space to signal continuation of content 
-
+- Comments lines cannot be empty, add a space to signal continuation of content  
+<br>
 
 TODO:<br>
 - @author - Specifies the author of the class, method, or field.
@@ -53,3 +55,4 @@ function doWork() {
 | writeCommentsFlat() | Write the accumulated comments to the output file trimmed of any newline   |
 | writeFunctionParameters() | write out the accumulated function parameters   |
 | writeParameterDescription() | write out the paramaters formatted for description in table   |
+| parseBashScript($1) | perform all the work to parse the documentation from the specified bash script file    <br><br><u>Args:</u><br>$1 - the script file to parse  <br> |

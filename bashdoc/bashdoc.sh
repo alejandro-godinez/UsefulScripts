@@ -4,20 +4,20 @@
 # be saved in the same directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
 # 
-# @version 1.0.0
+# @version 2023.6.23
 # 
 # Supported Function Formats:
 # - name() { }
 # - function name { }
 # - function name() { }
-#
-#
+# 
+# 
 # Supported Keywords:<br>
 # - @param - Specifies the parameters of a method.<br>
-#
+# 
 # Limitation Notes:
-# - Comments lines cannot be empty, add a space to signal continuation of content 
-#
+# - Comments lines cannot be empty, add a space to signal continuation of content  
+# <br>
 # 
 # TODO:<br>
 # - @author - Specifies the author of the class, method, or field.
@@ -36,7 +36,7 @@
 # # @param $1 - the first parameter
 # function doWork() {
 # }
-#
+# 
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -69,6 +69,8 @@ rgxHeader="^[-]{5}"
 rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)[ -]+(.+)"
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
+# output path to save document file, default to current directory
+OUTPUT_PATH="./"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -76,15 +78,19 @@ function printHelp {
   echo "markdown document."
   echo ""
   echo "Usage: "
-  echo "  bashdoc.sh [OPTION] <file> [outputDir]"
+  echo "  bashdoc.sh [OPTION] <file>"
   echo ""
   echo "  file - The input file to parse"
-  echo "  outputDir - optional, directory to which the output file will be saved"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -o path   optional, directory to which the output file will be saved"
   echo ""
+  echo "Examples:"
+  echo "  bashdoc.sh script.sh"
+  echo "  bashdoc.sh script1.sh script2.sh script3.sh"
+  echo "  bashdoc.sh -o /output/path *.sh"
 }
 
 # Process and capture the common execution options from the arguments used when
@@ -112,6 +118,22 @@ function processArgs {
     if [ "${arg^^}" = "-H" ]; then
       printHelp
       exit 0
+    fi
+
+    # check for output path option
+    if [ "${arg^^}" = "-O" ]; then
+
+      # check if there are still more arguments where the path can be provided
+      if (( $# > 0 )); then
+        OUTPUT_PATH=$1
+        log "  Output Path: $OUTPUT_PATH"
+        
+        # shift path argument so it is not processed on next iteration
+        shift
+      else
+        log "  No more arguments that could be the output path exist"
+      fi
+      continue
     fi
     
     # keep arguments that are not options or values from the option
@@ -230,6 +252,120 @@ function writeParameterDescription {
   done
 }
 
+# perform all the work to parse the documentation from the specified bash script file
+# 
+# @param $1 - the script file to parse
+function parseBashScript {
+  local inputFile="$1"
+  
+  lineNo=0
+  lineNoPadded="000"
+
+  # Reset the output file
+  local outputFile="${OUTPUT_PATH}/${inputFile}.md"
+  log "Output File: $outputFile"
+  if [ -f ${outputFile} ]; then
+    rm ${outputFile}
+  fi
+  touch ${outputFile}
+
+  # add auto-generated comment
+  echo "<!-- Auto-generated using bashdoc.sh -->" >> $outputFile
+
+  # add file title header
+  echo "# [${inputFile}](${inputFile})" >> $outputFile
+
+  # declare an array to store comments before function
+  declare -a commentArr=()
+  declare -a paramArr=()
+  isFirstFunction=true
+
+
+  # Read the file line by line
+  while IFS= read -r line; do
+    # count number of lines
+    lineNo=$((++lineNo))
+    
+    # pad line number with spaces
+    lineNoPadded=$(printf %4d $lineNo)
+
+    # detect if this is a comment line
+    if isComment "$line"; then
+      log "[$lineNoPadded] - Comment: $line"
+
+      # get the comment text
+      commentText="${BASH_REMATCH[1]}"
+      log "  Comment Text:$commentText"
+
+      # if this is a header indicator line output as description
+      if isHeader "$commentText"; then
+        # write out accumulated description comments, keep the newlines
+        log "Writing out comments..."
+        writeComments
+        echo "" >> $outputFile
+
+      elif isKeyword "$commentText"; then
+        keywordType="${BASH_REMATCH[1]}"
+        log "  Keyword Type:$keywordType"
+        if [ "$keywordType" = "param" ]; then
+          log "  Adding parameter to list..."
+          paramArr+=("$commentText")
+        fi
+      else
+        # add comment line to array
+        log "  Adding comment to list..."
+        commentArr+=("$commentText")
+      fi
+
+    elif isFunction "$line"; then
+
+      # add function header when first function is encountered
+      if [ "$isFirstFunction" = true ]; then 
+        echo "" >> $outputFile
+        echo "## Functions:" >> $outputFile
+        echo "| Function | Description |" >> $outputFile
+        echo "|----------|-------------|" >> $outputFile
+        isFirstFunction=false
+      fi
+
+      # get the function name from first group capture
+      functionName="${BASH_REMATCH[2]}"
+
+      # write function with open parenthesis
+      logAll "${BLU}Function:${NC}${functionName}"
+      echo -n "| ${functionName}(" >> $outputFile
+
+      # write out the parameters if any
+      log "Writing function parameters..."
+      writeFunctionParameters
+
+      # close the function
+      echo -n ") | " >> $outputFile
+
+      # write out the accumulated comments
+      log "Writing comments flat..."
+      writeCommentsFlat
+
+      log "Writing parameter descriptions..."
+      writeParameterDescription
+
+      echo " |" >> $outputFile
+      
+      # clear arrays for next function
+      log "Clearing arrays..."
+      commentArr=()
+      paramArr=()
+    else
+      # clear arrays when we encounter break in expected continuous comment/function
+      log "Clearing arrays..."
+      commentArr=()
+      paramArr=()
+    fi
+
+  done < $inputFile
+
+}
+
 #< - - - Main - - - >
 
 # enable logging library escapes
@@ -237,6 +373,13 @@ escapesOn
 
 # process arguments
 processArgs "$@"
+
+# check that the output directory exists
+logAll "Output Path: $OUTPUT_PATH"
+if [ ! -d "$OUTPUT_PATH" ]; then
+  logAll "${RED}ERROR: output path not found${NC}"
+  exit
+fi
 
 # print out the list of args that were not consumed by function (non-flag arguments)
 argCount=0
@@ -250,130 +393,17 @@ else
   exit 0
 fi
 
-# get the input file from the first argument
-inputFile="${ARG_VALUES[0]}"
-logAll "Input File: ${inputFile}"
+# loop through all get the input file from the first argument
+fileCount=0
+for inputFile in "${ARG_VALUES[@]}"; do
+  fileCount=$((++fileCount))
+  logAll "Input File ($fileCount of $argCount): ${inputFile}"
 
-# check if the file exists
-if [[ -e inputFile ]]; then
-  logAll "${RED}ERROR: input file not found${NC}"
-  exit
-fi
-
-# check if output path was specified
-outputPath=""
-if (( argCount > 1)); then
-  outputPath="${ARG_VALUES[1]}"
-  logAll "Output Path: $outputPath"
-  if [ ! -d "$outputPath" ]; then
-    logAll "${RED}ERROR: output path not found${NC}"
+  # check if the file exists
+  if [[ -e inputFile ]]; then
+    logAll "${RED}ERROR: input file not found${NC}"
     exit
   fi
-fi
 
-lineNo=0
-lineNoPadded="000"
-
-# Reset the output file
-outputFile="${outputPath}/${inputFile}.md"
-log "Output File: $outputFile"
-if [ -f ${outputFile} ]; then
-  rm ${outputFile}
-fi
-touch ${outputFile}
-
-# add auto-generated comment
-echo "<!-- Auto-generated using bashdoc.sh -->" >> $outputFile
-
-# add file title header
-echo "# [${inputFile}](${inputFile})" >> $outputFile
-
-# declare an array to store comments before function
-declare -a commentArr=()
-declare -a paramArr=()
-isFirstFunction=true
-
-
-# Read the file line by line
-while IFS= read -r line; do
-  # count number of lines
-  lineNo=$((++lineNo))
-  
-  # pad line number with spaces
-  lineNoPadded=$(printf %4d $lineNo)
-
-  # detect if this is a comment line
-  if isComment "$line"; then
-    log "[$lineNoPadded] - Comment: $line"
-
-    # get the comment text
-    commentText="${BASH_REMATCH[1]}"
-    log "  Comment Text:$commentText"
-
-    # if this is a header indicator line output as description
-    if isHeader "$commentText"; then
-      # write out accumulated description comments, keep the newlines
-      log "Writing out comments..."
-      writeComments
-      echo "" >> $outputFile
-
-    elif isKeyword "$commentText"; then
-      keywordType="${BASH_REMATCH[1]}"
-      log "  Keyword Type:$keywordType"
-      if [ "$keywordType" = "param" ]; then
-        log "  Adding parameter to list..."
-        paramArr+=("$commentText")
-      fi
-    else
-      # add comment line to array
-      log "  Adding comment to list..."
-      commentArr+=("$commentText")
-    fi
-
-  elif isFunction "$line"; then
-
-    # add function header when first function is encountered
-    if [ "$isFirstFunction" = true ]; then 
-      echo "" >> $outputFile
-      echo "## Functions:" >> $outputFile
-      echo "| Function | Description |" >> $outputFile
-      echo "|----------|-------------|" >> $outputFile
-      isFirstFunction=false
-    fi
-
-    # get the function name from first group capture
-    functionName="${BASH_REMATCH[2]}"
-
-    # write function with open parenthesis
-    logAll "${BLU}Function:${NC}${functionName}"
-    echo -n "| ${functionName}(" >> $outputFile
-
-    # write out the parameters if any
-    log "Writing function parameters..."
-    writeFunctionParameters
-
-    # close the function
-    echo -n ") | " >> $outputFile
-
-    # write out the accumulated comments
-    log "Writing comments flat..."
-    writeCommentsFlat
-
-    log "Writing parameter descriptions..."
-    writeParameterDescription
-
-    echo " |" >> $outputFile
-    
-    # clear arrays for next function
-    log "Clearing arrays..."
-    commentArr=()
-    paramArr=()
-  else
-    # clear arrays when we encounter break in expected continuous comment/function
-    log "Clearing arrays..."
-    commentArr=()
-    paramArr=()
-  fi
-
-done < $inputFile
-
+  parseBashScript "$inputFile"
+done
