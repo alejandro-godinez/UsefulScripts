@@ -160,8 +160,6 @@ function isFunction {
 # Replace newline characters (cr and lf) to space
 #
 # @param $1 - text to perform replacement
-# @param $2 - other
-# @param $3 - another
 function newLinesToSpace() {
   echo "$1" | tr "\r\n" " "
 }
