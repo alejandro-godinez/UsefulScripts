@@ -52,10 +52,10 @@ declare -a SOURCE_DIRS=("linux" "git" "bashdoc")
 projDir=""
 
 # install path
-#binInstallPath=~/bin/
-binInstallPath=~/temp/bin/  #testing
-#libInstallPath=~/lib/
-libInstallPath=~/temp/lib/  #testing
+binInstallPath=~/bin/
+#binInstallPath=~/temp/bin/  #testing
+libInstallPath=~/lib/
+#libInstallPath=~/temp/lib/  #testing
 
 #//search depth
 IS_MOCK=false
