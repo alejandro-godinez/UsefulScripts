@@ -1,6 +1,8 @@
 #!/bin/bash
-#-------------------------------------------------------------------------------
-# Parse documentation comments from bash script and generate markdown
+#-------------------------------------------------------------------------------------------
+# Parse documentation comments from bash script and generate markdown. The output file will
+# be saved in the same directory unless the optional output directory option is
+# specified.  The output file name will be the name of the script with '.md' extension.
 # 
 # @version 1.0.0
 # 
@@ -36,7 +38,7 @@
 # }
 #
 # </pre>
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------------------------
 
 set -u # error on unset variable
 set -e # exit on error
@@ -74,9 +76,10 @@ function printHelp {
   echo "markdown document."
   echo ""
   echo "Usage: "
-  echo "  bashdoc.sh [OPTION] <file>"
+  echo "  bashdoc.sh [OPTION] <file> [outputDir]"
   echo ""
   echo "  file - The input file to parse"
+  echo "  outputDir - optional, directory to which the output file will be saved"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
@@ -247,22 +250,32 @@ else
   exit 0
 fi
 
-
 # get the input file from the first argument
 inputFile="${ARG_VALUES[0]}"
 logAll "Input File: ${inputFile}"
 
 # check if the file exists
 if [[ -e inputFile ]]; then
-  echo "${RED}ERROR: input file not found${NC}"
+  logAll "${RED}ERROR: input file not found${NC}"
   exit
+fi
+
+# check if output path was specified
+outputPath=""
+if (( argCount > 1)); then
+  outputPath="${ARG_VALUES[1]}"
+  logAll "Output Path: $outputPath"
+  if [ ! -d "$outputPath" ]; then
+    logAll "${RED}ERROR: output path not found${NC}"
+    exit
+  fi
 fi
 
 lineNo=0
 lineNoPadded="000"
 
 # Reset the output file
-outputFile="${inputFile}.md"
+outputFile="${outputPath}/${inputFile}.md"
 log "Output File: $outputFile"
 if [ -f ${outputFile} ]; then
   rm ${outputFile}
