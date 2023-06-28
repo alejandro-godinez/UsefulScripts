@@ -4,7 +4,7 @@
 # be saved in the same directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
 # 
-# @version 2023.6.23
+# @version 2023.6.28
 # 
 # Supported Function Formats:
 # - name() { }
@@ -400,7 +400,7 @@ for inputFile in "${ARG_VALUES[@]}"; do
   logAll "Input File ($fileCount of $argCount): ${inputFile}"
 
   # check if the file exists
-  if [[ -e inputFile ]]; then
+  if [ ! -f $inputFile ]; then
     logAll "${RED}ERROR: input file not found${NC}"
     exit
   fi

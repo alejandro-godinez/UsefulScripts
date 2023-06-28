@@ -5,7 +5,7 @@ Parse documentation comments from bash script and generate markdown. The output 
 be saved in the same directory unless the optional output directory option is
 specified.  The output file name will be the name of the script with '.md' extension.
 
-@version 2023.6.23
+@version 2023.6.28
 
 Supported Function Formats:
 - name() { }
