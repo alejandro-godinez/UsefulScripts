@@ -1,0 +1,21 @@
+ABC-123 - Task Name
+8:00 - 10:00
+task with task name
+
+MEETING: team stand up
+10:00 - 10:15
+alternative task delimiter ':' 
+
+ABC-123
+10:15 - 12:00
+task without task name
+
+LUNCH
+12:00 - 13:00
+
+ABC-555
+13:00 - 16:00
+some description
+
+16:00 - 17:00
+this time entry does not have it's own task, it will be added to the previous task
