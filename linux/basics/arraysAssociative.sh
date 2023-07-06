@@ -42,3 +42,13 @@ echo "Print Two and Five index positions"
 echo "  two -> ${myArr[two]}"
 echo "  five -> ${myArr[five]}"
 echo ""
+
+#//check a key that exists in the array
+if [[ -v myArr['five'] ]]; then
+  echo "The key 'five' exists in the array"
+fi
+
+#//check a key does not exist in the array
+if [[ ! -v myArr['DNE'] ]]; then
+  echo "The key 'DNE' does not exist in the array"
+fi
