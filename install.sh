@@ -46,7 +46,7 @@ RGX_NUM='^[0-9]+$'
 declare -a ARG_VALUES
 
 # array of directories that contain scripts to be installed
-declare -a SOURCE_DIRS=("linux" "git" "bashdoc")
+declare -a SOURCE_DIRS=("linux" "git" "bashdoc" "timelog")
 
 # variable for selected project directory 
 projDir=""
