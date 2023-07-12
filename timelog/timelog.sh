@@ -16,7 +16,8 @@ NC='\033[0m' # No Color
 RED='\033[0;31m'
 GRN='\033[0;32m'
 BLU='\033[0;34m'
-U_CYN='\033[4;36m'       # Cyan
+YEL='\033[0;33m'
+U_CYN='\033[4;36m'
 
 # import logging functionality
 if [[ ! -f ~/lib/logging.sh ]]; then
@@ -33,6 +34,11 @@ rgxTaskNo="^([A-Z]+[A-Z0-9-]+)([ :\-]{2,3})?(.*)$"
 
 # time range regex for format of "HH:mm - HH:mm"
 rgxTimeRange="^([0-9]{1,2}[:][0-9]{2})[ ]-[ ]([0-9]{1,2}[:][0-9]{2})"
+
+# define padding for task and hours output
+taskPad=12
+hoursPad=5
+NO_TASK="NO_TASK"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -126,17 +132,36 @@ function getElapsedMinutes {
   echo "${min}"
 }
 
-# Perform native bash division with fixed point arithmetic
-# Note: bash only works with integers, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
+# Perform native bash division
+# Note: bash only works with integers, fake it using fixed point arithmetic
 # 
 # @param $1 - dividend
 # @param $2 - divisor
+# @param $3 - scale (precision)
 function div {
-  local result=$((100 * $1 / $2))
-  result="${result:0:-2}.${result: -2}"
+  # default precision scale to 2 decimal places
+  local precision=2
+  local scale=100
+
+  # check if scale parameter was specified
+  if (( $# > 2 )) && [[ ! -z ${3} ]] && (( $3 >= 1)); then
+    precision=$3
+    scale=$((10**precision))
+  fi
+
+  # check for zero, no need to perform division just pad zeros
+  if (( $1 == 0 )); then
+    echo $(printf "%.${precision}f" "0")
+    return
+  fi
+  
+  # multiple by scale and perform division
+  local result=$(($scale * $1 / $2))
+
+  # insert decimal into result
+  result="${result:0:-$precision}.${result: -$precision}"
   echo "${result}"
 }
-
 
 #< - - - Main - - - >
 
@@ -168,12 +193,17 @@ if [ ! -f "$inputFile" ]; then
     exit
 fi
 
+# define an associative array to map taskCode key to time value
+declare -A taskList
+
+# add a position in array to accumulate time without a task
+taskList["$NO_TASK"]=0
+
+# variable to capture the task number and use for time range
+currentTaskNo=""
 
 lineNo=0
 lineNoPadded="000"
-
-declare -A taskList
-taskNo=""
 
 # read and loop through lines
 while IFS= read -r line; do
@@ -191,13 +221,13 @@ while IFS= read -r line; do
   if isTaskNo "$line"; then
 
     # get the task number capture
-    taskNo="${BASH_REMATCH[1]}"
-    log "Task: $taskNo"
+    currentTaskNo="${BASH_REMATCH[1]}"
+    log "Task: $currentTaskNo"
 
     # add the task number to the list of it does not exist
-    if [[ ! -v taskList["$taskNo"] ]]; then
+    if [[ ! -v taskList["$currentTaskNo"] ]]; then
       log "Adding task number to list"
-      taskList["$taskNo"]=0
+      taskList["$currentTaskNo"]=0
     fi
 
   elif isTimeRange "$line"; then
@@ -212,20 +242,26 @@ while IFS= read -r line; do
     elapsedMinutes=$(getElapsedMinutes "$timeStart" "$timeEnd")
     log " -> Minutes: $elapsedMinutes"
 
+    # add time without defined task to a special position
+    if [[ -z ${currentTaskNo} ]]; then
+      log "${RED}Error:${NC} No task for time range"
+      taskList["$NO_TASK"]=$((taskList["$NO_TASK"] + elapsedMinutes))
+      continue
+    fi
+
     # add minutes to task list key position
-    log "Adding $elapsedMinutes minutes to task $taskNo"
-    taskList["$taskNo"]=$((taskList["$taskNo"] + elapsedMinutes))
+    log "Adding $elapsedMinutes minutes to task $currentTaskNo"
+    taskList["$currentTaskNo"]=$((taskList["$currentTaskNo"] + elapsedMinutes))
+   
+    # clear the task number after assigning this time range
+    currentTaskNo=''
   fi
 
 done < "$inputFile"
 
-# define padding for task and hours columns
-taskPad=12
-hoursPad=5
-
+# loop through and report on accumulated task time
 log "Task List:"
 totalMinutes=0
-min=0
 for index in "${!taskList[@]}"; do
   log "  Task: $index"
 
@@ -237,10 +273,14 @@ for index in "${!taskList[@]}"; do
   log "    Minutes: $taskMin"
 
   # bash doesn't do dicimals, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
+  log "    Dividing by 60 to get hours"
   taskHours=$(div "$taskMin" "60")
 
-  #logAll "${BLU}${index}${NC}:${taskHours}"
-  logAll "${BLU}$(printf %${taskPad}s ${index}:)${NC}$(printf %${hoursPad}s ${taskHours})"
+  if [[ "$index" == "$NO_TASK" ]]; then
+    logAll "${YEL}$(printf %${taskPad}s ${index}:)${NC}$(printf %${hoursPad}s ${taskHours})"
+  else
+    logAll "${BLU}$(printf %${taskPad}s ${index}:)${NC}$(printf %${hoursPad}s ${taskHours})"
+  fi
 done
 
 log "Total Minutes: $totalMinutes"
@@ -248,3 +288,4 @@ totalHours=$(div "$totalMinutes" "60")
 
 logAll "----------------------"
 logAll "${GRN}$(printf %${taskPad}s 'Total Hours:')${NC}$(printf %${hoursPad}s ${totalHours})"
+logAll ""
