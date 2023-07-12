@@ -1,12 +1,44 @@
 #!/bin/bash
 
 #-----------------------------------------------------------------------------
-#  Bash Notes: 
+#  Bash Notes:
+#    division - bash natively does not perform decimal operations
 #-----------------------------------------------------------------------------
 
 #//bash shell options
 set -u #//error on unset variable
 set -e #//exit on error
+
+# Perform native bash division
+# Note: bash only works with integers, fake it using fixed point arithmetic
+# 
+# @param $1 - dividend
+# @param $2 - divisor
+# @param $3 - scale (precision)
+function div {
+  # default precision scale to 2 decimal places
+  local precision=2
+  local scale=100
+
+  # check if scale parameter was specified
+  if (( $# > 2 )) && [[ ! -z ${3} ]] && (( $3 >= 1)); then
+    precision=$3
+    scale=$((10**precision))
+  fi
+
+  # check for zero, no need to perform division just pad zeros
+  if (( $1 == 0 )); then
+    echo $(printf "%.${precision}f" "0")
+    return
+  fi
+  
+  # multiple by scale and perform division
+  local result=$(($scale * $1 / $2))
+
+  # insert decimal into result
+  result="${result:0:-$precision}.${result: -$precision}"
+  echo "${result}"
+}
 
 result=50
 echo "Initial Value: $result"
@@ -43,8 +75,20 @@ echo "Mul 2:    $result"
 result=$((result / 2))
 echo "Div 2:    $result"
 
+#//decimal division, bash does not support natively
+result=$(div 22 4 3)
+echo "Div Dec.: $result"
+
+#//decimal division, zero needs special handling in div function
+result=$(div 0 60)
+echo "Div Zero.: $result"
+
+#//decimal division using awk
+result=$(awk 'BEGIN {printf "%.3f", 22/8}')
+echo "Div awk: $result"
+
 #//modulo
-result=$((result % 7))
+result=$((30 % 7))
 echo "Mod 7:    $result"
 
 #//exponent
