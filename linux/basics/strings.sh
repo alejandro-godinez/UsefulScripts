@@ -28,9 +28,17 @@ function padRight {
   printf "%-${padLen}s" "${text}" | tr ' ' "$padChar"
 }
 
+# Padding text
 echo "Pad  Left:$(padLeft "text" 15 '_')"
 echo "Pad Right:$(padRight "hello world" 15 '~')"
+echo ""
 
-# precision=5
-# result=$(printf "%.${precision}f", "0")
-# echo "$result"
+# spliting text values
+text="one,two,three"
+delim=","
+declare -a array=()
+for val in $(echo "$text" | tr "$delim" "\n"); do
+  array+=($val)
+done
+echo "Array Len: ${#array}"
+for item in "${array[@]}"; do echo "  ${item}"; done
