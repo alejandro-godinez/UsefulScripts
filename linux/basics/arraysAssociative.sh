@@ -46,9 +46,13 @@ echo ""
 #//check a key that exists in the array
 if [[ -v myArr['five'] ]]; then
   echo "The key 'five' exists in the array"
+else
+  echo "The key 'five' does NOT exists in the array"
 fi
 
 #//check a key does not exist in the array
 if [[ ! -v myArr['DNE'] ]]; then
   echo "The key 'DNE' does not exist in the array"
+else
+  echo "The key 'DNE' exist in the array"
 fi
