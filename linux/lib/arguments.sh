@@ -22,7 +22,7 @@
 #    addOption "-file"
 # 
 #    # run processing of argument
-#    processArgs "$@"
+#    parseArguments "$@"
 # 
 #    # check and get argument value
 #    if hasArgument "-file"; then
@@ -128,10 +128,10 @@ function addToREM {
   REM_ARGS+=("$1")
 }
 
-# Processing of the argument list
+# Parsing and processing of the argument list
 # 
 # @param $1 - array of arguments, use "$@" from script call
-function processArgs {
+function parseArguments {
   # loop while there are still arguments
   while (( $# > 0 )); do
     arg=$1
@@ -198,7 +198,7 @@ function printRemArgs {
 # addOption "-h"
 
 #//process the arguments from the script
-# processArgs "$@"
+# parseArguments "$@"
 
 #//debug print the option
 # printArgs
