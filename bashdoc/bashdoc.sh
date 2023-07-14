@@ -4,7 +4,7 @@
 # be saved in the same directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
 # 
-# @version 2023.6.28
+# @version 2023.7.14
 # 
 # Supported Function Formats:
 # - name() { }
@@ -57,11 +57,15 @@ if [[ ! -f ~/lib/logging.sh ]]; then
 fi
 source ~/lib/logging.sh
 
+# import argument processing functionality
+if [[ ! -f ~/lib/arguments.sh ]]; then
+  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
+  exit
+fi
+source ~/lib/arguments.sh
+
 # set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
-
-# indexed array of arguments that are not options/flags
-declare -a ARG_VALUES
 
 # Line regular expressions
 rgxComment="^[#][^!/]([ ]*(.*))$"
@@ -93,53 +97,37 @@ function printHelp {
   echo "  bashdoc.sh -o /output/path *.sh"
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  # check the command arguments
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    log "  Argument: ${arg}"
-    
-    # the arguments to the next item
-    shift 
-    
-    # check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-      continue
-    fi
-    
-    # check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
-    fi
+  # initialize expected options
+  addOption "-v"      #verbose
+  addOption "-h"      #help
+  addOption "-o" true #ouput path
 
-    # check for output path option
-    if [ "${arg^^}" = "-O" ]; then
+  # perform parsing of options
+  parseArguments "$@"
 
-      # check if there are still more arguments where the path can be provided
-      if (( $# > 0 )); then
-        OUTPUT_PATH=$1
-        log "  Output Path: $OUTPUT_PATH"
-        
-        # shift path argument so it is not processed on next iteration
-        shift
-      else
-        log "  No more arguments that could be the output path exist"
-      fi
-      continue
-    fi
-    
-    # keep arguments that are not options or values from the option
-    log "    > Adding $arg to rem arg list"
-    ARG_VALUES+=("$arg")
-  done
+  printArgs
+  printRemArgs
+  
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
+
+  # check for output path option
+  if hasArgument "-o" ]; then
+    OUTPUT_PATH=$(getArgument "-o")
+    log "  Output Path: $OUTPUT_PATH"
+  fi
 }
 
 # Determine if text is a comment
@@ -383,10 +371,10 @@ fi
 
 # print out the list of args that were not consumed by function (non-flag arguments)
 argCount=0
-if [[ -v ARG_VALUES ]]; then
-  argCount=${#ARG_VALUES[@]}
+if [[ -v REM_ARGS ]]; then
+  argCount=${#REM_ARGS[@]}
   log "List Remaining Args: ${argCount}"
-  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
+  for item in "${REM_ARGS[@]}"; do log "  ${item}"; done
 else
   #log "No Process Arguments Identified"
   printHelp
@@ -395,7 +383,7 @@ fi
 
 # loop through all get the input file from the first argument
 fileCount=0
-for inputFile in "${ARG_VALUES[@]}"; do
+for inputFile in "${REM_ARGS[@]}"; do
   fileCount=$((++fileCount))
   logAll "Input File ($fileCount of $argCount): ${inputFile}"
 
