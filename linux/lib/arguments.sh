@@ -1,6 +1,9 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Library implementation of common script argument processing functionality.
+# Library implementation of common script argument processing functionality. The
+# developer pre-defines the expected option codes along with indicator if the
+# option will need to have a value specified. After calling the parsing function
+# there are vaious getter functions to determine if option was specified.
 # 
 # Note: Any additional arguments that were not matched to expected option will
 # stored and can be access via the 'REM_ARGS' variable
@@ -19,7 +22,7 @@
 #  <pre>
 #    # define expected options
 #    addOption "-v"
-#    addOption "-file"
+#    addOption "-file" true
 # 
 #    # run processing of argument
 #    parseArguments "$@"
@@ -40,6 +43,8 @@ declare -a REM_ARGS
 
 # associative array for option key and value
 declare -A ARGS
+# associative array for option key and boolean indicator if it needs a subsequence value
+declare -A NEEDSVAL
 
 # Check if the specified option key exists
 # 
@@ -52,9 +57,11 @@ function hasOption {
   return 1
 }
 
-# Add an option code/name that should be captured
+# Add an option code/name that should be captured. If a value needs to be
+# provided with the argument set value indicator to true.
 # 
 # @param $1 - the option name
+# @param $2 - argument value needed indicator true/false (optional)
 function addOption {
   local option=$1
 
@@ -65,8 +72,25 @@ function addOption {
 
   # add the option key to the array
   ARGS[$option]=false
+  NEEDSVAL[$option]=false
 
+  # check if needs value argument was provided
+  if (( $# > 1 )) && [ "$2" = "true" ]; then
+    NEEDSVAL[$option]=true
+  fi
+  
   return 0
+}
+
+# Check if the option needs to have a value provided following the code
+# 
+# @param $1 - the option name
+function optionNeedsVal {
+  local option=$1
+  if [ "${NEEDSVAL[$option]}" = 'true' ]; then
+    return 0
+  fi
+  return 1
 }
 
 # Sets the argument value for the specified option
@@ -157,8 +181,8 @@ function parseArguments {
         # set option argument value to true when found
         setArgument "$option" true
 
-        # perform lookahead on next argument for a potential option value (option does not start with dash)
-        if (( $# > 0 )); then
+        # if option needs value perform lookahead on next argument for the value value (option does not start with dash)
+        if optionNeedsVal "$option" && (( $# > 0 )); then
           nextArg=$1
           if ! startsWithDash "$nextArg"; then
             setArgument "$option" "$nextArg"
@@ -183,7 +207,7 @@ function parseArguments {
 # Print to standard output the captured argument options and values
 function printArgs {
   echo "Args:"
-  for index in "${!ARGS[@]}"; do echo "  $index -> ${ARGS[$index]}"; done
+  for index in "${!ARGS[@]}"; do echo "  $index -> ${ARGS[$index]} ${NEEDSVAL[$index]}"; done
 }
 
 # Prints to standard output all the remaining arguments that were not match to a defined option
@@ -196,6 +220,7 @@ function printRemArgs {
 #//add options
 # addOption "-v"
 # addOption "-h"
+# addOption "-file" true
 
 #//process the arguments from the script
 # parseArguments "$@"
