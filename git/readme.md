@@ -5,6 +5,7 @@ As is common you can post scripts in your home bin folder so that they are avail
   _Include the following in a lib folder in your bash home directory_  
   - [git_lib.sh](lib/git_lib.sh)
   - [logging.sh](../linux/lib/logging.sh)
+  - [arguments.sh](../linux/lib/arguments.sh)
 
 <br><br>
 
