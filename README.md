@@ -57,6 +57,7 @@ Extract all '.tar.gz' file into the working directory.
 
 - **Libraries**  
     - **logging.sh** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
+    - **arguments.sh** - Implementation of script argument processing
 
 
 ### Maven  
