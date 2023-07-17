@@ -29,6 +29,13 @@ if [[ ! -f ~/lib/git_lib.sh ]]; then
 fi
 source ~/lib/git_lib.sh
 
+# import argument processing functionality
+if [[ ! -f ~/lib/arguments.sh ]]; then
+  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
+  exit
+fi
+source ~/lib/arguments.sh
+
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
 
@@ -55,63 +62,59 @@ function printHelp {
   echo "    -t num    Trim Size (default 3), keeps most recent"
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    
-    #//check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-    fi
-    
-    log "Arg Count: $#"
-    log "Argument: ${arg^^}"
+  # initialize expected options
+  addOption "-h"
+  addOption "-v"
+  addOption "-f"
+  addOption "-d" true
+  addOption "-t" true
+  
+  # perform parsing of options
+  parseArguments "$@"
 
-    #//check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
+  #printArgs
+  #printRemArgs
+    
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
+
+  # check for force trim, no prompt
+  if hasArgument "-f"; then
+    FORCE=true
+  fi
+
+
+  # check for depth
+  if hasArgument "-d" ]; then
+    numValue=$(getArgument "-d")
+    log "  Depth Value: $numValue"
+    if [[ $numValue =~ $RGX_NUM ]]; then
+      MAX_DEPTH=$numValue
+      log "  Max Depth: $MAX_DEPTH"
     fi
-    
-      #//check for force
-    if [ "${arg^^}" = "-F" ]; then
-      FORCE=true
+  fi
+
+  # check for depth
+  if hasArgument "-t" ]; then
+    numValue=$(getArgument "-t")
+    log "  Depth Value: $numValue"
+    if [[ $numValue =~ $RGX_NUM ]]; then
+      TRIM_SIZE=$numValue
+      log "  Trim Size: $TRIM_SIZE"
     fi
-    
-    #//check for options with numeric values
-    if [ "${arg^^}" = "-D" ] || [ "${arg^^}" = "-T" ]; then
-    
-      #//check if there are still more arguments where the number could be provided
-      if (( $# > 1 )); then
-        #//check the depth number from next argument
-        numValue=$2
-        
-        if [[ $numValue =~ $RGX_NUM ]]; then
-          if [ "${arg^^}" = "-D" ]; then
-            MAX_DEPTH=$numValue
-            log "  Max Depth: $MAX_DEPTH"
-          elif [ "${arg^^}" = "-T" ]; then
-            TRIM_SIZE=$numValue
-            log "  Trim Size: $TRIM_SIZE"
-          fi
-          
-          #//shift number argument so it is not processed on next iteration
-          shift
-        fi
-      else
-        log "  No more arguments for number to exist"
-      fi
-    fi
-    
-    #//shift to next argument
-    shift
-  done
+  fi
 }
 
 # Prompt user with option to perform trim, skip, or quit

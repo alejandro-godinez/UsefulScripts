@@ -28,8 +28,15 @@ if [[ ! -f ~/lib/git_lib.sh ]]; then
 fi
 source ~/lib/git_lib.sh
 
+# import argument processing functionality
+if [[ ! -f ~/lib/arguments.sh ]]; then
+  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
+  exit
+fi
+source ~/lib/arguments.sh
+
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-IFS=$'\n'
+#IFS=$'\n'
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
@@ -47,54 +54,39 @@ function printHelp {
   echo "    -v        Verbose/debug output"
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    log "  Argument: ${arg}"
-    
-    #//the arguments to the next item
-    shift 
-    
-    #//check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-      continue
-    fi
-    
-    #//check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
-    fi
-    
-    #//keep arguments that are not options or values from the option
-    log "    > Adding $arg to rem arg list"
-    ARG_VALUES+=("$arg")
-  done
+  # initialize expected options
+  addOption "-h"
+  addOption "-v"
+
+  # perform parsing of options
+  parseArguments "$@"
+
+  #printArgs
+  #printRemArgs
+  
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
 }
 
 #< - - - Main - - - >
 
+#//enable logging library escapes
+escapesOn
+
 #//check the command arguments
 processArgs "$@"
-
-#//print out the list of args that were not consumed by function (non-flag arguments)
-argCount=0
-if [[ -v ARG_VALUES ]]; then
-  argCount=${#ARG_VALUES[@]}
-  log "List Remaining Args: ${argCount}"
-  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
-else
-  #log "No Process Arguments Identified"
-  printHelp
-  exit 0
-fi
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)

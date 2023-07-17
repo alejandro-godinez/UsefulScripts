@@ -31,11 +31,15 @@ if [[ ! -f ~/lib/git_lib.sh ]]; then
 fi
 source ~/lib/git_lib.sh
 
-#//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-IFS=$'\n'
+# import argument processing functionality
+if [[ ! -f ~/lib/arguments.sh ]]; then
+  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
+  exit
+fi
+source ~/lib/arguments.sh
 
-#//indexed array of arguments that are not options/flags
-declare -a ARG_VALUES
+#//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
+#IFS=$'\n'
 
 #//prompt to perform pull on non main branches
 PULL_ALL=FALSE
@@ -62,71 +66,53 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    log "  Argument: ${arg}"
-    
-    #//the arguments to the next item
-    shift 
-    
-    #//check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-      continue
+  # initialize expected options
+  addOption "-v"
+  addOption "-h"
+  addOption "-a"
+  addOption "-f"
+  addOption "-d" true
+
+  # perform parsing of options
+  parseArguments "$@"
+
+  #printArgs
+  #printRemArgs
+  
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
+
+  # check for ALL branch
+  if hasArgument "-a"; then
+    PULL_ALL=true
+  fi
+
+  # check for force pull, no prompt
+  if hasArgument "-f"; then
+    FORCE_PULL=true
+  fi
+  
+  # check for depth
+  if hasArgument "-d" ]; then
+    numValue=$(getArgument "-d")
+    log "  Depth Value: $numValue"
+    if [[ $numValue =~ $RGX_NUM ]]; then
+      MAX_DEPTH=$numValue
+      log "  Max Depth: $MAX_DEPTH"
     fi
-    
-    #//check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
-    fi
-    
-    #//check for ALL branch
-    if [ "${arg^^}" = "-A" ]; then
-      PULL_ALL=true
-      continue
-    fi
-    
-    #//check for ALL branch
-    if [ "${arg^^}" = "-F" ]; then
-      FORCE_PULL=true
-      continue
-    fi
-    
-    #//check for depth
-    if [ "${arg^^}" = "-D" ]; then
-    
-      #//check if there are still more arguments where the number could be provided
-      if (( $# > 0 )); then
-        #//check the depth number from next argument
-        numValue=$1
-        log "  Depth Value: $numValue"
-        
-        if [[ $numValue =~ $RGX_NUM ]]; then
-          MAX_DEPTH=$numValue
-          log "  Max Depth: $MAX_DEPTH"
-          
-          #//shift number argument so it is not processed on next iteration
-          shift
-        fi
-      else
-        log "  No more arguments for number to exist"
-      fi
-      
-      continue
-    fi
-    
-    #//keep arguments that are not options or values from the option
-    log "    > Adding $arg to rem arg list"
-    ARG_VALUES+=("$arg")
-  done
+  fi
 }
 
 # Ask user if they would like to perform pull for the repository/branch specified
@@ -198,14 +184,6 @@ escapesOn
 
 #//check the command arguments
 processArgs "$@"
-
-#//print out the list of args that were not consumed by function (non-flag arguments)
-argCount=0
-if [[ -v ARG_VALUES ]]; then
-  argCount=${#ARG_VALUES[@]}
-  log "List Remaining Args: ${argCount}"
-  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
-fi
 
 #//identify if current directory is a git project directory
 currDir=$(pwd)

@@ -29,11 +29,15 @@ if [[ ! -f ~/lib/git_lib.sh ]]; then
 fi
 source ~/lib/git_lib.sh
 
+# import argument processing functionality
+if [[ ! -f ~/lib/arguments.sh ]]; then
+  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
+  exit
+fi
+source ~/lib/arguments.sh
+
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
-
-#//indexed array of arguments that are not options/flags
-declare -a ARG_VALUES
 
 #//search depth
 MAX_DEPTH=1
@@ -50,57 +54,42 @@ function printHelp {
   echo "    -d num    Search depth (default 1)"
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    log "  Argument: ${arg}"
-    
-    #//the arguments to the next item
-    shift 
-    
-    #//check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-      continue
+
+  # initialize expected options
+  addOption "-h"
+  addOption "-v"
+  addOption "-d" true
+
+  # perform parsing of options
+  parseArguments "$@"
+
+  #printArgs
+  #printRemArgs
+  
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
+
+  # check for depth
+  if hasArgument "-d" ]; then
+    numValue=$(getArgument "-d")
+    log "  Depth Value: $numValue"
+    if [[ $numValue =~ $RGX_NUM ]]; then
+      MAX_DEPTH=$numValue
+      log "  Max Depth: $MAX_DEPTH"
     fi
-    
-    #//check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
-    fi
-    
-    #//check for depth
-    if [ "${arg^^}" = "-D" ]; then
-    
-      #//check if there are still more arguments where the number could be provided
-      if (( $# > 1 )); then
-        #//check the depth number from next argument
-        numValue=$2
-        log "  Depth Value: $numValue"
-        
-        if [[ $numValue =~ $RGX_NUM ]]; then
-          MAX_DEPTH=$numValue
-          log "  Max Depth: $MAX_DEPTH"
-          
-          #//shift number argument so it is not processed on next iteration
-          shift
-        fi
-      else
-        log "  No more arguments for number to exist"
-      fi
-    fi
-    
-    #//keep arguments that are not options or values from the option
-    log "    > Adding $arg to rem arg list"
-    ARG_VALUES+=("$arg")
-  done
+  fi
 }
 
 # Get rev count for a specific repo directory
