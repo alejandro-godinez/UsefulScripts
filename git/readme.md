@@ -3,13 +3,13 @@ As is common you can post scripts in your home bin folder so that they are avail
 
 **Dependencies**  
   _Include the following in a lib folder in your bash home directory_  
-  - [git_lib.sh](lib/git_lib.sh)
-  - [logging.sh](../linux/lib/logging.sh)
-  - [arguments.sh](../linux/lib/arguments.sh)
+  - [git_lib.sh](lib/docs/git_lib.sh.md)
+  - [logging.sh](../linux/lib/docs/logging.sh.md)
+  - [arguments.sh](../linux/lib/docs/arguments.sh.md)
 
 <br><br>
 
-# [gitBranchList.sh](gitBranchList.sh)
+# [gitBranchList.sh](docs/gitBranchList.sh.md)
 This script will list the current branch for each of the git project folders in the current directory.  When already inside a git project folder it will display that projects current branch.
 
 **Sample:**
@@ -21,7 +21,7 @@ Depth Search: 1
 DONE
 ```
 
-# [gitFetch.sh](gitFetch.sh)
+# [gitFetch.sh](docs/gitFetch.sh.md)
 This script will perform a fetch on each of the git project folders in the current directory. When already inside a git project folder it will perform fetch on only that project.
 
 **Sample:**
@@ -31,7 +31,7 @@ $ gitFetch.sh
 ./userDefinedLanguages
 ```
 
-# [gitPullMain.sh](gitPullMain.sh)
+# [gitPullMain.sh](docs/gitPullMain.sh.md)
 This script will perform a pull on each of the git project folders in the current directory if it is pointing to the main branch.  The user will be interrogated to confirm pull.
 
 **Sample:**
@@ -49,7 +49,7 @@ Repo Dir: ./userDefinedLanguages
   Skipped
 ```
 
-# [gitRevCount.sh](gitRevCount.sh)
+# [gitRevCount.sh](docs/gitRevCount.sh.md)
 This script will get a count of revisions ahead and behind from master both against local and remote. You should perform a fetch so that your working directory is up to date and counts are accurate. When in the "main" branch the local compare is not done as it will always be zeros.
 ```
 $ gitRevCount.sh
@@ -63,7 +63,7 @@ Ahead   Behind  Branch
 ```
 _Note: in the example above local trunk has a commit and featureBranch is 1 commit behind._
 
-# [gitStashList.sh](gitStashList.sh)
+# [gitStashList.sh](docs/gitStashList.sh.md)
 This script will list the stash entries of each of the git project folders in the current directory.
 
 **Sample:**
@@ -76,7 +76,7 @@ stash@{1}: On trunk: Updates to git documentation
 DONE
 ```
 
-# [gitStashPullApply](gitStashPullApply)
+# [gitStashPullApply](docs/gitStashPullApply.sh.md)
 This script will perform a stash-pull-apply sequence of operations on the git project folder in which you are located. 
 
 **Sample:**
@@ -96,7 +96,7 @@ Changes to be committed:
         new file:   git/readme.md
 ```
 
-# [gitTrimStash.sh](gitTrimStash.sh)
+# [gitTrimStash.sh](docs/gitTrimStash.sh.md)
 This script will trim the stash of entries from the end/oldest down to a specified number of entries.  The script default to 3 but can be adjusted with -t option.
 
 **Sample:**

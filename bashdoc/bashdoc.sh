@@ -3,8 +3,9 @@
 # Parse documentation comments from bash script and generate markdown. The output file will
 # be saved in the same directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
+# A relative path option (-r) can be used to fix the link to the script in the header.
 # 
-# @version 2023.7.14
+# @version 2023.7.19
 # 
 # Supported Function Formats:
 # - name() { }
@@ -75,6 +76,8 @@ rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
 # output path to save document file, default to current directory
 OUTPUT_PATH="./"
+# relative path to use with the script link
+RELATIVE_PATH=""
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -90,6 +93,7 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -o path   optional, directory to which the output file will be saved"
+  echo "    -r path   optional, relative path to use for the script link in the header"
   echo ""
   echo "Examples:"
   echo "  bashdoc.sh script.sh"
@@ -102,15 +106,16 @@ function printHelp {
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
-  addOption "-v"      #verbose
-  addOption "-h"      #help
-  addOption "-o" true #ouput path
+  addOption "-v"
+  addOption "-h"
+  addOption "-o" true
+  addOption "-r" true
 
   # perform parsing of options
   parseArguments "$@"
 
-  printArgs
-  printRemArgs
+  # printArgs
+  # printRemArgs
   
   # check for help
   if hasArgument "-h"; then
@@ -127,6 +132,12 @@ function processArgs {
   if hasArgument "-o" ]; then
     OUTPUT_PATH=$(getArgument "-o")
     log "  Output Path: $OUTPUT_PATH"
+  fi
+
+  # check for relative path for link
+  if hasArgument "-r" ]; then
+    RELATIVE_PATH=$(getArgument "-r")
+    log "  Relative Path: $RELATIVE_PATH"
   fi
 }
 
@@ -258,10 +269,10 @@ function parseBashScript {
   touch ${outputFile}
 
   # add auto-generated comment
-  echo "<!-- Auto-generated using bashdoc.sh -->" >> $outputFile
+  echo "<small><i>Auto-generated using bashdoc.sh</i></small>" >> $outputFile
 
-  # add file title header
-  echo "# [${inputFile}](${inputFile})" >> $outputFile
+  # add file title header, check if a relative path was specified
+  echo "# [${inputFile}](${RELATIVE_PATH}${inputFile})" >> $outputFile
 
   # declare an array to store comments before function
   declare -a commentArr=()
