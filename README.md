@@ -9,50 +9,50 @@ A largley re-usable ANT build script for any standalone java project that will e
 Parse documentation comments from bash script and generate markdown
 
 ### [Git](git/readme.md)
-- **gitBranchList.sh**  
+- **[gitBranchList.sh](git/docs/gitBranchList.sh.md)**  
 List the current branch name for git projects in the current directory
 
-- **gitPullMain.sh**  
+- **[gitPullMain.sh](git/docs/gitPullMain.sh.md)**  
 Prompts to perform a pull for git projects in the current directory
 
-- **gitStashList.sh**  
+- **[gitStashList.sh](git/docs/gitStashList.sh.md)**  
 Lists the stash entries for each project in the current directory
 
-- **gitTrimStash.sh**  
+- **[gitTrimStash.sh](git/docs/gitTrimStash.sh.md)**  
 Perform a trim (drop) of the oldes stash entries down to a set number of items.
 
 - **Libraries**  
-    - **git_lib.sh** - Various GIT functions to obtain repo information or perform operations.
+    - **[git_lib.sh](git/lib/docs/git_lib.sh.md)** - Various GIT functions to obtain repo information or perform operations.
 
 ### [Linux](linux/readme.md)
-- **avgFileSize.sh**  
+- **[avgFileSize.sh](linux/docs/avgFileSize.sh.md)**  
 Get an average file size of all the files that meet the specified name filter.
 
-- **changeOptionValue.sh**  
+- **[changeOptionValue.sh](linux/docs/changeOptionValue.sh.md)**  
 Change the value of a standard "name=value" pair such as ini or config files.
 
-- **comment.sh**  
+- **[comment.sh](linux/docs/comment.sh.md)**  
 Add a comment "#" to the start of the line number(s) specified.
 
-- **findFileInTarGzip.sh**  
+- **[findFileInTarGzip.sh](linux/docs/findFileInTarGzip.sh.md)**  
 Search the contents of any '.tar.gz' file in the specified directory for entries with matching specified search text.
 
-- **findFilesWithText.sh**  
+- **[findFilesWithText.sh](linux/docs/findFilesWithText.sh.md)**  
 Search the contents of file in sub-directories from the working path for content that matches the specified search text.
 
-- **findFilesWithTextInTarGzip.sh**  
+- **[findFilesWithTextInTarGzip.sh](linux/docs/findFilesWithTextInTarGzip.sh.md)**  
 search the contents of any '.tar.gz' file in the specified directory for entries with matching specified search text.
 
-- **findLargestFiles.sh**    
+- **[findLargestFiles.sh](linux/docs/findLargestFiles.sh.md)**    
 Find the largest files for the specified directory recursively.
 
-- **jarinfo.sh**  
+- **[jarinfo.sh](linux/docs/jarinfo.sh.md)**  
 Display the contents of the manifest file inside of the jar file specified.
 
-- **sortFilesIntoYearFolders.sh**  
+- **[sortFilesIntoYearFolders.sh](linux/docs/sortFilesIntoYearFolders.sh.md)**  
 Move all files in the working directory into a sub-folder of the year equal to the last modified date.
 
-- **unzipAll.sh**  
+- **[unzipAll.sh](linux/docs/unzipAll.sh.md)**  
 Extract all '.tar.gz' file into the working directory.
 
 - **Libraries**  
@@ -61,11 +61,11 @@ Extract all '.tar.gz' file into the working directory.
 
 
 ### Maven  
-- **installToMaven.sh**  
+- **[installToMaven.sh](maven/docs/installToMaven.sh.md)**  
 Installs a java project to your local maven repository. Useful for re-using in-house libraries in other maven projects.
 
 ### Nano
-- **createNanoRCFile.sh**  
+- **[createNanoRCFile.sh](nanorc/docs/createNanoRCFile.sh.md)**  
 Create the .nanorc file in the home directory that is needed to enable the code highlighting in the nano editor.   
 
 - **unibasic.nanorc**  
