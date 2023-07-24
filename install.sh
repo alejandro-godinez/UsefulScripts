@@ -14,7 +14,7 @@
 # - Add script option to simply install all projects without prompt (-a)
 # - Better detect changes in script, maybe by version number if one exists
 # 
-# version: 2023.7.14
+# version: 2023.7.24
 #-------------------------------------------------------------------------------
 
 set -u # error on unset variable
@@ -48,6 +48,8 @@ source ~/lib/arguments.sh
 
 # numeric regex
 RGX_NUM='^[0-9]+$'
+# library folder regex
+RGX_LIB='/lib/'
 
 # array of directories that contain scripts to be installed
 declare -a SOURCE_DIRS=("linux" "git" "bashdoc" "timelog")
@@ -61,18 +63,19 @@ binInstallPath=~/bin/
 libInstallPath=~/lib/
 #libInstallPath=~/temp/lib/  #testing
 
-#//search depth
+# mock run variable
 IS_MOCK=false
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "Usage: install.sh [-h] [-v] "
+  echo "Usage: install.sh [option]"
   echo "  This script will perform installation and detect updates of scripts."
   echo ""
   echo "  Options:"
-  echo "    -h      This help info"
-  echo "    -v      Verbose/debug output"
-  echo "    -m      Mock run, will display what will be installed and updated"
+  echo "    -h           This help info"
+  echo "    -v           Verbose/debug output"
+  echo "    -m           Mock run, will display what will be installed and updated"
+  echo "    -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed"
 }
 
 
@@ -80,10 +83,12 @@ function printHelp {
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
+  
   # initialize expected options
-  addOption "-v"  #verbose
-  addOption "-h"  #help
-  addOption "-m"  #mock run
+  addOption "-v"
+  addOption "-h"
+  addOption "-m"
+  addOption "-n" true
 
   # perform parsing of options
   parseArguments "$@"
@@ -106,6 +111,17 @@ function processArgs {
   if hasArgument "-m"; then
     IS_MOCK=true
   fi
+}
+
+# Ask user to confirm if the file that was found is the one intended
+# to be installed.
+function showYestNoPrompt {
+  read -p "Continue with install [Y/N]: "
+  # check if user reply is numeric
+  if [[ "$REPLY" == "y" ]] || [[ "$REPLY" == "Y" ]]; then
+    return 0
+  fi
+  return 1
 }
 
 # Ask user which project they would like to install from the set
@@ -160,7 +176,7 @@ function promptForInstall {
 # Perform installation of scripts for the specified project sub directory.
 # 
 # @param $1 - the project sub-directory from which to install scripts
-function installScripts {
+function installProject {
   local projSubDir=$1
   local isLib=false
 
@@ -193,48 +209,122 @@ function installScripts {
   # get a list of bash script from the source directory, no sub-directories
   local fileList=$(find $srcDir -mindepth 1 -maxdepth 1 -type f -name "*.sh")
 
-  # Loop through each of the file_list values
-  local destFile=""
-  local fileName=""
+  # Loop through and install each file in the list
   for srcFile in $fileList; do
     logAll "$srcFile"
 
-    # get the base file name
-    fileName=$(basename $srcFile)
-    log "  File Name: ${fileName}"
-    
-    # build destination path for this file
-    destFile="${destDir}${fileName}"
-    log "  Dest File: ${destFile}"
-
-    # install file if it does not exist
-    if [[ ! -f $destFile ]]; then
-      logAll "  ${GRN}Install:${NC}$destFile"
-
-      #//dont perform copy if this is a mock run
-      if [ "$IS_MOCK" = true ]; then continue; fi
-
-      cp "$srcFile" "$destFile"
-      continue
-    fi
-
-    # get hash for both source and destination files
-    srcHash=$(md5sum $srcFile | cut -d' ' -f1)
-    log "  Src Hash: $srcHash"
-    destHash=$(md5sum $destFile | cut -d' ' -f1)
-    log "  Dest Hash: $srcHash"
-
-    # update if there is a difference in the files
-    if ! [ "$srcHash" == "$destHash" ]; then
-      logAll "  ${YEL}Update:${NC}$destFile"
-      
-      #//dont perform copy if this is a mock run
-      if [ "$IS_MOCK" = true ]; then continue; fi
-
-      cp "$srcFile" "$destFile"
-      continue
-    fi
+    # perform installation for file
+    installFile "$srcFile" "$destDir"
   done
+}
+
+# Perform the work to find the single file to install
+function installSingleFile {
+  # get the file name from argument
+  fileName=$(getArgument "-n")
+  logAll "Serach Name: ${fileName}"
+
+  # search for a matching file
+  srcFile=$(findFile "${fileName}")
+  if [ -z "${srcFile}" ]; then
+    logAll "No Files Found"
+    exit 0
+  fi
+  logAll "File Found: $srcFile"
+
+  # prompt user if the found file should be installed
+  if ! showYestNoPrompt ; then
+    exit 0
+  fi
+
+  # determine if file is in a 'lib' folder
+  destDir="${binInstallPath}"
+  if pathHasLibFolder "${srcFile}" ; then
+    logAll " - Has LIB Folder"
+    destDir="${libInstallPath}"
+  fi
+  log "Dest Path: ${destDir}"
+
+  # perform installation for file
+  installFile "$srcFile" "$destDir"
+}
+
+# Perform install work for a file
+#
+# @param $1 - the file to install
+# @param $2 - the destination path into which file should be installed
+function installFile {
+  local srcFile="$1"
+  local destDir="$2"
+
+  # get the base file name
+  local fileName=$(basename $srcFile)
+  log "  File Name: ${fileName}"
+  
+  # build destination path for this file
+  local destFile="${destDir}${fileName}"
+  log "  Dest File: ${destFile}"
+
+  # install file if it does not exist
+  if [[ ! -f $destFile ]]; then
+    logAll "  ${GRN}Install:${NC}$destFile"
+
+    #//dont perform copy if this is a mock run
+    if [ "$IS_MOCK" = true ]; then continue; fi
+
+    cp "$srcFile" "$destFile"
+    continue
+  fi
+
+  # get hash for both source and destination files
+  srcHash=$(md5sum $srcFile | cut -d' ' -f1)
+  log "  Src Hash: $srcHash"
+  destHash=$(md5sum $destFile | cut -d' ' -f1)
+  log "  Dest Hash: $srcHash"
+
+  # update if there is a difference in the files
+  if ! [ "$srcHash" == "$destHash" ]; then
+    logAll "  ${YEL}Update:${NC}$destFile"
+    
+    #//dont perform copy if this is a mock run
+    if [ "$IS_MOCK" = true ]; then continue; fi
+
+    cp "$srcFile" "$destFile"
+    continue
+  fi
+
+  # no install/update performed
+  log "  [NO UPDATE]:$destFile"
+}
+
+# Find the first file that is found to match the name specified
+# 
+# @param $1 - the file name to search
+function findFile {
+  local fileName="$1"
+
+  # perform find command and capture to an array
+  #fileList=$( find -type f -iname "${fileName}.sh" )
+  readarray -d '' fileList < <(find -type f -iname "${fileName}.sh" -print0)
+
+  # check if file list was empty/undefined
+  if [[ -z "${fileList[@]}" ]]; then
+    echo ""
+    return
+  fi
+
+  # echo the path
+  echo "${fileList[0]}"
+}
+
+# Check if the specified path contains a lib folder
+# 
+# @param $1 - the path to check
+function pathHasLibFolder {
+  if [[ "$1" =~ $RGX_LIB ]]; then
+    return 0
+  fi
+  return 1
 }
 
 #< - - - Main - - - >
@@ -253,13 +343,23 @@ if [ ! -d "$libInstallPath" ]; then
   mkdir "$libInstallPath"
 fi
 
-log "Prompting user for install..."
+# output mock run indicator
 if [ "$IS_MOCK" = true ]; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
+
+# check if option for a single file to install was specified
+if hasArgument "-n"; then
+  installSingleFile
+  exit 0
+fi
+
+# show default prompt for project install
+log "Prompting user for install..."
 if ! promptForInstall ; then
   logAll "${RED}ERROR:${NC} Invalid option selected"
+  exit 0
 fi
 
 logAll "${U_CYN}BIN Scripts...${NC}"
-installScripts "$projDir"
+installProject "$projDir"
 logAll "${U_CYN}LIB Scripts...${NC}"
-installScripts "$projDir" "lib"
+installProject "$projDir" "lib"
