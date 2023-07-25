@@ -76,6 +76,10 @@ function printHelp {
   echo "    -v           Verbose/debug output"
   echo "    -m           Mock run, will display what will be installed and updated"
   echo "    -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed"
+  echo ""
+  echo "Examples:"
+  echo "  ./install.sh -n bashdoc"
+  echo "    - install the bashdoc.sh script"
 }
 
 

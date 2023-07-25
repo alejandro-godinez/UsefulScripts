@@ -1,6 +1,7 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------------------
-# Parse time log work hour files
+# Parse time log work hour files and output time spend on each task as well as total for
+# each file day.
 # 
 # @version 2023.07.25
 # 
@@ -49,7 +50,7 @@ function printHelp {
   echo "This script will parse a time log ".hrs" file and output task work time"
   echo ""
   echo "Usage: "
-  echo "  timelog.sh [OPTION] <file>"
+  echo "  timelog.sh [OPTION] <files>"
   echo ""
   echo "  file - The input file to parse"
   echo ""
@@ -59,6 +60,7 @@ function printHelp {
   echo ""
   echo "Examples:"
   echo "  timelog.sh 2023.06.28.hrs"
+  echo "  timelog.sh 2023.06*hrs"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -283,15 +285,17 @@ else
   exit 0
 fi
 
-# get the input file
-inputFile="${REM_ARGS[0]}"
-logAll "Input File: ${inputFile}"
-
-# check if the file does not exist
-if [ ! -f "$inputFile" ]; then 
+# loop through all the input files from the arguments
+fileCount=0
+for inputFile in "${REM_ARGS[@]}"; do
+  fileCount=$((++fileCount))
+  logAll "Input File ($fileCount of $argCount): ${inputFile}"
+  
+  # check if the file exists
+  if [ ! -f "${inputFile}" ]; then
     logAll "${RED}ERROR: input file not found${NC}"
     exit
-fi
+  fi
 
-# perform parsing of time log file
-parseFile "${inputFile}"
+  parseFile "$inputFile"
+done
