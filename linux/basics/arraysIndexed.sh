@@ -4,6 +4,7 @@
 #  Bash Notes:
 #    [@]   - expands values to separate words
 #    ${!   - the ! here expands the indices (keys) instead of the values
+#    local - can be used instead of declare when in a function
 #--------------------------------------------------------------------------------
 
 

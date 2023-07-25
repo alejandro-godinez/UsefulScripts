@@ -1,11 +1,12 @@
-<!-- Auto-generated using bashdoc.sh -->
+<small><i>Auto-generated using bashdoc.sh</i></small>
 # [bashdoc.sh](bashdoc.sh)
 
 Parse documentation comments from bash script and generate markdown. The output file will
 be saved in the same directory unless the optional output directory option is
 specified.  The output file name will be the name of the script with '.md' extension.
+A relative path option (-r) can be used to fix the link to the script in the header.
 
-@version 2023.6.28
+@version 2023.7.19
 
 Supported Function Formats:
 - name() { }
@@ -45,7 +46,7 @@ function doWork() {
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.   |
-| processArgs($1) | Process and capture the common execution options from the arguments used when  running the script. All other arguments specific to the script are retained  in array variable.    <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script  <br> |
+| processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script  <br> |
 | isComment($1) | Determine if text is a comment   <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br> |
 | isHeader($1) | Determine if text is a special header section indicator   <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br> |
 | isKeyword($1) | Determine if text is one a keyword   <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br> |
