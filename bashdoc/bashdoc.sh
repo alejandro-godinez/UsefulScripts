@@ -257,8 +257,8 @@ function writeParameterDescription {
 function parseBashScript {
   local inputFile="$1"
   
-  lineNo=0
-  lineNoPadded="000"
+  local lineNo=0
+  local lineNoPadded="000"
 
   # Reset the output file
   local outputFile="${OUTPUT_PATH}/${inputFile}.md"
@@ -275,9 +275,9 @@ function parseBashScript {
   echo "# [${inputFile}](${RELATIVE_PATH}${inputFile})" >> $outputFile
 
   # declare an array to store comments before function
-  declare -a commentArr=()
-  declare -a paramArr=()
-  isFirstFunction=true
+  local -a commentArr=()
+  local -a paramArr=()
+  local isFirstFunction=true
 
 
   # Read the file line by line
@@ -293,7 +293,7 @@ function parseBashScript {
       log "[$lineNoPadded] - Comment: $line"
 
       # get the comment text
-      commentText="${BASH_REMATCH[1]}"
+      local commentText="${BASH_REMATCH[1]}"
       log "  Comment Text:$commentText"
 
       # if this is a header indicator line output as description
@@ -304,7 +304,7 @@ function parseBashScript {
         echo "" >> $outputFile
 
       elif isKeyword "$commentText"; then
-        keywordType="${BASH_REMATCH[1]}"
+        local keywordType="${BASH_REMATCH[1]}"
         log "  Keyword Type:$keywordType"
         if [ "$keywordType" = "param" ]; then
           log "  Adding parameter to list..."
@@ -328,7 +328,7 @@ function parseBashScript {
       fi
 
       # get the function name from first group capture
-      functionName="${BASH_REMATCH[2]}"
+      local functionName="${BASH_REMATCH[2]}"
 
       # write function with open parenthesis
       logAll "${BLU}Function:${NC}${functionName}"

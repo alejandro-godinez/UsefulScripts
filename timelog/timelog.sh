@@ -40,8 +40,8 @@ rgxTaskNo="^([A-Z]+[A-Z0-9-]+)([ :\-]{2,3})?(.*)$"
 rgxTimeRange="^([0-9]{1,2}[:][0-9]{2})[ ]-[ ]([0-9]{1,2}[:][0-9]{2})"
 
 # define padding for task and hours output
-taskPad=12
-hoursPad=5
+TASK_PAD=12
+HOURS_PAD=5
 NO_TASK="NO_TASK"
 
 # Print the usage information for this script to standard output.
@@ -161,6 +161,108 @@ function div {
   echo "${result}"
 }
 
+# Perform all the work to parse a single time log file
+# 
+# @param $1 - the log file path
+function parseFile {
+  # define an associative array to map taskCode key to time value
+  local -A taskList
+
+  # add a position in array to accumulate time without a task
+  taskList["$NO_TASK"]=0
+
+  # variable to capture the task number and use for time range
+  local currentTaskNo=""
+
+  local lineNo=0
+  local lineNoPadded="000"
+
+  # read and loop through lines
+  while IFS= read -r line; do
+    #log "$line"
+
+    # count number of line
+    lineNo=$((++lineNo))
+
+    # pad line number with spaces
+    lineNoPadded=$(printf %4d $lineNo)
+
+    log "[$lineNoPadded]$line"
+
+    # detect if this is a task number line
+    if isTaskNo "$line"; then
+
+      # get the task number capture
+      currentTaskNo="${BASH_REMATCH[1]}"
+      log "Task: $currentTaskNo"
+
+      # add the task number to the list of it does not exist
+      if [[ ! -v taskList["$currentTaskNo"] ]]; then
+        log "Adding task number to list"
+        taskList["$currentTaskNo"]=0
+      fi
+
+    elif isTimeRange "$line"; then
+
+      # get the time range parts from the capture
+      local timeStart="${BASH_REMATCH[1]}"
+      logN "Start: $timeStart - "
+      local timeEnd="${BASH_REMATCH[2]}"
+      logN "End: $timeEnd"
+
+      # calculate the elapsed minutes from range
+      local elapsedMinutes=$(getElapsedMinutes "$timeStart" "$timeEnd")
+      log " -> Minutes: $elapsedMinutes"
+
+      # add time without defined task to a special position
+      if [[ -z ${currentTaskNo} ]]; then
+        log "${RED}Error:${NC} No task for time range"
+        taskList["$NO_TASK"]=$((taskList["$NO_TASK"] + elapsedMinutes))
+        continue
+      fi
+
+      # add minutes to task list key position
+      log "Adding $elapsedMinutes minutes to task $currentTaskNo"
+      taskList["$currentTaskNo"]=$((taskList["$currentTaskNo"] + elapsedMinutes))
+    
+      # clear the task number after assigning this time range
+      currentTaskNo=''
+    fi
+
+  done < "$inputFile"
+
+  # loop through and report on accumulated task time
+  log "Task List:"
+  local totalMinutes=0
+  for index in "${!taskList[@]}"; do
+    log "  Task: $index"
+
+    # add minutes to a total for the file
+    totalMinutes=$((totalMinutes + taskList[$index]))
+
+    # get the task minutes value
+    local taskMin=${taskList[$index]}
+    log "    Minutes: $taskMin"
+
+    # bash doesn't do dicimals, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
+    log "    Dividing by 60 to get hours"
+    local taskHours=$(div "$taskMin" "60")
+
+    if [[ "$index" == "$NO_TASK" ]]; then
+      logAll "${YEL}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+    else
+      logAll "${BLU}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+    fi
+  done
+
+  log "Total Minutes: $totalMinutes"
+  local totalHours=$(div "$totalMinutes" "60")
+
+  logAll "----------------------"
+  logAll "${GRN}$(printf %${TASK_PAD}s 'Total Hours:')${NC}$(printf %${HOURS_PAD}s ${totalHours})"
+  logAll ""
+}
+
 #< - - - Main - - - >
 
 # enable logging library escapes
@@ -191,99 +293,5 @@ if [ ! -f "$inputFile" ]; then
     exit
 fi
 
-# define an associative array to map taskCode key to time value
-declare -A taskList
-
-# add a position in array to accumulate time without a task
-taskList["$NO_TASK"]=0
-
-# variable to capture the task number and use for time range
-currentTaskNo=""
-
-lineNo=0
-lineNoPadded="000"
-
-# read and loop through lines
-while IFS= read -r line; do
-  #log "$line"
-
-  # count number of line
-  lineNo=$((++lineNo))
-
-  # pad line number with spaces
-  lineNoPadded=$(printf %4d $lineNo)
-
-  log "[$lineNoPadded]$line"
-
-  # detect if this is a task number line
-  if isTaskNo "$line"; then
-
-    # get the task number capture
-    currentTaskNo="${BASH_REMATCH[1]}"
-    log "Task: $currentTaskNo"
-
-    # add the task number to the list of it does not exist
-    if [[ ! -v taskList["$currentTaskNo"] ]]; then
-      log "Adding task number to list"
-      taskList["$currentTaskNo"]=0
-    fi
-
-  elif isTimeRange "$line"; then
-
-    # get the time range parts from the capture
-    timeStart="${BASH_REMATCH[1]}"
-    logN "Start: $timeStart - "
-    timeEnd="${BASH_REMATCH[2]}"
-    logN "End: $timeEnd"
-
-    # calculate the elapsed minutes from range
-    elapsedMinutes=$(getElapsedMinutes "$timeStart" "$timeEnd")
-    log " -> Minutes: $elapsedMinutes"
-
-    # add time without defined task to a special position
-    if [[ -z ${currentTaskNo} ]]; then
-      log "${RED}Error:${NC} No task for time range"
-      taskList["$NO_TASK"]=$((taskList["$NO_TASK"] + elapsedMinutes))
-      continue
-    fi
-
-    # add minutes to task list key position
-    log "Adding $elapsedMinutes minutes to task $currentTaskNo"
-    taskList["$currentTaskNo"]=$((taskList["$currentTaskNo"] + elapsedMinutes))
-   
-    # clear the task number after assigning this time range
-    currentTaskNo=''
-  fi
-
-done < "$inputFile"
-
-# loop through and report on accumulated task time
-log "Task List:"
-totalMinutes=0
-for index in "${!taskList[@]}"; do
-  log "  Task: $index"
-
-  # add minutes to a total for the file
-  totalMinutes=$((totalMinutes + taskList[$index]))
-
-  # get the task minutes value
-  taskMin=${taskList[$index]}
-  log "    Minutes: $taskMin"
-
-  # bash doesn't do dicimals, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
-  log "    Dividing by 60 to get hours"
-  taskHours=$(div "$taskMin" "60")
-
-  if [[ "$index" == "$NO_TASK" ]]; then
-    logAll "${YEL}$(printf %${taskPad}s ${index}:)${NC}$(printf %${hoursPad}s ${taskHours})"
-  else
-    logAll "${BLU}$(printf %${taskPad}s ${index}:)${NC}$(printf %${hoursPad}s ${taskHours})"
-  fi
-done
-
-log "Total Minutes: $totalMinutes"
-totalHours=$(div "$totalMinutes" "60")
-
-logAll "----------------------"
-logAll "${GRN}$(printf %${taskPad}s 'Total Hours:')${NC}$(printf %${hoursPad}s ${totalHours})"
-logAll ""
+# perform parsing of time log file
+parseFile "${inputFile}"
