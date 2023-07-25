@@ -2,7 +2,7 @@
 #-------------------------------------------------------------------------------------------
 # Parse time log work hour files
 # 
-# @version 2023.07.05
+# @version 2023.07.25
 # 
 # Notes:<br>
 # - time range without task will add time to previous task
