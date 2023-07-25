@@ -6,8 +6,9 @@
 # 
 # Dependencies:  
 #   ../UsefulScripts/linux/lib/logging.sh  
+#   ../UsefulScripts/linux/lib/arguments.sh
 # 
-# version: 2023.3.16
+# version: 2023.7.25
 #----------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -24,11 +25,15 @@ if [[ ! -f ~/lib/logging.sh ]]; then
 fi
 source ~/lib/logging.sh
 
+# import argument processing functionality
+if [[ ! -f ~/lib/arguments.sh ]]; then
+  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
+  exit
+fi
+source ~/lib/arguments.sh
+
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
-
-#//indexed array of arguments that are not options/flags
-declare -a ARG_VALUES
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -51,37 +56,31 @@ function printHelp {
   echo ""
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  #//check the command arguments
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    log "  Argument: ${arg}"
+  
+  # initialize expected options
+  addOption "-v"
+  addOption "-h"
+
+  # perform parsing of options
+  parseArguments "$@"
+
+  #printArgs
+  #printRemArgs
     
-    #//the arguments to the next item
-    shift 
-    
-    #//check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-      continue
-    fi
-    
-    #//check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
-    fi
-    
-    #//keep arguments that are not options or values from the option
-    log "    > Adding $arg to rem arg list"
-    ARG_VALUES+=("$arg")
-  done
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
 }
 
 #< - - - Main - - - >
@@ -91,10 +90,10 @@ processArgs "$@"
 
 #//print out the list of args that were not consumed by function (non-flag arguments)
 argCount=0
-if [[ -v ARG_VALUES ]]; then
-  argCount=${#ARG_VALUES[@]}
+if [[ -v REM_ARGS ]]; then
+  argCount=${#REM_ARGS[@]}
   log "List Remaining Args: ${argCount}"
-  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
+  for item in "${REM_ARGS[@]}"; do log "  ${item}"; done
 else
   #log "No Process Arguments Identified"
   printHelp
@@ -102,12 +101,12 @@ else
 fi
 
 #//get the search term from the first argument
-search="${ARG_VALUES[0]}"
+search="${REM_ARGS[0]}"
 logAll "Search: ${search}"
 
 #//if the directory is not supplied default to current work directory
 if (( argCount > 1 )); then
-  dir="${ARG_VALUES[1]}"
+  dir="${REM_ARGS[1]}"
 else
   dir="$(pwd)/"
 fi
