@@ -270,10 +270,10 @@ function installFile {
     logAll "  ${GRN}Install:${NC}$destFile"
 
     #//dont perform copy if this is a mock run
-    if [ "$IS_MOCK" = true ]; then continue; fi
+    if [ "$IS_MOCK" = true ]; then return; fi
 
     cp "$srcFile" "$destFile"
-    continue
+    return
   fi
 
   # get hash for both source and destination files
@@ -287,10 +287,10 @@ function installFile {
     logAll "  ${YEL}Update:${NC}$destFile"
     
     #//dont perform copy if this is a mock run
-    if [ "$IS_MOCK" = true ]; then continue; fi
+    if [ "$IS_MOCK" = true ]; then return; fi
 
     cp "$srcFile" "$destFile"
-    continue
+    return
   fi
 
   # no install/update performed
