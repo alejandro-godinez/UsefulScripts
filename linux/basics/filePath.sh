@@ -19,9 +19,15 @@ pathOnly=$(dirname $filePath)
 echo "Dirname: $pathOnly"
 fileName=$(basename $filePath)
 echo "Basename: $fileName"
+nameNoExt=$(basename -s .sh $filePath)
+echo "No Extension: $nameNoExt"
 
 #Using parameter expansion
 pathOnly=${filePath%/*}
 echo "Directory (expansion): $pathOnly"
 fileName=${filePath##*/}
 echo "Name (expansion): $fileName"
+nameNoExt="${fileName%.*}"
+echo "No Extension (expansion): $nameNoExt"
+extension="${fileName##*.}"
+echo "Extension: $extension"
