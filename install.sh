@@ -29,15 +29,15 @@ YEL='\033[1;33m'
 PUR='\033[0;35m'
 U_CYN='\033[4;36m'
 
-# import logging functionality from project
+# import logging functionality from project, may not be installed yet
 if [[ ! -f ./linux/lib/logging.sh ]]; then
   echo -e "${RED}ERROR: Missing logging.sh library${NC}"
   exit
 fi
 source ~/lib/logging.sh
 
-# import argument processing functionality
-if [[ ! -f ~/lib/arguments.sh ]]; then
+# import argument processing functionality, may not be installed yet
+if [[ ! -f ~/linux/lib/arguments.sh ]]; then
   echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
   exit
 fi
