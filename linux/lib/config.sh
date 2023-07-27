@@ -1,10 +1,13 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
 # Library implementation with functions to read from a configuration file
-# with simple name value pair (name=value).
+# with simple name value pair (i.e. name=value). The value is acquired after
+# the first instance of the equal sign, therefore equals character is valid in
+# the value.
 # 
 # TODO:
 # - Add write functionality
+# - Get a list of available property names
 # 
 # Import Sample Code:
 #   <pre>
@@ -41,9 +44,7 @@ function hasProperty {
   fi
 
   # use grep to get a count of matches for ('propName=')
-  #echo "Prop Name: $propName"
   matchCount=$(grep -cE "^(\s*)${propName}=" "${configFile}")
-  #echo "Count: $matchCount"
   if (( matchCount > 0 )); then
     return 0
   fi
@@ -79,13 +80,15 @@ function getProperty {
   echo ""
 }
 
-#// TESTING 
+# -- TESTING --
 # configFile="./test/test.config"
-# property="lastupdate"
-# if hasProperty "$configFile" "$property"; then
-#   echo "${property} - Exists"
-#   value=$(getProperty "$configFile" "$property")
-#   echo "Value:$value"
-# else
-#   echo "${property} - Not Found"
-# fi
+# declare -a props=("name" "country" "lastupdate" "somekey") 
+# for property in "${props[@]}"; do
+#   if hasProperty "$configFile" "$property"; then
+#     echo -n "${property} - "
+#     value=$(getProperty "$configFile" "$property")
+#     echo "$value"
+#   else
+#     echo "${property} - [Not Found]"
+#   fi
+# done
