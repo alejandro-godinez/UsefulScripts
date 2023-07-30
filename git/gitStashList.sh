@@ -17,26 +17,15 @@ GRN='\033[0;32m'
 YEL='\033[1;33m'
 RED='\033[1;31m'
 
-#//import logging functionality
-if [[ ! -f ~/lib/logging.sh ]]; then
-  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
-  exit
-fi
-source ~/lib/logging.sh
-
-#//import git functionality
-if [[ ! -f ~/lib/git_lib.sh ]]; then
-  echo "${RED}ERROR: Missing git_lib.sh library${NC}"
-  exit
-fi
-source ~/lib/git_lib.sh
-
-# import argument processing functionality
-if [[ ! -f ~/lib/arguments.sh ]]; then
-  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
-  exit
-fi
-source ~/lib/arguments.sh
+# define list of libraries and import them
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
+for lib in "${libs[@]}"; do 
+  if [[ ! -f $lib ]]; then
+    echo -e "${RED}ERROR: Missing $lib library${NC}"
+    exit
+  fi 
+  source "$lib"
+done
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
