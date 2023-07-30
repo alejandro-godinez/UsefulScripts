@@ -20,19 +20,15 @@ BLU='\033[0;34m'
 YEL='\033[0;33m'
 U_CYN='\033[4;36m'
 
-# import logging functionality
-if [[ ! -f ~/lib/logging.sh ]]; then
-  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
-  exit
-fi
-source ~/lib/logging.sh
-
-# import argument processing functionality
-if [[ ! -f ~/lib/arguments.sh ]]; then
-  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
-  exit
-fi
-source ~/lib/arguments.sh
+# define list of libraries and import them
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
+for lib in "${libs[@]}"; do 
+  if [[ ! -f $lib ]]; then
+    echo -e "${RED}ERROR: Missing $lib library${NC}"
+    exit
+  fi 
+  source "$lib"
+done
 
 # task number regex, should support any uppercase alphanumeric with optional dash separator
 rgxTaskNo="^([A-Z]+[A-Z0-9-]+)([ :\-]{2,3})?(.*)$"

@@ -116,7 +116,7 @@ function getArgument {
 }
 
 # Check if the specified option was parsed from the arguments.
-# This checks if the value is not empty
+# This checks if the value is not 'false'
 # 
 # @param $1 - the option name
 function hasArgument {

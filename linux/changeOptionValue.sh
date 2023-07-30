@@ -25,18 +25,18 @@ YEL='\033[1;33m'
 RED='\033[0;31m'
 U_CYN='\033[4;36m'       # Cyan
 
-#//import logging functionality
-if [[ ! -f ~/lib/logging.sh ]]; then
-  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
-  exit
-fi
-source ~/lib/logging.sh
+# define list of libraries and import them
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
+for lib in "${libs[@]}"; do 
+  if [[ ! -f $lib ]]; then
+    echo -e "${RED}ERROR: Missing $lib library${NC}"
+    exit
+  fi 
+  source "$lib"
+done
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
-
-#//indexed array of arguments that are not options/flags
-declare -a ARG_VALUES
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -56,36 +56,30 @@ function printHelp {
   echo ""
 }
 
-# Process and capture the common execution options from the arguments used when
-# running the script. All other arguments specific to the script are retained
-# in array variable.
+# Setup and execute the argument processing functionality imported from arguments.sh.
 # 
 # @param $1 - array of argument values provided when calling the script
 function processArgs {
-  log "Arg Count: $#"
-  while (( $# > 0 )); do
-    arg=$1
-    log "  Argument: ${arg}"
-    
-    #//the arguments to the next item
-    shift 
-    
-    #//check for verbose
-    if [ "${arg^^}" = "-V" ]; then
-      DEBUG=true
-      continue
-    fi
-    
-    #//check for help
-    if [ "${arg^^}" = "-H" ]; then
-      printHelp
-      exit 0
-    fi
-    
-    #//keep arguments that are not options or values from the option
-    log "    > Adding $arg to rem arg list"
-    ARG_VALUES+=("$arg")
-  done
+  # initialize expected options
+  addOption "-v"
+  addOption "-h"
+  
+  # perform parsing of options
+  parseArguments "$@"
+
+  # printArgs
+  # printRemArgs
+  
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
 }
 
 #< - - - Main - - - >
@@ -99,10 +93,10 @@ processArgs "$@"
 
 #//print out the list of args that were not consumed by function (non-flag arguments)
 argCount=0
-if [[ -v ARG_VALUES ]]; then
-  argCount=${#ARG_VALUES[@]}
+if [[ -v REM_ARGS ]]; then
+  argCount=${#REM_ARGS[@]}
   log "List Remaining Args: ${argCount}"
-  for item in "${ARG_VALUES[@]}"; do log "  ${item}"; done
+  for item in "${REM_ARGS[@]}"; do log "  ${item}"; done
 else
   #log "No Process Arguments Identified"
   printHelp
@@ -120,7 +114,7 @@ fi
 
 #//get and check if specified file does not exist
 log "Checking if the file exists..."
-file="${ARG_VALUES[0]}"
+file="${REM_ARGS[0]}"
 if [[ ! -f  $file ]]; then
   logAll "  ${YEL}ERROR: File specified was not found${NC}"
   logAll "  ${YEL}FILE: ${file}${NC}"
@@ -130,7 +124,7 @@ logAll "${U_CYN}FILE:${NC} ${file}"
 
 #//get and check if the option name was specified
 log "Checking the option name..."
-optionName="${ARG_VALUES[1]}"
+optionName="${REM_ARGS[1]}"
 if [[ -z "${optionName// }" ]]; then
   logAll "Option name no specified."
   exit 1
@@ -139,7 +133,7 @@ logAll "${U_CYN}Option Name:${NC} ${optionName}"
 
 #//get and check if the option value was specified
 log "Checking the option value..."
-optionValue="${ARG_VALUES[2]}"
+optionValue="${REM_ARGS[2]}"
 if [[ -z "${optionValue// }" ]]; then
   logAll "Option value not specified."
   exit 1
