@@ -29,19 +29,16 @@ YEL='\033[1;33m'
 PUR='\033[0;35m'
 U_CYN='\033[4;36m'
 
-# import logging functionality from project, may not be installed yet
-if [[ ! -f ./linux/lib/logging.sh ]]; then
-  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
-  exit
-fi
-source ~/lib/logging.sh
 
-# import argument processing functionality, may not be installed yet
-if [[ ! -f ~/linux/lib/arguments.sh ]]; then
-  echo -e "${RED}ERROR: Missing arguments.sh library${NC}"
-  exit
-fi
-source ~/lib/arguments.sh
+# define list of libraries and import them
+declare -a libs=( ./linux/lib/logging.sh ./linux/lib/arguments.sh)
+for lib in "${libs[@]}"; do 
+  if [[ ! -f $lib ]]; then
+    echo -e "${RED}ERROR: Missing $lib library${NC}"
+    exit
+  fi 
+  source "$lib"
+done
 
 # set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
