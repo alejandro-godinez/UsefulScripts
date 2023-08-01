@@ -57,7 +57,9 @@ alias gitLog='git log -5'
 alias gitLogLines='git log -5 --pretty=online'
 #//list of local commits (HEAD) not pushed to origin
 alias gitLogLocal='git log ORIGIN..HEAD'
+#alias gitLogLocal='git log origin/trunk..HEAD'
 alias gitLogLocalLines='git log ORIGIN..HEAD --pretty=oneline'
+#alias gitLogLocalLines='git log origin/trunk..HEAD --pretty=oneline'
 
 #------------------------------------------------
 # SSH commands
