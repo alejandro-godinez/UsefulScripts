@@ -1,6 +1,10 @@
 # UsefulScripts
 An assortment of useful scripts from a wide variety of technologies.
 
+### [Install](docs/install.sh.md)
+- **[install.sh](install.sh)**  
+Script to install the various bash scripts and libraries from this project
+
 ### [ANT](ant/readme.md)
 - **build_junit.xml**  
 A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
