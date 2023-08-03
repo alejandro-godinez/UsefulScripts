@@ -4,7 +4,7 @@
 Parse time log work hour files and output time spend on each task as well as total for
 each file day.
 
-@version 2023.07.25
+@version 2023.08.03
 
 Notes:<br>
 - time range without task will add time to previous task
@@ -19,9 +19,10 @@ timelog.sh [options] [files]
 
 Examples:
 <pre>
-Single:    timelog.sh 2023.06.28.hrs
-Multiple:  timelog.sh 2023.06*hrs
-Summary:   timelog.sh -s 2023.06*.hrs
+All .hrs Files:  timelog.sh -s
+Single:          timelog.sh 2023.06.28.hrs
+Multiple:        timelog.sh 2023.06*hrs
+Summary:         timelog.sh -s 2023.06*.hrs
 </pre>
 
 

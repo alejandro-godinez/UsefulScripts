@@ -3,7 +3,7 @@
 # Parse time log work hour files and output time spend on each task as well as total for
 # each file day.
 # 
-# @version 2023.07.25
+# @version 2023.08.03
 # 
 # Notes:<br>
 # - time range without task will add time to previous task
@@ -18,9 +18,10 @@
 # 
 # Examples:
 # <pre>
-# Single:    timelog.sh 2023.06.28.hrs
-# Multiple:  timelog.sh 2023.06*hrs
-# Summary:   timelog.sh -s 2023.06*.hrs
+# All .hrs Files:  timelog.sh -s
+# Single:          timelog.sh 2023.06.28.hrs
+# Multiple:        timelog.sh 2023.06*hrs
+# Summary:         timelog.sh -s 2023.06*.hrs
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -74,9 +75,10 @@ function printHelp {
   echo "    -s        Summary output"
   echo ""
   echo "Examples:"
-  echo "  Single:    timelog.sh 2023.06.28.hrs"
-  echo "  Multiple:  timelog.sh 2023.06*hrs"
-  echo "  Summary:   timelog.sh -s 2023.06*.hrs"
+  echo "  All .hrs Files:  timelog.sh -s"
+  echo "  Single:          timelog.sh 2023.06.28.hrs"
+  echo "  Multiple:        timelog.sh 2023.06*hrs"
+  echo "  Summary:         timelog.sh -s 2023.06*.hrs"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -337,17 +339,25 @@ escapesOn
 # process arguments
 processArgs "$@"
 
-# print out the list of args that were not consumed by function (non-flag arguments)
+# check if no files were specified, no remaining arguments 
 argCount=0
-if [[ -v REM_ARGS ]]; then
-  argCount=${#REM_ARGS[@]}
-  log "List Remaining Args: ${argCount}"
-  for item in "${REM_ARGS[@]}"; do log "  ${item}"; done
-else
-  #log "No Process Arguments Identified"
-  printHelp
+if [[ ! -v REM_ARGS ]]; then
+  # search for hrs files in current directory, depth of 3 should be enough (timelog/year/month)
+  fileList=$(find -mindepth 1 -maxdepth 3 -type f -name '*.hrs')
+  for file in $fileList; do
+    REM_ARGS+=($file)
+    argCount=$((++argCount))
+  done
+fi
+
+# check files were specified or found
+if (( argCount == 0 )); then
+  logAll "No files found"
   exit 0
 fi
+
+log "List Found Files: ${argCount}"
+for item in "${REM_ARGS[@]}"; do logAll "  ${item}"; done
 
 # loop through all the input files from the arguments
 fileCount=0
