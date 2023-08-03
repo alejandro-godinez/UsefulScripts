@@ -7,6 +7,21 @@
 # 
 # Notes:<br>
 # - time range without task will add time to previous task
+# 
+# Usage:<br>
+# <pre>
+# timelog.sh [options] [files]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -s           Summary output
+# </pre>
+# 
+# Examples:
+# <pre>
+# Single:    timelog.sh 2023.06.28.hrs
+# Multiple:  timelog.sh 2023.06*hrs
+# Summary:   timelog.sh -s 2023.06*.hrs
+# </pre>
 #-------------------------------------------------------------------------------------------
 
 set -u # error on unset variable
@@ -41,6 +56,9 @@ TASK_PAD=12
 HOURS_PAD=5
 NO_TASK="NO_TASK"
 
+# summary of hours for all files parsed
+declare -A summaryTaskList
+
 # Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will parse a time log ".hrs" file and output task work time"
@@ -53,10 +71,12 @@ function printHelp {
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -s        Summary output"
   echo ""
   echo "Examples:"
-  echo "  timelog.sh 2023.06.28.hrs"
-  echo "  timelog.sh 2023.06*hrs"
+  echo "  Single:    timelog.sh 2023.06.28.hrs"
+  echo "  Multiple:  timelog.sh 2023.06*hrs"
+  echo "  Summary:   timelog.sh -s 2023.06*.hrs"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -67,6 +87,7 @@ function processArgs {
   # initialize expected options
   addOption "-v"
   addOption "-h"
+  addOption "-s"
   
   # perform parsing of options
   parseArguments "$@"
@@ -216,18 +237,29 @@ function parseFile {
       if [[ -z ${currentTaskNo} ]]; then
         log "${RED}Error:${NC} No task for time range"
         taskList["$NO_TASK"]=$((taskList["$NO_TASK"] + elapsedMinutes))
+
+        # add task time to summary
+        addTaskToSummary "$NO_TASK" $elapsedMinutes
         continue
       fi
 
       # add minutes to task list key position
       log "Adding $elapsedMinutes minutes to task $currentTaskNo"
       taskList["$currentTaskNo"]=$((taskList["$currentTaskNo"] + elapsedMinutes))
+      
+      # add task time to summary
+      addTaskToSummary "$currentTaskNo" $elapsedMinutes
     
       # clear the task number after assigning this time range
       currentTaskNo=''
     fi
 
   done < "$inputFile"
+
+  # don't print individual file info when summary option was specified
+  if hasArgument "-s"; then
+    return
+  fi
 
   # loop through and report on accumulated task time
   log "Task List:"
@@ -259,6 +291,42 @@ function parseFile {
   logAll "----------------------"
   logAll "${GRN}$(printf %${TASK_PAD}s 'Total Hours:')${NC}$(printf %${HOURS_PAD}s ${totalHours})"
   logAll ""
+}
+
+# Adds a task and time to the summary task list
+# 
+# @param $1 - task number to update
+# @param $2 - time to add
+function addTaskToSummary {
+  local taskNo="$1"
+  local elapsedMinutes=$2
+
+  if [[ ! -v summaryTaskList["$taskNo"] ]]; then
+    log "Adding task number ($taskNo) to summary list"
+    summaryTaskList["$taskNo"]=0
+  fi
+  summaryTaskList["$taskNo"]=$((summaryTaskList["$taskNo"] + elapsedMinutes))
+}
+
+# Print the summary of all task files parsed
+function printSummary {
+  for index in "${!summaryTaskList[@]}"; do
+    log "  Task: $index"
+
+    # get the task minutes value
+    local taskMin=${summaryTaskList[$index]}
+    log "    Minutes: $taskMin"
+    
+    # bash doesn't do dicimals, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
+    log "    Dividing by 60 to get hours"
+    local taskHours=$(div "$taskMin" "60")
+
+    if [[ "$index" == "$NO_TASK" ]]; then
+      logAll "${YEL}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+    else
+      logAll "${BLU}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+    fi
+  done
 }
 
 #< - - - Main - - - >
@@ -293,5 +361,12 @@ for inputFile in "${REM_ARGS[@]}"; do
     exit
   fi
 
+  log "Parsing File..."
   parseFile "$inputFile"
 done
+
+# check for the print summary option
+if hasArgument "-s"; then
+  log "Printing Summary..."
+  printSummary
+fi
