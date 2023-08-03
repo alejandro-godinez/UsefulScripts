@@ -341,8 +341,11 @@ processArgs "$@"
 
 # check if no files were specified, no remaining arguments 
 argCount=0
-if [[ ! -v REM_ARGS ]]; then
+if [[ -v REM_ARGS ]]; then
+  argCount=${#REM_ARGS[@]}
+else
   # search for hrs files in current directory, depth of 3 should be enough (timelog/year/month)
+  log "Serach for hrs files..."
   fileList=$(find -mindepth 1 -maxdepth 3 -type f -name '*.hrs')
   for file in $fileList; do
     REM_ARGS+=($file)
