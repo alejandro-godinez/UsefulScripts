@@ -10,10 +10,28 @@
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
+# @version: 2023.8.3
+# 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
 # 
-# version: 2023.7.24
+# Usage:<br>
+# <pre>
+# install.sh [option]
+# 
+# Options:
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -m           Mock run, will display what will be installed and updated
+#   -a           Install all pre-defined projects
+#   -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed
+# </pre>
+# 
+# Examples:
+# <pre>
+#   install.sh -n bashdoc
+#   - install the bashdoc.sh script
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u # error on unset variable
