@@ -11,7 +11,6 @@
 # <br>
 # 
 # TODO:<br>
-# - Add script option to simply install all projects without prompt (-a)
 # - Better detect changes in script, maybe by version number if one exists
 # 
 # version: 2023.7.24
@@ -72,6 +71,7 @@ function printHelp {
   echo "    -h           This help info"
   echo "    -v           Verbose/debug output"
   echo "    -m           Mock run, will display what will be installed and updated"
+  echo "    -a           Install all pre-defined projects"
   echo "    -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed"
   echo ""
   echo "Examples:"
@@ -89,6 +89,7 @@ function processArgs {
   addOption "-v"
   addOption "-h"
   addOption "-m"
+  addOption "-a"
   addOption "-n" true
 
   # perform parsing of options
@@ -347,6 +348,19 @@ fi
 # output mock run indicator
 if [ "$IS_MOCK" = true ]; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
 
+# check if option for all project install
+if hasArgument "-a"; then
+  # loop through and install all predefined directories
+  for projDir in "${SOURCE_DIRS[@]}"; do
+    logAll "${U_CYN}${projDir}${NC}"
+    logAll "${BLU}BIN Scripts...${NC}"
+    installProject "$projDir"
+    logAll "${BLU}LIB Scripts...${NC}"
+    installProject "$projDir" "lib"
+  done
+  exit 0
+fi
+
 # check if option for a single file to install was specified
 if hasArgument "-n"; then
   installSingleFile
@@ -360,7 +374,8 @@ if ! promptForInstall ; then
   exit 0
 fi
 
-logAll "${U_CYN}BIN Scripts...${NC}"
+logAll "${U_CYN}${projDir}${NC}"
+logAll "${BLU}BIN Scripts...${NC}"
 installProject "$projDir"
-logAll "${U_CYN}LIB Scripts...${NC}"
+logAll "${BLU}LIB Scripts...${NC}"
 installProject "$projDir" "lib"
