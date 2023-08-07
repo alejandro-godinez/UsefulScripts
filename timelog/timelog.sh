@@ -3,7 +3,7 @@
 # Parse time log work hour files and output time spend on each task as well as total for
 # each file day.
 # 
-# @version 2023.08.03
+# @version 2023.08.07
 # 
 # Notes:<br>
 # - time range without task will add time to previous task
@@ -14,6 +14,7 @@
 #   -h           This help info
 #   -v           Verbose/debug output
 #   -s           Summary output
+#   -t           Task filter
 # </pre>
 # 
 # Examples:
@@ -22,6 +23,7 @@
 # Single:          timelog.sh 2023.06.28.hrs
 # Multiple:        timelog.sh 2023.06*hrs
 # Summary:         timelog.sh -s 2023.06*.hrs
+# Task Filter:     timelog.sh -t "ABC-1234"
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -35,6 +37,9 @@ GRN='\033[0;32m'
 BLU='\033[0;34m'
 YEL='\033[0;33m'
 U_CYN='\033[4;36m'
+
+SPINNER=("|" "/" "-" "\\")
+SPIN_IDX=0
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
@@ -60,6 +65,20 @@ NO_TASK="NO_TASK"
 # summary of hours for all files parsed
 declare -A summaryTaskList
 
+# Display the next step in the cursor spinner
+function spinCursor {
+  # increment spin counter
+  SPIN_IDX=$((++SPIN_IDX))
+
+  # reset spinner back to zero
+  if (( SPIN_IDX > 3)); then
+    SPIN_IDX=0
+  fi
+
+  # print backspace to remove previous character and next spin character
+  echo -en "\b${SPINNER[$SPIN_IDX]}"
+}
+
 # Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will parse a time log ".hrs" file and output task work time"
@@ -73,6 +92,7 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -s        Summary output"
+  echo "    -t        Task filter"
   echo ""
   echo "Examples:"
   echo "  All .hrs Files:  timelog.sh -s"
@@ -90,6 +110,7 @@ function processArgs {
   addOption "-v"
   addOption "-h"
   addOption "-s"
+  addOption "-t" true
   
   # perform parsing of options
   parseArguments "$@"
@@ -186,11 +207,13 @@ function div {
 # 
 # @param $1 - the log file path
 function parseFile {
+  local inputFile=$1
+
   # define an associative array to map taskCode key to time value
   local -A taskList
 
   # add a position in array to accumulate time without a task
-  taskList["$NO_TASK"]=0
+  # taskList["$NO_TASK"]=0
 
   # variable to capture the task number and use for time range
   local currentTaskNo=""
@@ -217,6 +240,15 @@ function parseFile {
       currentTaskNo="${BASH_REMATCH[1]}"
       log "Task: $currentTaskNo"
 
+      # filter for only the specified task
+      if hasArgument "-t"; then
+        local filterTask=$(getArgument "-t")
+        if [ "$currentTaskNo" != "$filterTask" ]; then
+          currentTaskNo=""
+          continue
+        fi
+      fi
+
       # add the task number to the list of it does not exist
       if [[ ! -v taskList["$currentTaskNo"] ]]; then
         log "Adding task number to list"
@@ -237,6 +269,17 @@ function parseFile {
 
       # add time without defined task to a special position
       if [[ -z ${currentTaskNo} ]]; then
+
+        # when task filter has been specified don't add the NO_TASK entries
+        if hasArgument "-t"; then
+          continue
+        fi
+
+        # add the special NO_TASK entry if it does not exist
+        if [[ ! -v taskList["$NO_TASK"] ]]; then
+          taskList["$NO_TASK"]=0
+        fi
+
         log "${RED}Error:${NC} No task for time range"
         taskList["$NO_TASK"]=$((taskList["$NO_TASK"] + elapsedMinutes))
 
@@ -263,6 +306,9 @@ function parseFile {
     return
   fi
 
+  logAllN "\b"
+  logAll "File: ${inputFile}"
+
   # loop through and report on accumulated task time
   log "Task List:"
   local totalMinutes=0
@@ -286,6 +332,11 @@ function parseFile {
       logAll "${BLU}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
     fi
   done
+
+  # don't print individual file total when task filter has been specified 
+  if hasArgument "-t"; then
+    return
+  fi
 
   log "Total Minutes: $totalMinutes"
   local totalHours=$(div "$totalMinutes" "60")
@@ -360,22 +411,37 @@ if (( argCount == 0 )); then
 fi
 
 log "List Found Files: ${argCount}"
-for item in "${REM_ARGS[@]}"; do logAll "  ${item}"; done
+for item in "${REM_ARGS[@]}"; do log "  ${item}"; done
 
 # loop through all the input files from the arguments
 fileCount=0
 for inputFile in "${REM_ARGS[@]}"; do
   fileCount=$((++fileCount))
-  logAll "Input File ($fileCount of $argCount): ${inputFile}"
+  log "Input File ($fileCount of $argCount): ${inputFile}"
   
+  # print a dot indicator that work is being done
+  if ! hasArgument "-v"; then
+    spinCursor
+  fi
+
   # check if the file exists
   if [ ! -f "${inputFile}" ]; then
     logAll "${RED}ERROR: input file not found${NC}"
-    exit
+    continue
+  fi
+
+  # don't parse file if task filter was specified and file doesn't contain the task
+  if hasArgument "-t"; then
+    filterTask=$(getArgument "-t")
+    log "Filter: $filterTask"
+    if ! grep -q -m 1 -c "$filterTask" "$inputFile"; then
+      log "  Task Filter Not found"
+      continue
+    fi
   fi
 
   log "Parsing File..."
-  parseFile "$inputFile"
+  parseFile $inputFile
 done
 
 # check for the print summary option
