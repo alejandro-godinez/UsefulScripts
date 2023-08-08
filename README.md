@@ -60,8 +60,10 @@ Move all files in the working directory into a sub-folder of the year equal to t
 Extract all '.tar.gz' file into the working directory.
 
 - **Libraries**  
-    - **logging.sh** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
-    - **arguments.sh** - Implementation of script argument processing
+    - **[logging.sh](linux/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
+    - **[arguments.sh](linux/lib/docs/arguments.sh.md)** - Implementation of script argument processing
+    - **[config.sh](linux/lib/docs/config.sh.md)** - Implementation of reader for name/value pair from config file
+    - **[spinner.sh](linux/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
 
 
 ### Maven  
