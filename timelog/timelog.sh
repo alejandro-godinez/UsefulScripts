@@ -38,11 +38,8 @@ BLU='\033[0;34m'
 YEL='\033[0;33m'
 U_CYN='\033[4;36m'
 
-SPINNER=("|" "/" "-" "\\")
-SPIN_IDX=0
-
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -65,19 +62,7 @@ NO_TASK="NO_TASK"
 # summary of hours for all files parsed
 declare -A summaryTaskList
 
-# Display the next step in the cursor spinner
-function spinCursor {
-  # increment spin counter
-  SPIN_IDX=$((++SPIN_IDX))
 
-  # reset spinner back to zero
-  if (( SPIN_IDX > 3)); then
-    SPIN_IDX=0
-  fi
-
-  # print backspace to remove previous character and next spin character
-  echo -en "\b${SPINNER[$SPIN_IDX]}"
-}
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -306,7 +291,9 @@ function parseFile {
     return
   fi
 
-  logAllN "\b"
+  #delete the spinner character
+  spinDel
+
   logAll "File: ${inputFile}"
 
   # loop through and report on accumulated task time
@@ -421,7 +408,7 @@ for inputFile in "${REM_ARGS[@]}"; do
   
   # print a dot indicator that work is being done
   if ! hasArgument "-v"; then
-    spinCursor
+    spinChar
   fi
 
   # check if the file exists
