@@ -82,7 +82,7 @@ currDir=$(pwd)
 log "Current Dir: ${currDir}"
 
 #//if the directory is not supplied default to current work directory
-message="${ARG_VALUES[0]}"
+message="${REM_ARGS[0]}"
 log "  Message:  ${message}"
 
 log "Checking current directory..."
