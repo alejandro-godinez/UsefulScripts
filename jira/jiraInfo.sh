@@ -19,19 +19,60 @@ CONFIG_FILE=~/auth/jira.config
 USER=
 API_TOKEN=
 
-# import logging functionality
-if [[ ! -f ~/lib/logging.sh ]]; then
-  echo -e "${RED}ERROR: Missing logging.sh library${NC}"
-  exit
-fi
-source ~/lib/logging.sh
+# define list of libraries and import them
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/config.sh)
+for lib in "${libs[@]}"; do 
+  if [[ ! -f $lib ]]; then
+    echo -e "${RED}ERROR: Missing $lib library${NC}"
+    exit
+  fi 
+  source "$lib"
+done
 
-# import configuration functionality
-if [[ ! -f ~/lib/config.sh ]]; then
-  echo -e "${RED}ERROR: Missing config.sh library${NC}"
-  exit
-fi
-source ~/lib/config.sh
+# Print the usage information for this script to standard output.
+function printHelp {
+  echo "Usage: jiraInfo.sh [-h] [-v] -j jiraId"
+  echo "  Print information for the jira item id specified"
+  echo ""
+  echo "  Options:"
+  echo "    -h         This help text info"
+  echo "    -v         Verbose/debug output"
+  echo "    -j jiraId  The jira item/issue id"
+}
+
+# Setup and execute the argument processing functionality imported from arguments.sh.
+# 
+# @param $1 - array of argument values provided when calling the script
+function processArgs {
+  # initialize expected options
+  addOption "-v"      #verbose
+  addOption "-h"      #help
+  addOption "-j" true #jira item id
+  
+  # perform parsing of options
+  parseArguments "$@"
+
+  #printArgs
+  #printRemArgs
+    
+  # check for help
+  if hasArgument "-h"; then
+    printHelp
+    exit 0
+  fi
+
+  # check for vebose/debug
+  if hasArgument "-v"; then
+    DEBUG=true
+  fi
+
+  if ! hasArgument "-j"; then
+    echo -e "${RED}ERROR: Missing jira item id (-j) ${NC}"
+    printHelp
+    exit 0
+  fi
+
+}
 
 # Perform work to load settings from config file
 function loadConfig {
@@ -109,11 +150,17 @@ function getIssueInfo {
 # enable logging library escapes
 escapesOn
 
+#//process arguments
+processArgs "$@"
+printRemArgs
+
 # load jira config options
 logAll "Loading configuration..."
 loadConfig
 
-issueID=""
+# get the issue id from the arguments
+issueID=$(getArgument "-j")
+log "Jira ID: $issueID"
 
 # get next file name
 outputDir=~/temp/
