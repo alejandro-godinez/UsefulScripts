@@ -3,7 +3,7 @@
 # Parse time log work hour files and output time spend on each task as well as total for
 # each file day.
 # 
-# @version 2023.08.07
+# @version 2023.08.21
 # 
 # Notes:<br>
 # - time range without task will add time to previous task
@@ -350,6 +350,9 @@ function addTaskToSummary {
 
 # Print the summary of all task files parsed
 function printSummary {
+  #delete the spinner character
+  spinDel
+  
   for index in "${!summaryTaskList[@]}"; do
     log "  Task: $index"
 
