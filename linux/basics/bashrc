@@ -51,7 +51,8 @@ alias isodate='date -Iseconds'
 #------------------------------------------------
 # GIT commands
 #------------------------------------------------
-
+alias gitConfigGlobal='nano ~/.gitconfig'
+alias gitConfigLocal='if [[ -f .git/config ]]; then nano .git/config; else echo "Not git config"; fi'
 #//list five most recent log entries
 alias gitLog='git log -5'
 alias gitLogLines='git log -5 --pretty=online'
