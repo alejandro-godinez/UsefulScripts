@@ -1,0 +1,64 @@
+<NotepadPlus>
+    <UserLang name="Delphi" ext="" udlVersion="2.1">
+        <Settings>
+            <Global caseIgnored="yes" allowFoldOfComments="no" foldCompact="no" forcePureLC="0" decimalSeparator="0" />
+            <Prefix Keywords1="no" Keywords2="no" Keywords3="no" Keywords4="no" Keywords5="no" Keywords6="no" Keywords7="no" Keywords8="no" />
+        </Settings>
+        <KeywordLists>
+            <Keywords name="Comments">00// 01 02 03{ 04}</Keywords>
+            <Keywords name="Numbers, prefix1"></Keywords>
+            <Keywords name="Numbers, prefix2"></Keywords>
+            <Keywords name="Numbers, extras1"></Keywords>
+            <Keywords name="Numbers, extras2"></Keywords>
+            <Keywords name="Numbers, suffix1"></Keywords>
+            <Keywords name="Numbers, suffix2"></Keywords>
+            <Keywords name="Numbers, range"></Keywords>
+            <Keywords name="Operators1">; . ( ) , : = [ ]</Keywords>
+            <Keywords name="Operators2"></Keywords>
+            <Keywords name="Folders in code1, open"></Keywords>
+            <Keywords name="Folders in code1, middle"></Keywords>
+            <Keywords name="Folders in code1, close"></Keywords>
+            <Keywords name="Folders in code2, open"></Keywords>
+            <Keywords name="Folders in code2, middle"></Keywords>
+            <Keywords name="Folders in code2, close"></Keywords>
+            <Keywords name="Folders in comment, open"></Keywords>
+            <Keywords name="Folders in comment, middle"></Keywords>
+            <Keywords name="Folders in comment, close"></Keywords>
+            <Keywords name="Keywords1">And Array As Begin Case Class Const Constructor Destructor Div Do DownTo Else End Except File Finally For Function Goto If Implementation In Inherited Interface Is Mod Not Object Of On Or Packed Procedure Program Property Raise Record Repeat Set Shl Shr Then ThreadVar To Try Type Unit Until Uses Var While With Xor </Keywords>
+            <Keywords name="Keywords2">$A $Align $AppType $B $BoolEval $D $DebugInfo $Define $DefinitionInfo $Else $EndIf $ExtendedSyntax $H $Hints $I $IfDef $IfNDef $IfOpt $Include $IOChecks $L $LocalSymbols $LongStrings $MinEnumSize $O $Optimization $OverFlowChecks $Q $R $RangeChecks $ReferenceInfo $Resource $UnDef $Warnings $X $Y $Z </Keywords>
+            <Keywords name="Keywords3">Abstract Default Dynamic Export Index Out Overload Override Private Protected Public Published Virtual </Keywords>
+            <Keywords name="Keywords4">AnsiChar AnsiString Boolean Byte Cardinal Char Comp Currency Double Extended Int64 Integer LongInt LongWord PAnsiChar PAnsiString PChar PCurrency PDateTime PExtended PInt64 Pointer PShortString PString PVariant PWideChar PWideString Real Real48 ShortInt ShortString Single SmallInt String TBits TConvType TDateTime TextFile TFloatFormat TFormatSettings TList TObject TOpenDialog TPoint TPrintDialog TRect TReplaceFlags TSaveDialog TSearchRec TStringList TSysCharSet TThreadFunc Variant WideChar WideString Word </Keywords>
+            <Keywords name="Keywords5">AbstractErrorProc CmdLine CurrencyDecimals CurrencyFormat CurrencyString DateSeparator DecimalSeparator ErrorAddr ExitCode FileMode Input LongDateFormat LongDayNames LongMonthNames LongTimeFormat NegCurrFormat Null Output RandSeed Result Self ShortDateFormat ShortDayNames ShortMonthNames ShortTimeFormat TConvFamily ThousandSeparator TimeAMString TimePMString TimeSeparator TwoDigitYearCenturyWindow </Keywords>
+            <Keywords name="Keywords6">Infinity MaxInt MaxLongInt MinsPerDay MonthDays NaN Nil SecsPerDay VarTypeMask </Keywords>
+            <Keywords name="Keywords7">Abs Addr AnsiCompareStr AnsiCompareText AnsiContainsStr AnsiContainsText AnsiEndsStr AnsiIndexStr AnsiLeftStr AnsiLowerCase AnsiMatchStr AnsiMidStr AnsiPos AnsiReplaceStr AnsiReverseString AnsiRightStr AnsiStartsStr AnsiUpperCase ArcCos ArcSin ArcTan Assigned BeginThread Bounds CelsiusToFahrenheit ChangeFileExt Chr CompareStr CompareText CompareValue Concat Convert Copy Cos CreateDir CurrToStr CurrToStrF Date DateTimeToFileDate DateTimeToStr DateToStr DayOfTheMonth DayOfTheWeek DayOfTheYear DayOfWeek DaysBetween DaysInAMonth DaysInAYear DaySpan DegToRad DeleteFile DirectoryExists DiskFree DiskSize DupeString EncodeDate EncodeDateTime EncodeTime EndOfADay EndOfAMonth Eof Eoln Exp ExtractFileDir ExtractFileDrive ExtractFileExt ExtractFileName ExtractFilePath FahrenheitToCelsius FileAge FileDateToDateTime FileExists FileGetAttr FilePos FileSearch FileSetAttr FileSetDate FileSize FindClose FindCmdLineSwitch FindFirst FindNext FloatToStr FloatToStrF ForceDirectories Format FormatCurr FormatDateTime FormatFloat Frac GetCurrentDir GetLastError GetMem Hi High IncDay IncHour IncMillisecond IncMinute IncMonth IncSecond IncYear InputBox InputQuery Int IntToHex IntToStr IOResult IsInfinite IsLeapYear IsMultiThread IsNaN LastDelimiter Length Ln Lo Log10 Low LowerCase Max Mean MessageDlg MessageDlgPos Min MonthOfTheYear Now Odd Ord ParamCount ParamStr Pi Point PointsEqual Pos Pred Printer PromptForFileName PtInRect RadToDeg Random RandomRange RecodeDate RecodeTime Rect RemoveDir RenameFile Round SeekEof SeekEoln SelectDirectory SetCurrentDir Sin SizeOf Slice Sqr Sqrt StringOfChar StringReplace StringToWideChar StrScan StrToCurr StrToDate StrToDateTime StrToFloat StrToInt StrToInt64 StrToInt64Def StrToIntDef StrToTime StuffString Succ Sum Tan Time TimeToStr Tomorrow Trim TrimLeft TrimRight Trunc UpCase UpperCase VarType WideCharToString WrapText Yesterday </Keywords>
+            <Keywords name="Keywords8">Abort Append AppendStr Assign AssignFile AssignPrn Beep BlockRead BlockWrite Break ChDir Close CloseFile Continue DateTimeToString Dec DecodeDate DecodeDateTime DecodeTime Delete Dispose EndThread Erase Exclude Exit FillChar Flush FreeAndNil FreeMem GetDir GetLocaleFormatSettings Halt Inc Include Insert MkDir Move New ProcessPath Randomize Read ReadLn ReallocMem Rename ReplaceDate ReplaceTime Reset ReWrite RmDir RunError Seek SetLength SetString ShowMessage ShowMessageFmt ShowMessagePos Str Truncate Val Write WriteLn </Keywords>
+            <Keywords name="Delimiters">00&apos; 01 02&apos; 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23</Keywords>
+        </KeywordLists>
+        <Styles>
+            <WordsStyle name="DEFAULT" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="COMMENTS" fgColor="008000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="LINE COMMENTS" fgColor="008000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="NUMBERS" fgColor="FF8000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS1" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS2" fgColor="B30000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS3" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS4" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS5" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS6" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS7" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="KEYWORDS8" fgColor="0000FF" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="OPERATORS" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE1" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN CODE2" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="FOLDER IN COMMENT" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS1" fgColor="FF0000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS2" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS3" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS4" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS5" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS6" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS7" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+            <WordsStyle name="DELIMITERS8" fgColor="000000" bgColor="FFFFFF" fontStyle="0" nesting="0" />
+        </Styles>
+    </UserLang>
+</NotepadPlus>
