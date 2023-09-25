@@ -26,3 +26,6 @@ Function definition for the UniBasic program languange.
 
 # [UniBasic_Highlight.xml](UniBasic_Highlight.xml)
 Syntax highlight keyword definition for the UniBasic program languange.
+
+# [Delphi7_Highlight.xml](Delphi7_Highlight.xml)
+Syntax highlight keyword definition for the Delphi7 language (variation of pascal)
