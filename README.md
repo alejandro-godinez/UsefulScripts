@@ -74,8 +74,11 @@ Installs a java project to your local maven repository. Useful for re-using in-h
 - **[createNanoRCFile.sh](nanorc/docs/createNanoRCFile.sh.md)**  
 Create the .nanorc file in the home directory that is needed to enable the code highlighting in the nano editor.   
 
-- **unibasic.nanorc**  
+- **[unibasic.nanorc](nanorc/unibasic.nanorc)**  
 Syntax highlighting for the UniBasic database language.
+
+- **[delphi.nanorc](nanorc/delphi.nanorc)**  
+Syntax highlighting for the Delphi7 language.
 
 ### Notepad++
 - **TimeLog.xml**  
