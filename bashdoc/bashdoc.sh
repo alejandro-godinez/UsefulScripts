@@ -95,6 +95,7 @@ function printHelp {
   echo "  bashdoc.sh script.sh"
   echo "  bashdoc.sh script1.sh script2.sh script3.sh"
   echo "  bashdoc.sh -o /output/path *.sh"
+  echo "  bashdoc.sh -r "../" -o /output/path *.sh"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
