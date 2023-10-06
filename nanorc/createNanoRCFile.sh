@@ -118,7 +118,7 @@ function includeSyntaxFromInstall {
   local nanoInstallDir=""
   for nanoDir in "${nanoDirs[@]}"; do
     log "$nanoDir"
-    if [[ -d $nanoDir ]]; then
+    if [[ ! -d $nanoDir ]]; then
       nanoInstallDir=$nanoDir
       break
     fi
@@ -144,6 +144,12 @@ function includeSyntaxFromInstall {
 # copies project syantax file to local home nano directory and adds include
 # statement to the nanorc file
 function includeSyntaxFromProject {
+
+  # create home nano directory if needed
+  if [[ ! -d $homeNanoDir ]]; then
+    log "Creating the home nano directory"
+    mkdir $homeNanoDir
+  fi
 
   # loop through all nanorc syntax file in project
   for nanoFile in $( find -mindepth 1 -maxdepth 1 -type f -name "*.nanorc" ); do 
