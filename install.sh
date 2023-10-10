@@ -66,16 +66,14 @@ RGX_NUM='^[0-9]+$'
 RGX_LIB='/lib/'
 
 # array of directories that contain scripts to be installed
-declare -a SOURCE_DIRS=("linux" "git" "bashdoc" "timelog")
+declare -a PROJECT_DIRS=("linux" "git" "bashdoc" "timelog")
 
 # variable for selected project directory 
 projDir=""
 
 # install path
 binInstallPath=~/bin/
-#binInstallPath=~/temp/bin/  #testing
 libInstallPath=~/lib/
-#libInstallPath=~/temp/lib/  #testing
 
 # mock run variable
 IS_MOCK=false
@@ -152,12 +150,12 @@ function promptForInstall {
   installDir=""
 
   local optionNo=0
-  local optionCount=${#SOURCE_DIRS[@]}
+  local optionCount=${#PROJECT_DIRS[@]}
   log "Option Count: ${optionCount}"
 
   # print the list of source options
   logAll "${U_CYN}Project To Install:${NC}"
-  for srcPath in "${SOURCE_DIRS[@]}"; do
+  for srcPath in "${PROJECT_DIRS[@]}"; do
     # count number of lines
     optionNo=$((++optionNo))
     logAll "  ${optionNo}. ${srcPath}"
@@ -174,7 +172,7 @@ function promptForInstall {
     # check if the number is within range of option array
     if (( REPLY > -1 )) && (( REPLY < optionCount )); then
       # return the selected path
-      projDir=${SOURCE_DIRS[$REPLY]}
+      projDir=${PROJECT_DIRS[$REPLY]}
 
       # return success value
       return 0
@@ -369,7 +367,7 @@ if [ "$IS_MOCK" = true ]; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
 # check if option for all project install
 if hasArgument "-a"; then
   # loop through and install all predefined directories
-  for projDir in "${SOURCE_DIRS[@]}"; do
+  for projDir in "${PROJECT_DIRS[@]}"; do
     logAll "${U_CYN}${projDir}${NC}"
     logAll "${BLU}BIN Scripts...${NC}"
     installProject "$projDir"
