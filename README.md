@@ -64,6 +64,7 @@ Extract all '.tar.gz' file into the working directory.
     - **[arguments.sh](linux/lib/docs/arguments.sh.md)** - Implementation of script argument processing
     - **[config.sh](linux/lib/docs/config.sh.md)** - Implementation of reader for name/value pair from config file
     - **[spinner.sh](linux/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
+    - **[prompt.sh](linux/lib/docs/prompt.sh.md)** - Re-usable user input prompt methods
 
 
 ### Maven  
