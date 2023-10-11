@@ -224,7 +224,7 @@ function installSingleFile {
   logAll "File Found: $srcFile"
 
   # prompt user if the found file should be installed
-  if ! promptYesNo "Continue with install?"; then
+  if ! promptYesNo "Continue with install? [Y/N]: "; then
     logAll "Quitting Script"
     exit 0
   fi
