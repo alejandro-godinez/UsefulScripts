@@ -27,6 +27,7 @@ TRIM_SIZE=3
 # Check if a directory is a git working directory
 # 
 # @param $1 - the path to check for git project
+# @return - 0 (zero) when true, 1 otherwise
 function isGitDir {
   local theDir=$1
   if [ -d "${theDir}" ] && [ -d "${theDir}/.git" ]; then
@@ -38,6 +39,7 @@ function isGitDir {
 # Get the current repo branch name
 # 
 # @param $1 - path to the local git project
+# @return - current branch name of project
 function gitBranchName {
   #//check if there are still more arguments where the number could be provided
   if (( $# > 0 )); then
@@ -49,6 +51,7 @@ function gitBranchName {
 # note: checks for one of (main, master, or trunk)
 # 
 # @param $1 - path to the local git project
+# @return - main branch name used in the git project
 function gitMainBranch {
 
   #//check for missing argument
