@@ -13,7 +13,33 @@ set -u #//error on unset variable
 set -e #//exit on error
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-IFS=$'\n'
+#IFS=$'\n'
+
+# Delete (unset) an item index position from an array. This method will
+# collapse all the items ahead of delete position and unset the last position.
+# This avoids breaking the index sequence.
+#
+# <pre>
+# Example: arrayDelete 3 arrayName
+# </pre>
+# 
+# @param $1 - the index position to delete from the aray
+# @param $2 - the nameref of the array
+function arrayDelete {
+  local delIndex=$1
+  shift
+
+  #use nameref to array for indirection
+  local -n arr=$1
+
+  for index in "${!arr[@]}"; do 
+  if (( index > delIndex )); then
+      nextIndex=$((index - 1))
+      arr[nextIndex]="${arr[index]}"
+  fi
+  done
+  unset 'myArr[-1]'
+}
 
 #//standard array
 echo "Declare Index Array"
@@ -60,3 +86,17 @@ echo ""
 
 #//Get the count of entries for an array
 echo "Array Value Count: ${#myArr[@]}"
+echo ""
+
+#//Unset array positions
+echo "Unset array position (looses index sequence)"
+unset 'myArr[1]'
+for index in "${!myArr[@]}"; do echo "  $index -> ${myArr[$index]}"; done
+
+echo "Remove array item function"
+myArr[1]="two" #//restore the previously removed item
+echo "  Removing ${myArr[0]}"
+arrayDelete 0 myArr
+echo "  Removing ${myArr[3]}"
+arrayDelete 3 myArr
+for index in "${!myArr[@]}"; do echo "  $index -> ${myArr[$index]}"; done
