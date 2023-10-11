@@ -18,7 +18,7 @@ YEL='\033[1;33m'
 U_CYN='\033[4;36m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh ~/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -119,16 +119,14 @@ function waitForInput {
     logAll "${repoDir} - ${YEL}${branch}${NC}"
   fi
 
-  read -p "  Perform Pull? [Y/N] or Q to Quit: "
-
-  #//exit script if quit is entered
-  log "  Input: ${REPLY}"
-  if [ "${REPLY^^}" = "Q" ];  then
-    logAll "Quitting Script"
-    exit 0
-  elif [ "${REPLY^^}" = "Y" ];  then
+  if promptYesNo "  Perform Pull? [Y/N] or Q to Quit: "; then
     return 0
   else
+    #//exit script if quit is entered
+    if [ "${REPLY^^}" = "Q" ];  then
+      logAll "Quitting Script"
+      exit 0  
+    fi
     return 1
   fi
 }

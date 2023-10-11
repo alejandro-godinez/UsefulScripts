@@ -37,7 +37,7 @@ function promptForInput {
 function promptYesNo {
   prompt=$1
 
-  read -p "$prompt [Y/N]: "
+  read -p "$prompt"
 
   # upercase response to avoid performing multiple checks
   response="${REPLY^^}"
@@ -117,6 +117,7 @@ function promptSelection {
 # else
 #   echo "Response: No"
 # fi
+# echo "Reply: $REPLY"
 
 #//prompt for integer number
 # if promptForInteger "Is an even number?"; then
