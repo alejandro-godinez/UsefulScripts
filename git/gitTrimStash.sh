@@ -3,7 +3,7 @@
 #  This script will trim the stash of entries from the end/oldest down to
 #  a specified number of entries.
 #  
-#  version: 2023.3.13
+#  version: 2023.10.11
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -16,7 +16,7 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh ~/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -108,17 +108,16 @@ function processArgs {
 
 # Prompt user with option to perform trim, skip, or quit
 function waitForInput {
-  #//wait for input 
-  read -p "Perform Trim down to ${TRIM_SIZE}? [Y/N] or Q to Quit: "
-  
-  #//exit script if quit is entered
-  log "  Input: ${REPLY}"
-  if [ "${REPLY^^}" = "Q" ];  then
-    logAll "Quitting Script"
-    exit 0
-  elif [ "${REPLY^^}" = "Y" ];  then
+  #//wait for input
+  if promptYesNo "Perform Trim down to ${TRIM_SIZE}? [Y/N] or Q to Quit: "; then
     return 0
   else
+    #//exit script if quit is entered
+    log "  Input: ${REPLY}"
+    if [ "${REPLY^^}" = "Q" ];  then
+      logAll "Quitting Script"
+      exit 0
+    fi
     return 1
   fi
 }
