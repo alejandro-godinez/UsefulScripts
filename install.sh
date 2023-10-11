@@ -242,7 +242,7 @@ function installSingleFile {
 }
 
 # Perform install work for a file
-#
+# 
 # @param $1 - the file to install
 # @param $2 - the destination path into which file should be installed
 function installFile {
@@ -312,6 +312,7 @@ function findFile {
 # Check if the specified path contains a lib folder
 # 
 # @param $1 - the path to check
+# @return - 0 (zero) when true, 1 otherwise
 function pathHasLibFolder {
   if [[ "$1" =~ $RGX_LIB ]]; then
     return 0
