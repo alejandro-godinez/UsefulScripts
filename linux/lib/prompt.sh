@@ -69,22 +69,27 @@ function promptForInteger {
 # Prompt user to select from list
 # User selection value is stored in the bash $REPLY variable
 # 
-# @param $1..n - array of options
+# @param $1 - the prompt text
+# @param $2..n - array of options
 # @return - exit value of zero indicates valid selection (no error)
 function promptSelection {
+  # capture prompt from first argument and consume
+  local prompt=$1
+  shift
+
+  # capture remaining arguments as options into array
   local options=("$@")
   local optionCount=${#options[@]}
   local optionNo=0
 
-  echo "Select Option from List:"
+  #echo "Select Option from List:"
   for option in "${options[@]}" ; do
     # increment option counter
     optionNo=$((++optionNo))
     echo "  ${optionNo}. ${option}"
   done
 
-  echo ""
-  if promptForInteger "Enter option number:" ; then
+  if promptForInteger "$prompt" ; then
     # decrement input option number to zero-index
     optionNo=$(($REPLY-1))
     #echo "Option index: $optionNo"
@@ -125,10 +130,10 @@ function promptSelection {
 #   echo "Error: Response was not an integer"
 # fi
 
-# TODO: prompt selection from list
+#//prompt selection from array 
 # options=("one" "two" "three")
-# #if promptSelection "${options[@]}"; then
-# if promptSelection "one" "two" "three"; then
+# if promptSelection "Enter number of selection:" "${options[@]}"; then
+# #if promptSelection "Enter number of selection:" "one" "two" "three"; then
 #   echo "Selected: $REPLY"
 # else
 #   echo "Error: no selection"

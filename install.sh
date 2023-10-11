@@ -10,7 +10,7 @@
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2023.8.3
+# @version: 2023.10.11
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
@@ -48,7 +48,7 @@ U_CYN='\033[4;36m'
 
 
 # define list of libraries and import them
-declare -a libs=( ./linux/lib/logging.sh ./linux/lib/arguments.sh)
+declare -a libs=( ./linux/lib/logging.sh ./linux/lib/arguments.sh ./linux/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -131,17 +131,6 @@ function processArgs {
   fi
 }
 
-# Ask user to confirm if the file that was found is the one intended
-# to be installed.
-function showYestNoPrompt {
-  read -p "Continue with install [Y/N]: "
-  # check if user reply is numeric
-  if [[ "$REPLY" == "y" ]] || [[ "$REPLY" == "Y" ]]; then
-    return 0
-  fi
-  return 1
-}
-
 # Ask user which project they would like to install from the set
 # 
 # @return - exit value of zero (truthy) indicates installDir variable set
@@ -155,39 +144,23 @@ function promptForInstall {
 
   # print the list of source options
   logAll "${U_CYN}Project To Install:${NC}"
-  for srcPath in "${PROJECT_DIRS[@]}"; do
-    # count number of lines
-    optionNo=$((++optionNo))
-    logAll "  ${optionNo}. ${srcPath}"
-  done
-  logAll ""
-  read -p "Enter number of project to install or Q to Quit: "
-
-  # check if user reply is numeric
-  if [[ "$REPLY" =~ $RGX_NUM ]]; then
-    # capture index from option number specified
-    optionNo=$((--REPLY))
-    log "Option Index: $optionNo"
-
-    # check if the number is within range of option array
-    if (( REPLY > -1 )) && (( REPLY < optionCount )); then
-      # return the selected path
-      projDir=${PROJECT_DIRS[$REPLY]}
-
-      # return success value
-      return 0
-    fi
-    
-    # return error value
-    return 1
-  elif [ "${REPLY^^}" = "Q" ];  then
-    logAll "Quitting Script"
-    exit 0
-  else
-    logAll "${RED}ERROR:${NC} Invalid Input"
+  local prompt="Enter number of project to install or Q to Quit: "
+  if promptSelection "$prompt" "${PROJECT_DIRS[@]}"; then
+    # capture the user selection reply
+    projDir=$REPLY
+    log "Selected Option: $projDir"
     
     # return success value
-    return 1
+    return 0
+  else
+    if [ "${REPLY^^}" = "Q" ];  then
+      logAll "Quitting Script"
+      exit 0
+    else
+      logAll "${RED}ERROR:${NC} Invalid Input" 
+      # return error code
+      return 1
+    fi
   fi
 }
 
@@ -251,7 +224,8 @@ function installSingleFile {
   logAll "File Found: $srcFile"
 
   # prompt user if the found file should be installed
-  if ! showYestNoPrompt ; then
+  if ! promptYesNo "Continue with install?"; then
+    logAll "Quitting Script"
     exit 0
   fi
 
