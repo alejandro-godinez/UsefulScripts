@@ -5,7 +5,7 @@
 # specified.  The output file name will be the name of the script with '.md' extension.
 # A relative path option (-r) can be used to fix the link to the script in the header.
 # 
-# @version 2023.7.19
+# @version 2023.10.11
 # 
 # Supported Function Formats:
 # - name() { }
@@ -15,6 +15,7 @@
 # 
 # Supported Keywords:<br>
 # - @param - Specifies the parameters of a method.<br>
+# - @return - Specifies the return value of a method.
 # 
 # Limitation Notes:
 # - Comments lines cannot be empty, add a space to signal continuation of content  
@@ -23,7 +24,6 @@
 # TODO:<br>
 # - @author - Specifies the author of the class, method, or field.
 # - @version - Specifies the version of the class, method, or field.
-# - @return - Specifies the return value of a method.
 # - @see - Specifies a link to another class, method, or field.
 # 
 # Sample:
@@ -35,6 +35,7 @@
 # 
 # # This function does work
 # # @param $1 - the first parameter
+# # @return - some value
 # function doWork() {
 # }
 # 
@@ -50,6 +51,7 @@ RED='\033[0;31m'
 GRN='\033[0;32m'
 BLU='\033[0;34m'
 YEL='\033[1;33m'
+PUR='\033[0;35m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
@@ -67,7 +69,7 @@ done
 # Line regular expressions
 rgxComment="^[#][^!/]([ ]*(.*))$"
 rgxHeader="^[-]{5}"
-rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)[ -]+(.+)"
+rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)?[ -]+(.+)"
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
 # output path to save document file, default to current directory
@@ -140,6 +142,7 @@ function processArgs {
 # Determine if text is a comment
 #
 # @param $1 - text to test with regex for match
+# @return - 0 (zero) when true, 1 otherwise
 function isComment {
   if [[ $1 =~ $rgxComment ]]; then
     return 0
@@ -150,6 +153,7 @@ function isComment {
 # Determine if text is a special header section indicator
 #
 # @param $1 - text to test with regex for match
+# @return - 0 (zero) when true, 1 otherwise
 function isHeader {
   if [[ $1 =~ $rgxHeader ]]; then
     return 0
@@ -160,6 +164,7 @@ function isHeader {
 # Determine if text is one a keyword
 #
 # @param $1 - text to test with regex for match
+# @return - 0 (zero) when true, 1 otherwise
 function isKeyword {
   if [[ $1 =~ $rgxKeyword ]]; then
     return 0
@@ -170,6 +175,7 @@ function isKeyword {
 # Determine if text is a function
 #
 # @param $1 - text to test with regex for match
+# @return - 0 (zero) when true, 1 otherwise
 function isFunction {
   if [[ $1 =~ $rgxFunction ]]; then
     return 0
@@ -180,6 +186,7 @@ function isFunction {
 # Replace newline characters (cr and lf) to space
 #
 # @param $1 - text to perform replacement
+# @return - trimmed text
 function newLinesToSpace() {
   echo "$1" | tr "\r\n" " "
 }
@@ -247,6 +254,21 @@ function writeParameterDescription {
   done
 }
 
+# write out the output description
+function writeReturnDescription {
+  if [[ -z "$returnDescription" ]]; then
+    return 0
+  fi
+  logAll "${PUR}Return:${NC}${returnDescription}"
+  echo -n "<br><u>Return:</u><br>" >> $outputFile
+  # perform keyword match to get capture groups
+  if isKeyword "$returnDescription"; then
+    local desc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
+    log "Keyword Desc:$desc"
+    echo -n "${desc}<br>" >> $outputFile
+  fi
+}
+
 # perform all the work to parse the documentation from the specified bash script file
 # 
 # @param $1 - the script file to parse
@@ -273,6 +295,7 @@ function parseBashScript {
   # declare an array to store comments before function
   local -a commentArr=()
   local -a paramArr=()
+  local returnDescription=""
   local isFirstFunction=true
 
 
@@ -305,6 +328,9 @@ function parseBashScript {
         if [ "$keywordType" = "param" ]; then
           log "  Adding parameter to list..."
           paramArr+=("$commentText")
+        elif [ "$keywordType" = "return" ]; then
+          log "  Capturing return keyword..."
+          returnDescription="${commentText}"
         fi
       else
         # add comment line to array
@@ -344,17 +370,22 @@ function parseBashScript {
       log "Writing parameter descriptions..."
       writeParameterDescription
 
+      log "Writing output description..."
+      writeReturnDescription
+
       echo " |" >> $outputFile
       
       # clear arrays for next function
       log "Clearing arrays..."
       commentArr=()
       paramArr=()
+      returnDescription=""
     else
       # clear arrays when we encounter break in expected continuous comment/function
       log "Clearing arrays..."
       commentArr=()
       paramArr=()
+      returnDescription=""
     fi
 
   done < $inputFile
