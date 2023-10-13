@@ -4,8 +4,6 @@
 #  in the current directory.
 #  
 #  version: 2023.3.21
-#  
-#  TODO:
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

@@ -9,7 +9,7 @@ set -u #//error on unset variable
 set -e #//exit on error
 
 # Pad a string to the left with additional character up to a spcific length
-#
+# 
 # LIMITATION: replaces all spaces with character including those in the text
 function padLeft {
   local text=$1
@@ -19,7 +19,7 @@ function padLeft {
 }
 
 # Pad a string to the left with additional character up to a spcific length
-#
+# 
 # LIMITATION: replaces all spaces with character including those in the text
 function padRight {
   local text=$1

@@ -106,8 +106,9 @@ function processArgs {
 
 # Ask user if they would like to perform pull for the repository/branch specified
 # 
-# param $1 - the local repo directory
-# param $2 - the branch of the repo directory
+# @param $1 - the local repo directory
+# @param $2 - the branch of the repo directory
+# @return - 0 (zero) when user answered yes, 1 otherwise
 function waitForInput {
   local repoDir=$1
   local branch=$2

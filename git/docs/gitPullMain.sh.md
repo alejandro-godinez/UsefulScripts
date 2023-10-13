@@ -13,5 +13,5 @@
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.   |
 | processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script  <br> |
-| waitForInput() | Ask user if they would like to perform pull for the repository/branch specified    param $1 - the local repo directory  param $2 - the branch of the repo directory   |
+| waitForInput($1,$2) | Ask user if they would like to perform pull for the repository/branch specified    <br><br><u>Args:</u><br>$1 - the local repo directory  <br>$2 - the branch of the repo directory  <br><br><u>Return:</u><br>0 (zero) when user answered yes, 1 otherwise<br> |
 | gitPullMain($1) | Perform a git pull on the speicified local repository if it is the main branch.  Other branches are allowed if the 'All' (-a) option was specified when executing.    <br><br><u>Args:</u><br>$1 - the local repo directory  <br> |

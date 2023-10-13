@@ -5,7 +5,7 @@
 # specified.  The output file name will be the name of the script with '.md' extension.
 # A relative path option (-r) can be used to fix the link to the script in the header.
 # 
-# @version 2023.10.11
+# @version 2023.10.13
 # 
 # Supported Function Formats:
 # - name() { }
@@ -14,11 +14,13 @@
 # 
 # 
 # Supported Keywords:<br>
-# - @param - Specifies the parameters of a method.<br>
-# - @return - Specifies the return value of a method.
-# 
+# - @param - Describes the parameters of a method.<br>
+# - @return - Describes the return code of a method. Normally 0 (success), 1 (error)<br>
+# - @output - Describes the otuput of a method, normally written to standard output so it can be captured<br>
+#  
 # Limitation Notes:
 # - Comments lines cannot be empty, add a space to signal continuation of content  
+# - keyword descriptions are limited to single lines, multiple duplicate keyword lines can be used
 # <br>
 # 
 # TODO:<br>
@@ -35,8 +37,11 @@
 # 
 # # This function does work
 # # @param $1 - the first parameter
-# # @return - some value
+# # @return - 0 when true, 1 otherwise
+# # @output - the text ouput
 # function doWork() {
+#   echo "otuput value"
+#   return 0
 # }
 # 
 # </pre>
@@ -52,6 +57,7 @@ GRN='\033[0;32m'
 BLU='\033[0;34m'
 YEL='\033[1;33m'
 PUR='\033[0;35m'
+CYN='\033[1;36m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
@@ -140,7 +146,7 @@ function processArgs {
 }
 
 # Determine if text is a comment
-#
+# 
 # @param $1 - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isComment {
@@ -151,7 +157,7 @@ function isComment {
 }
 
 # Determine if text is a special header section indicator
-#
+# 
 # @param $1 - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isHeader {
@@ -162,7 +168,7 @@ function isHeader {
 }
 
 # Determine if text is one a keyword
-#
+# 
 # @param $1 - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isKeyword {
@@ -173,7 +179,7 @@ function isKeyword {
 }
 
 # Determine if text is a function
-#
+# 
 # @param $1 - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isFunction {
@@ -184,9 +190,9 @@ function isFunction {
 }
 
 # Replace newline characters (cr and lf) to space
-#
+# 
 # @param $1 - text to perform replacement
-# @return - trimmed text
+# @output - the trimmed text on standard output
 function newLinesToSpace() {
   echo "$1" | tr "\r\n" " "
 }
@@ -203,8 +209,8 @@ function writeComments {
 function writeCommentsFlat {
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do 
-    commentLine=$(newLinesToSpace "${commentArr[$index]}")
-    logAll "${GRN}Comment:${NC}${commentArr[$index]}"
+    local commentLine=$(newLinesToSpace "${commentArr[$index]}")
+    logAll "  ${GRN}Comment:${NC}${commentArr[$index]}"
     echo -n "${commentLine}" >> $outputFile
   done
 }
@@ -213,12 +219,12 @@ function writeCommentsFlat {
 function writeFunctionParameters {
   local isFirstParam=true
   for index in "${!paramArr[@]}"; do 
-    paramLine="${paramArr[$index]}"
-    logAll "${YEL}Param:${NC}${paramLine}"
+    local paramLine="${paramArr[$index]}"
+    logAll "  ${YEL}Param:${NC}${paramLine}"
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      keywordName="${BASH_REMATCH[2]}"
+      local keywordName="${BASH_REMATCH[2]}"
       log "Keyword Name:$keywordName"
 
       log "IsFirstParam:$isFirstParam"
@@ -241,12 +247,12 @@ function writeParameterDescription {
   fi
 
   for index in "${!paramArr[@]}"; do 
-    paramLine="${paramArr[$index]}"
+    local paramLine="${paramArr[$index]}"
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      keywordName="${BASH_REMATCH[2]}"
-      keywordDesc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
+      local keywordName="${BASH_REMATCH[2]}"
+      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
       log "Keyword Name:$keywordName"
       log "Keyword Desc:$keywordDesc"
       echo -n "${keywordName} - ${keywordDesc}<br>" >> $outputFile
@@ -256,17 +262,30 @@ function writeParameterDescription {
 
 # write out the output description
 function writeReturnDescription {
-  if [[ -z "$returnDescription" ]]; then
+  local keyword='return'
+  if [[ ! -v keywordArr[$keyword] ]]; then
     return 0
   fi
-  logAll "${PUR}Return:${NC}${returnDescription}"
+
+  local description=${keywordArr[$keyword]}
+  logAll "  ${PUR}Return:${NC}${description}"
   echo -n "<br><u>Return:</u><br>" >> $outputFile
-  # perform keyword match to get capture groups
-  if isKeyword "$returnDescription"; then
-    local desc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
-    log "Keyword Desc:$desc"
-    echo -n "${desc}<br>" >> $outputFile
+  log "Keyword Desc:$description"
+  echo -n "${description}<br>" >> $outputFile
+}
+
+# write out the output description
+function writeOutputDescription {
+  local keyword='output'
+  if [[ ! -v keywordArr[$keyword] ]]; then
+    return 0
   fi
+
+  local description=${keywordArr[$keyword]}
+  logAll "  ${CYN}Output:${NC}${description}"
+  echo -n "<br><u>Output:</u><br>" >> $outputFile
+  log "Keyword Desc:$description"
+  echo -n "${description}<br>" >> $outputFile
 }
 
 # perform all the work to parse the documentation from the specified bash script file
@@ -295,7 +314,7 @@ function parseBashScript {
   # declare an array to store comments before function
   local -a commentArr=()
   local -a paramArr=()
-  local returnDescription=""
+  local -A keywordArr=()
   local isFirstFunction=true
 
 
@@ -321,16 +340,16 @@ function parseBashScript {
         log "Writing out comments..."
         writeComments
         echo "" >> $outputFile
-
       elif isKeyword "$commentText"; then
         local keywordType="${BASH_REMATCH[1]}"
         log "  Keyword Type:$keywordType"
         if [ "$keywordType" = "param" ]; then
           log "  Adding parameter to list..."
           paramArr+=("$commentText")
-        elif [ "$keywordType" = "return" ]; then
-          log "  Capturing return keyword..."
-          returnDescription="${commentText}"
+        else
+          log " Capturing $keywordType to list..."
+          #keywordArr[$keywordType]+="${commentText}"
+          keywordArr[$keywordType]+="${BASH_REMATCH[3]}"
         fi
       else
         # add comment line to array
@@ -370,8 +389,11 @@ function parseBashScript {
       log "Writing parameter descriptions..."
       writeParameterDescription
 
-      log "Writing output description..."
+      log "Writing return description..."
       writeReturnDescription
+
+      log "Writing output description..."
+      writeOutputDescription
 
       echo " |" >> $outputFile
       
@@ -379,12 +401,14 @@ function parseBashScript {
       log "Clearing arrays..."
       commentArr=()
       paramArr=()
+      keywordArr=()
       returnDescription=""
     else
       # clear arrays when we encounter break in expected continuous comment/function
       log "Clearing arrays..."
       commentArr=()
       paramArr=()
+      keywordArr=()
       returnDescription=""
     fi
 

@@ -44,7 +44,7 @@ function arrayDelete {
 # lastIndex=$( getLastIndex arrayName )
 # 
 # @param $1 - the array reference to the array
-# @return - the last index number
+# @output - the last index number it written to standard output
 function getLastIndex {
   #use nameref to array for indirection
   local -n arr=$1
