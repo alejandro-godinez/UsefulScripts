@@ -18,7 +18,7 @@ set -e #//exit on error
 # Delete (unset) an item index position from an array. This method will
 # collapse all the items ahead of delete position and unset the last position.
 # This avoids breaking the index sequence.
-#
+# 
 # <pre>
 # Example: arrayDelete 3 arrayName
 # </pre>

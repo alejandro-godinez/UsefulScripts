@@ -33,7 +33,7 @@ function promptForInput {
 # Prompt user for a yes or no response
 # 
 # @param $1 - prompt text
-# @return - exit value of zero indicates yes (bash no error)
+# @return - 0 (zero) when yes, 1 otherwise
 function promptYesNo {
   prompt=$1
 
@@ -53,7 +53,7 @@ function promptYesNo {
 # User input is stored in the bash $REPLY variable
 # 
 # @param $1 - prompt text
-# @return - exit value of zero indicates valid (no error)
+# @return - 0 (zero) when input is valid integer, 1 otherwise
 function promptForInteger {
   prompt=$1
 
@@ -71,7 +71,7 @@ function promptForInteger {
 # 
 # @param $1 - the prompt text
 # @param $2..n - array of options
-# @return - exit value of zero indicates valid selection (no error)
+# @return - 0 (zero) when selection from list is valid, 1 otherwise
 function promptSelection {
   # capture prompt from first argument and consume
   local prompt=$1

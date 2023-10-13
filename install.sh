@@ -292,6 +292,7 @@ function installFile {
 # Find the first file that is found to match the name specified
 # 
 # @param $1 - the file name to search
+# @output - the file path, writtent to standard output
 function findFile {
   local fileName="$1"
 

@@ -32,6 +32,7 @@
 # 
 # @param $1 - The config file
 # @param $2 - the property name
+# @return - 0 (zero) when true, 1 otherwise
 function hasProperty {
   local configFile="$1"
   local propName="$2"
@@ -57,6 +58,7 @@ function hasProperty {
 # 
 # @param $1 - The config file
 # @param $2 - the property name
+# @return - 0 (zero) when value is written to standard output, 1 otherwise
 function getProperty {
   local configFile="$1"
   local propName="$2"

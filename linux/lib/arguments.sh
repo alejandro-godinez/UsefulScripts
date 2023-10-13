@@ -49,6 +49,7 @@ declare -A NEEDSVAL
 # Check if the specified option key exists
 # 
 # @param $1 - the option name
+# @return - 0 (zero) when true, 1 otherwise
 function hasOption {
   local option=$1
   if [[ -v ARGS["$option"] ]]; then
@@ -62,6 +63,7 @@ function hasOption {
 # 
 # @param $1 - the option name
 # @param $2 - argument value needed indicator true/false (optional)
+# @return - 0 (zero) when added, 1 otherwise
 function addOption {
   local option=$1
 
@@ -85,6 +87,7 @@ function addOption {
 # Check if the option needs to have a value provided following the code
 # 
 # @param $1 - the option name
+# @return - 0 (zero) when true, 1 otherwise
 function optionNeedsVal {
   local option=$1
   if [ "${NEEDSVAL[$option]}" = 'true' ]; then
@@ -94,7 +97,7 @@ function optionNeedsVal {
 }
 
 # Sets the argument value for the specified option
-#
+# 
 # @param $1 - the option name
 # @param $2 - the argument value
 function setArgument {
@@ -103,9 +106,11 @@ function setArgument {
   ARGS[$option]=$value
 }
 
-# Get the argument value for an option name
+# Get the argument value for an option name.
 # 
 # @param $1 - the option name
+# @return - 0 (zero) with valid option, 1 otherwise.
+# @output - the argument value
 function getArgument {
   local option=$1
   if hasOption "${option}"; then
@@ -119,6 +124,7 @@ function getArgument {
 # This checks if the value is not 'false'
 # 
 # @param $1 - the option name
+# @return - 0 (zero) when true, 1 otherwise
 function hasArgument {
   local option=$1
 
@@ -139,6 +145,7 @@ function hasArgument {
 # Check if text starts with dash
 # 
 # @param $1 - the text to check
+# @return - 0 (zero) when true, 1 otherwise
 function startsWithDash {
   if [[ $1 =~ ^- ]]; then
     return 0
@@ -147,7 +154,8 @@ function startsWithDash {
 }
 
 # Adds an entry to the argument remaining variable
-#
+# 
+# @param $1 - argument value
 function addToREM {
   REM_ARGS+=("$1")
 }

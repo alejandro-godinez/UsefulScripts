@@ -7,8 +7,8 @@
 #    Prefix:  Set a prefix that will be added to every log output.
 #             - TIP: you can use color escape with escape mode to resume color
 #    LogFile:  Simple echo redirect to log file
-#
-#
+# 
+# 
 #  Import Sample Code:
 #      <pre>
 #      if [[ ! -f ~/lib/logging.sh ]]; then
@@ -17,7 +17,7 @@
 #      fi
 #      source ~/lib/logging.sh
 #      </pre>
-#
+# 
 #  version: 2023.5.11  
 #  project:  https://github.com/alejandro-godinez/UsefulScripts  
 #-------------------------------------------------------------------------------

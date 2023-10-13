@@ -118,6 +118,7 @@ function processArgs {
 # Determine if text is a task number
 # 
 # @param $1 - text to test with regex for match
+# @return - 0 when true, 1 otherwise
 function isTaskNo {
   if [[ $1 =~ $rgxTaskNo ]]; then
     return 0
@@ -128,6 +129,7 @@ function isTaskNo {
 # Determine if text is a time range
 # 
 # @param $1 - text to test with regex for match
+# @return - 0 when true, 1 otherwise
 function isTimeRange {
   if [[ $1 =~ $rgxTimeRange ]]; then
     return 0
@@ -139,6 +141,7 @@ function isTimeRange {
 # 
 # @param $1 - the start time in format (HH:mm)
 # @param $2 - the end time in format (HH:mm)
+# @output - elapsed minutes written to standard output
 function getElapsedMinutes {
   # split time into two part
   local hour="${timeStart%%:*}"
@@ -163,6 +166,7 @@ function getElapsedMinutes {
 # @param $1 - dividend
 # @param $2 - divisor
 # @param $3 - scale (precision)
+# @output - result of division, written to standard output
 function div {
   # default precision scale to 2 decimal places
   local precision=2

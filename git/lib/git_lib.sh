@@ -39,7 +39,7 @@ function isGitDir {
 # Get the current repo branch name
 # 
 # @param $1 - path to the local git project
-# @return - current branch name of project
+# @output - current branch name of project
 function gitBranchName {
   #//check if there are still more arguments where the number could be provided
   if (( $# > 0 )); then
@@ -51,7 +51,8 @@ function gitBranchName {
 # note: checks for one of (main, master, or trunk)
 # 
 # @param $1 - path to the local git project
-# @return - main branch name used in the git project
+# @return - 0 (zero) when successful, 1 otherwise
+# @output - main branch name used in the git project
 function gitMainBranch {
 
   #//check for missing argument
