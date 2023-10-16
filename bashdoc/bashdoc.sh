@@ -25,7 +25,7 @@
 # - @version - Specifies the version of the class, method, or field.
 # - @see - Specifies a link to another class, method, or field.
 #
-# Sample:
+# Format Sample:
 # <pre>
 # #!/bin/bash
 # #-------------------------------------------
@@ -40,7 +40,23 @@
 #   echo "otuput value"
 #   return 0
 # }
-# 
+# </pre>
+#
+# Usage:
+# <pre>
+# bashdoc.sh [options] [files]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -o path   optional, directory to which the output file will be saved
+#   -r path   optional, relative path to use for the script link in the header
+# </pre>
+#
+# Usage Examples:
+# <pre>
+# Single:          bashdoc.sh script.sh"
+# Multiple:        bashdoc.sh script1.sh script2.sh script3.sh"
+# Output Dir:      bashdoc.sh -o /output/path *.sh"
+# Relative Path:   bashdoc.sh -r '../' -o /output/path *.sh"
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -57,7 +73,7 @@ PUR='\033[0;35m'
 CYN='\033[1;36m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -217,6 +233,7 @@ function writeComments {
 
 # Write the accumulated comments to the output file trimmed of any newline
 function writeCommentsFlat {
+  spinDel
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do 
     local commentLine=$(newLinesToSpace "${commentArr[$index]}")
@@ -227,6 +244,7 @@ function writeCommentsFlat {
 
 # write out the accumulated function parameters
 function writeFunctionParameters {
+  spinDel
   local isFirstParam=true
   for index in "${!paramMap[@]}"; do 
     local paramLine="${paramMap[$index]}"
@@ -272,6 +290,7 @@ function writeParameterDescription {
 
 # write out the output description
 function writeReturnDescription {
+  spinDel
   local keyword='return'
   if [[ ! -v keywordMap[$keyword] ]]; then
     return 0
@@ -286,6 +305,7 @@ function writeReturnDescription {
 
 # write out the output description
 function writeOutputDescription {
+  spinDel
   local keyword='output'
   if [[ ! -v keywordMap[$keyword] ]]; then
     return 0
@@ -330,6 +350,8 @@ function parseBashScript {
 
   # Read the file line by line
   while IFS= read -r line; do
+    spinChar
+
     # count number of lines
     lineNo=$((++lineNo))
     
@@ -405,6 +427,7 @@ function parseBashScript {
       local functionName="${BASH_REMATCH[2]}"
 
       # write function with open parenthesis
+      spinDel
       logAll "${BLU}Function:${NC}${functionName}"
       echo -n "| ${functionName}(" >> $outputFile
 
@@ -444,7 +467,7 @@ function parseBashScript {
     fi
 
   done < $inputFile
-
+  spinDel
 }
 
 #< - - - Main - - - >

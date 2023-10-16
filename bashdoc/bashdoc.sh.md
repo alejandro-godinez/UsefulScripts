@@ -26,7 +26,7 @@ TODO:<br>
 - @version - Specifies the version of the class, method, or field.
 - @see - Specifies a link to another class, method, or field.
 
-Sample:
+Format Sample:
 <pre>
 #!/bin/bash
 #-------------------------------------------
@@ -41,7 +41,23 @@ function doWork() {
   echo "otuput value"
   return 0
 }
+</pre>
 
+Usage:
+<pre>
+bashdoc.sh [options] [files]
+  -h           This help info
+  -v           Verbose/debug output
+  -o path   optional, directory to which the output file will be saved
+  -r path   optional, relative path to use for the script link in the header
+</pre>
+
+Usage Examples:
+<pre>
+Single:          bashdoc.sh script.sh"
+Multiple:        bashdoc.sh script1.sh script2.sh script3.sh"
+Output Dir:      bashdoc.sh -o /output/path *.sh"
+Relative Path:   bashdoc.sh -r '../' -o /output/path *.sh"
 </pre>
 
 
