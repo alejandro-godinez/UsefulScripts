@@ -56,3 +56,21 @@ if [[ ! -v myArr['DNE'] ]]; then
 else
   echo "The key 'DNE' exist in the array"
 fi
+echo
+
+#//special character in key of array
+echo "Handle '$' character in key name"
+declare -A myArr=()
+key='one$two$three' #//can't be used as key due to varaible expansion
+key=${key//$/_} #replace '$' with '_' to avoid expansion
+myArr[$key]="hello"
+for index in "${!myArr[@]}"; do echo "  $index -> ${myArr[$index]}"; done
+echo "Checking if [$key] exists"
+if [[ -v myArr[$key] ]]; then
+  echo "YES, EXISTS"
+  myArr[$key]="${myArr[$key]} world"
+else
+  echo "NO, EXISTS"
+fi
+for index in "${!myArr[@]}"; do echo "  $index -> ${myArr[$index]}"; done
+echo ""

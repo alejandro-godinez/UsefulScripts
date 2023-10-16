@@ -19,7 +19,7 @@ Supported Keywords:
 - @output - Describes the otuput of a method, normally written to standard output so it can be captured
 
 Limitation Notes:
-- keyword descriptions are limited to single lines
+- keyword descriptions are limited to single lines, multiple instances can be used to append description.
 
 TODO:<br>
 - @author - Specifies the author of the class, method, or field.
@@ -49,17 +49,17 @@ function doWork() {
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.  |
-| processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script <br> |
-| isComment($1) | Determine if text is a comment  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isEmptyComment($1) | Determine if text is a completly empty comment (nothing but spaces)  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isHeader($1) | Determine if text is a special header section indicator  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isKeyword($1) | Determine if text is one a keyword  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isFunction($1) | Determine if text is a function  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| newLinesToSpace($1) | Replace newline characters (cr and lf) to space  <br><br><u>Args:</u><br>$1 - text to perform replacement <br><br><u>Output:</u><br>the trimmed text on standard output<br> |
+| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u>Args:</u><br>args - array of argument values provided when calling the script <br> |
+| isComment(text) | Determine if text is a comment  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| isEmptyComment(text) | Determine if text is a completly empty comment (nothing but spaces)  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| isHeader(text) | Determine if text is a special header section indicator  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| isKeyword(text) | Determine if text is one a keyword  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| isFunction(text) | Determine if text is a function  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| newLinesToSpace(text) | Replace newline characters (cr and lf) to space  <br><br><u>Args:</u><br>text - text to perform replacement <br><br><u>Output:</u><br>the trimmed text on standard output<br> |
 | writeComments() | Write the accumulated comments to the output file  |
 | writeCommentsFlat() | Write the accumulated comments to the output file trimmed of any newline  |
 | writeFunctionParameters() | write out the accumulated function parameters  |
 | writeParameterDescription() | write out the paramaters formatted for description in table  |
 | writeReturnDescription() | write out the output description  |
 | writeOutputDescription() | write out the output description  |
-| parseBashScript($1) | perform all the work to parse the documentation from the specified bash script file  <br><br><u>Args:</u><br>$1 - the script file to parse <br> |
+| parseBashScript(file) | perform all the work to parse the documentation from the specified bash script file  <br><br><u>Args:</u><br>file - the script file to parse <br> |

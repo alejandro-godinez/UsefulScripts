@@ -18,7 +18,7 @@
 # - @output - Describes the otuput of a method, normally written to standard output so it can be captured
 #
 # Limitation Notes:
-# - keyword descriptions are limited to single lines
+# - keyword descriptions are limited to single lines, multiple instances can be used to append description.
 #
 # TODO:<br>
 # - @author - Specifies the author of the class, method, or field.
@@ -101,12 +101,12 @@ function printHelp {
   echo "  bashdoc.sh script.sh"
   echo "  bashdoc.sh script1.sh script2.sh script3.sh"
   echo "  bashdoc.sh -o /output/path *.sh"
-  echo "  bashdoc.sh -r "../" -o /output/path *.sh"
+  echo "  bashdoc.sh -r '../' -o /output/path *.sh"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-v"
@@ -146,7 +146,7 @@ function processArgs {
 
 # Determine if text is a comment
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isComment {
   if [[ $1 =~ $rgxComment ]]; then
@@ -157,7 +157,7 @@ function isComment {
 
 # Determine if text is a completly empty comment (nothing but spaces)
 #
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isEmptyComment {
   if [[ $1 =~ $rgxEmptyComment ]]; then
@@ -168,7 +168,7 @@ function isEmptyComment {
 
 # Determine if text is a special header section indicator
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isHeader {
   if [[ $1 =~ $rgxHeader ]]; then
@@ -179,7 +179,7 @@ function isHeader {
 
 # Determine if text is one a keyword
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isKeyword {
   if [[ $1 =~ $rgxKeyword ]]; then
@@ -190,7 +190,7 @@ function isKeyword {
 
 # Determine if text is a function
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isFunction {
   if [[ $1 =~ $rgxFunction ]]; then
@@ -201,7 +201,7 @@ function isFunction {
 
 # Replace newline characters (cr and lf) to space
 # 
-# @param $1 - text to perform replacement
+# @param text - text to perform replacement
 # @output - the trimmed text on standard output
 function newLinesToSpace() {
   echo "$1" | tr "\r\n" " "
@@ -228,8 +228,8 @@ function writeCommentsFlat {
 # write out the accumulated function parameters
 function writeFunctionParameters {
   local isFirstParam=true
-  for index in "${!paramArr[@]}"; do 
-    local paramLine="${paramArr[$index]}"
+  for index in "${!paramMap[@]}"; do 
+    local paramLine="${paramMap[$index]}"
     logAll "  ${YEL}Param:${NC}${paramLine}"
 
     # perform keyword match to get capture groups
@@ -239,7 +239,7 @@ function writeFunctionParameters {
 
       log "IsFirstParam:$isFirstParam"
       if [ "$isFirstParam" = false ]; then
-        echo -n "," >> $outputFile
+        echo -n ", " >> $outputFile
       fi
       isFirstParam=false
       echo -n "${keywordName}" >> $outputFile
@@ -249,15 +249,15 @@ function writeFunctionParameters {
 
 # write out the paramaters formatted for description in table
 function writeParameterDescription {
-  local paramCount=${#paramArr[@]}
+  local paramCount=${#paramMap[@]}
   if (( paramCount > 0 )); then
     echo -n "<br><br><u>Args:</u><br>" >> $outputFile
   else
     return 0
   fi
 
-  for index in "${!paramArr[@]}"; do 
-    local paramLine="${paramArr[$index]}"
+  for index in "${!paramMap[@]}"; do 
+    local paramLine="${paramMap[$index]}"
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
@@ -300,7 +300,7 @@ function writeOutputDescription {
 
 # perform all the work to parse the documentation from the specified bash script file
 # 
-# @param $1 - the script file to parse
+# @param file - the script file to parse
 function parseBashScript {
   local inputFile="$1"
   
@@ -323,7 +323,7 @@ function parseBashScript {
 
   # declare an array to store comments before function
   local -a commentArr=()
-  local -a paramArr=()
+  local -A paramMap=()
   local -A keywordMap=()
   local isFirstFunction=true
 
@@ -362,12 +362,27 @@ function parseBashScript {
         local keywordType="${BASH_REMATCH[1]}"
         log "  Keyword Type:$keywordType"
         if [ "$keywordType" = "param" ]; then
-          log "  Adding parameter to list..."
-          paramArr+=("$commentText")
+
+          # capture the parameter name to use as map key, replace any '$' to '_' to avoid variable expansion issue
+          local paramName="${BASH_REMATCH[2]//$/_}"
+
+          # check if parameter name already exists in map, if so append text
+          if [[ ! -v paramMap[$paramName] ]]; then
+            log "  Adding parameter '${paramName}' to list..."
+            paramMap[$paramName]="$commentText"
+          else
+            log "    Append additional comment to '[$paramName]'..."
+            paramMap[$paramName]="${paramMap[$paramName]} ${BASH_REMATCH[3]}"
+          fi
         else
           log " Capturing $keywordType to list..."
-          #keywordMap[$keywordType]+="${commentText}"
-          keywordMap[$keywordType]+="${BASH_REMATCH[3]}"
+          if [[ ! -v keywordMap[$keywordType] ]]; then
+            log "  Adding keyword '[$keywordType]' to map..."
+            keywordMap[$keywordType]="${BASH_REMATCH[3]}"
+          else
+            log "    Append text to keyword '[$keywordType]'..."
+            keywordMap[$keywordType]="${keywordMap[$keywordType]} ${BASH_REMATCH[3]}"
+          fi
         fi
       else
         # add comment line to array
@@ -418,13 +433,13 @@ function parseBashScript {
       # clear arrays for next function
       log "Clearing arrays..."
       commentArr=()
-      paramArr=()
+      paramMap=()
       keywordMap=()
     else
       # clear arrays when we encounter break in expected continuous comment/function
       log "Clearing arrays..."
       commentArr=()
-      paramArr=()
+      paramMap=()
       keywordMap=()
     fi
 
