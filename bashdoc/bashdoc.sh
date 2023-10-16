@@ -3,31 +3,28 @@
 # Parse documentation comments from bash script and generate markdown. The output file will
 # be saved in the same directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
-# A relative path option (-r) can be used to fix the link to the script in the header.
-# 
+# A relative path option (-r) can be used to fix the link to the script in the header.<br>
+#
 # @version 2023.10.13
-# 
+#
 # Supported Function Formats:
 # - name() { }
 # - function name { }
 # - function name() { }
-# 
-# 
-# Supported Keywords:<br>
-# - @param - Describes the parameters of a method.<br>
-# - @return - Describes the return code of a method. Normally 0 (success), 1 (error)<br>
-# - @output - Describes the otuput of a method, normally written to standard output so it can be captured<br>
-#  
+#
+# Supported Keywords:
+# - @param - Describes the parameters of a method.
+# - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
+# - @output - Describes the otuput of a method, normally written to standard output so it can be captured
+#
 # Limitation Notes:
-# - Comments lines cannot be empty, add a space to signal continuation of content  
-# - keyword descriptions are limited to single lines, multiple duplicate keyword lines can be used
-# <br>
-# 
+# - keyword descriptions are limited to single lines
+#
 # TODO:<br>
 # - @author - Specifies the author of the class, method, or field.
 # - @version - Specifies the version of the class, method, or field.
 # - @see - Specifies a link to another class, method, or field.
-# 
+#
 # Sample:
 # <pre>
 # #!/bin/bash
@@ -74,6 +71,7 @@ done
 
 # Line regular expressions
 rgxComment="^[#][^!/]([ ]*(.*))$"
+rgxEmptyComment="^[#][ ]*$"
 rgxHeader="^[-]{5}"
 rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)?[ -]+(.+)"
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
@@ -103,6 +101,7 @@ function printHelp {
   echo "  bashdoc.sh script.sh"
   echo "  bashdoc.sh script1.sh script2.sh script3.sh"
   echo "  bashdoc.sh -o /output/path *.sh"
+  echo "  bashdoc.sh -r "../" -o /output/path *.sh"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -151,6 +150,17 @@ function processArgs {
 # @return - 0 (zero) when true, 1 otherwise
 function isComment {
   if [[ $1 =~ $rgxComment ]]; then
+    return 0
+  fi
+  return 1
+}
+
+# Determine if text is a completly empty comment (nothing but spaces)
+#
+# @param $1 - text to test with regex for match
+# @return - 0 (zero) when true, 1 otherwise
+function isEmptyComment {
+  if [[ $1 =~ $rgxEmptyComment ]]; then
     return 0
   fi
   return 1
@@ -263,11 +273,11 @@ function writeParameterDescription {
 # write out the output description
 function writeReturnDescription {
   local keyword='return'
-  if [[ ! -v keywordArr[$keyword] ]]; then
+  if [[ ! -v keywordMap[$keyword] ]]; then
     return 0
   fi
 
-  local description=${keywordArr[$keyword]}
+  local description=${keywordMap[$keyword]}
   logAll "  ${PUR}Return:${NC}${description}"
   echo -n "<br><u>Return:</u><br>" >> $outputFile
   log "Keyword Desc:$description"
@@ -277,11 +287,11 @@ function writeReturnDescription {
 # write out the output description
 function writeOutputDescription {
   local keyword='output'
-  if [[ ! -v keywordArr[$keyword] ]]; then
+  if [[ ! -v keywordMap[$keyword] ]]; then
     return 0
   fi
 
-  local description=${keywordArr[$keyword]}
+  local description=${keywordMap[$keyword]}
   logAll "  ${CYN}Output:${NC}${description}"
   echo -n "<br><u>Output:</u><br>" >> $outputFile
   log "Keyword Desc:$description"
@@ -314,7 +324,7 @@ function parseBashScript {
   # declare an array to store comments before function
   local -a commentArr=()
   local -a paramArr=()
-  local -A keywordArr=()
+  local -A keywordMap=()
   local isFirstFunction=true
 
 
@@ -325,6 +335,14 @@ function parseBashScript {
     
     # pad line number with spaces
     lineNoPadded=$(printf %4d $lineNo)
+
+    # skip empty comment lines to allow for break in descriptions
+    if isEmptyComment "$line"; then
+      log "  BREAK"
+      # add an actual blank line to comment line to array
+      commentArr+=("")
+      continue
+    fi
 
     # detect if this is a comment line
     if isComment "$line"; then
@@ -348,8 +366,8 @@ function parseBashScript {
           paramArr+=("$commentText")
         else
           log " Capturing $keywordType to list..."
-          #keywordArr[$keywordType]+="${commentText}"
-          keywordArr[$keywordType]+="${BASH_REMATCH[3]}"
+          #keywordMap[$keywordType]+="${commentText}"
+          keywordMap[$keywordType]+="${BASH_REMATCH[3]}"
         fi
       else
         # add comment line to array
@@ -401,15 +419,13 @@ function parseBashScript {
       log "Clearing arrays..."
       commentArr=()
       paramArr=()
-      keywordArr=()
-      returnDescription=""
+      keywordMap=()
     else
       # clear arrays when we encounter break in expected continuous comment/function
       log "Clearing arrays..."
       commentArr=()
       paramArr=()
-      keywordArr=()
-      returnDescription=""
+      keywordMap=()
     fi
 
   done < $inputFile

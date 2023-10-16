@@ -4,25 +4,22 @@
 Parse documentation comments from bash script and generate markdown. The output file will
 be saved in the same directory unless the optional output directory option is
 specified.  The output file name will be the name of the script with '.md' extension.
-A relative path option (-r) can be used to fix the link to the script in the header.
+A relative path option (-r) can be used to fix the link to the script in the header.<br>
 
-@version 2023.10.11
+@version 2023.10.13
 
 Supported Function Formats:
 - name() { }
 - function name { }
 - function name() { }
 
+Supported Keywords:
+- @param - Describes the parameters of a method.
+- @return - Describes the return code of a method. Normally 0 (success), 1 (error)
+- @output - Describes the otuput of a method, normally written to standard output so it can be captured
 
-Supported Keywords:<br>
-- @param - Describes the parameters of a method.<br>
-- @return - Describes the return code of a method. Normally 0 (success), 1 (error)<br>
-- @output - Describes the otuput of a method, normally written to standard output so it can be captured<br>
- 
 Limitation Notes:
-- Comments lines cannot be empty, add a space to signal continuation of content  
-- keyword descriptions are limited to single lines, multiple duplicate keyword lines can be used
-<br>
+- keyword descriptions are limited to single lines
 
 TODO:<br>
 - @author - Specifies the author of the class, method, or field.
@@ -54,6 +51,7 @@ function doWork() {
 | printHelp() | Print the usage information for this script to standard output.  |
 | processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script <br> |
 | isComment($1) | Determine if text is a comment  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| isEmptyComment($1) | Determine if text is a completly empty comment (nothing but spaces)  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
 | isHeader($1) | Determine if text is a special header section indicator  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
 | isKeyword($1) | Determine if text is one a keyword  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
 | isFunction($1) | Determine if text is a function  <br><br><u>Args:</u><br>$1 - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
