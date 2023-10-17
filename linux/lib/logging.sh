@@ -52,7 +52,7 @@ function debugOff {
 
 # set the log file path
 # 
-# @param $1 - path to log file
+# @param file - path to log file
 function setLogFile {
   LOGFILE=$1
 }
@@ -87,7 +87,7 @@ function escapesOff {
 
 # set the prefix variable
 # 
-# @param $1 - the prefix text
+# @param prefix - the prefix text
 function logPrefix {
   LOGPREFIX="$1"
 }
@@ -101,7 +101,7 @@ function clearPrefix {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-# @param $1 - the text content to log/output
+# @param content - the text content to log/output
 function log {
   local content="$1"
   if [ ! -z "$LOGPREFIX" ]; then
@@ -125,7 +125,7 @@ function log {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-# @param $1 - the text content to log/output
+# @param content - the text content to log/output
 function logN {
   NO_NEW_LINE=true
   
@@ -138,7 +138,7 @@ function logN {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-# @param $1 - the text content to log/output
+# @param content - the text content to log/output
 function logAll {
   local content="$1"
   if [ ! -z "$LOGPREFIX" ]; then
@@ -170,7 +170,7 @@ function logAll {
 # Writes to file when file logging is on.
 # Adds prefix to content if supplied.
 # 
-# @param $1 - the text content to log/output
+# @param content - the text content to log/output
 function logAllN {
   NO_NEW_LINE=true
   
