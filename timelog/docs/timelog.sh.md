@@ -7,7 +7,7 @@ each file day.
 @version 2023.08.21
 
 Notes:<br>
-- time range without task will add time to previous task
+- time range without task will accumulated to a special 'NO_TASK' entry
 
 Usage:<br>
 <pre>
@@ -32,11 +32,11 @@ Task Filter:     timelog.sh -t "ABC-1234"
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.   |
-| processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script  <br> |
-| isTaskNo($1) | Determine if text is a task number    <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br><br><u>Return:</u><br>0 when true, 1 otherwise<br> |
-| isTimeRange($1) | Determine if text is a time range    <br><br><u>Args:</u><br>$1 - text to test with regex for match  <br><br><u>Return:</u><br>0 when true, 1 otherwise<br> |
-| getElapsedMinutes($1,$2) | Calculate the elsapsed minutes from the provided time range    <br><br><u>Args:</u><br>$1 - the start time in format (HH:mm)  <br>$2 - the end time in format (HH:mm)  <br><br><u>Output:</u><br>elapsed minutes written to standard output<br> |
-| div($1,$2,$3) | Perform native bash division  Note: bash only works with integers, fake it using fixed point arithmetic    <br><br><u>Args:</u><br>$1 - dividend  <br>$2 - divisor  <br>$3 - scale (precision)  <br><br><u>Output:</u><br>result of division, written to standard output<br> |
-| parseFile($1) | Perform all the work to parse a single time log file    <br><br><u>Args:</u><br>$1 - the log file path  <br> |
-| addTaskToSummary($1,$2) | Adds a task and time to the summary task list    <br><br><u>Args:</u><br>$1 - task number to update  <br>$2 - time to add  <br> |
+| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u>Args:</u><br>args - array of argument values provided when calling the script  <br> |
+| isTaskNo(text) | Determine if text is a task number    <br><br><u>Args:</u><br>text - text to test with regex for match  <br><br><u>Return:</u><br>0 when true, 1 otherwise<br> |
+| isTimeRange(text) | Determine if text is a time range    <br><br><u>Args:</u><br>text - text to test with regex for match  <br><br><u>Return:</u><br>0 when true, 1 otherwise<br> |
+| getElapsedMinutes(end, start) | Calculate the elsapsed minutes from the provided time range    <br><br><u>Args:</u><br>end - the end time in format (HH:mm)  <br>start - the start time in format (HH:mm)  <br><br><u>Output:</u><br>elapsed minutes written to standard output<br> |
+| div(dividend, precision, divisor) | Perform native bash division  Note: bash only works with integers, fake it using fixed point arithmetic    <br><br><u>Args:</u><br>dividend - number being divided  <br>precision - decimal precision (scale factor), defaults to 2  <br>divisor - number to divide by  <br><br><u>Output:</u><br>result of division, written to standard output<br> |
+| parseFile(inputFile) | Perform all the work to parse a single time log file    <br><br><u>Args:</u><br>inputFile - the log file path  <br> |
+| addTaskToSummary(taskNo, time) | Adds a task and time to the summary task list    <br><br><u>Args:</u><br>taskNo - task number to update  <br>time - time to add in minutes  <br> |
 | printSummary() | Print the summary of all task files parsed   |
