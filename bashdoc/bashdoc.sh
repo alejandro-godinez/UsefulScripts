@@ -257,7 +257,7 @@ function writeFunctionParameters {
 
       log "IsFirstParam:$isFirstParam"
       if [ "$isFirstParam" = false ]; then
-        echo -n ", " >> $outputFile
+        echo -n "," >> $outputFile
       fi
       isFirstParam=false
       echo -n "${keywordName}" >> $outputFile
