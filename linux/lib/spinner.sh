@@ -1,7 +1,7 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-# Library implementation with function to print a rotating character in place
-# to demonstrate work being perform by long running script.
+# Library implementation with function to print a rotating set of characters 
+# in place to demonstrate work being perform by long running script.
 # 
 # 
 # Import Sample Code:
@@ -17,7 +17,7 @@
 #  <pre>
 #    # spin the caracter one step
 #    spinChar
-#    # delete the spinner character at the end
+#    # delete the spinner character(s) (clear line)
 #    spinDel
 #  </pre>
 #-------------------------------------------------------------------------------
@@ -45,20 +45,26 @@ function spinChar {
   fi
 
   # print backspace to remove previous character and next spin character
-  echo -en "\b${SPINNER[$SPIN_IDX]}"
+  spinDel
+  echo -en "${SPINNER[$SPIN_IDX]}"
+  #echo -en "\b${SPINNER[$SPIN_IDX]}"
 }
 
-# delete the spinner character
+# delete the spinner character by clearing the currnet line content
 function spinDel {
-  echo -en "\b \b"
+  # clear the current line
+  echo -en "\033[2K"
+  # move cursor to start of line
+  echo -en "\r"
 }
 
 # - - - TESTING - - - #
-# newSpinner=('1' '2' '3' '4' '5' '6')
-# setSpinner "${newSpinner[@]}"
+#newSpinner=('10' '9' '8' '7' '6' '5') 
+#newSpinner=('1/10' '2/10' '3/10' '4/10' '5/10' '6/10' '7/10' '8/10' '9/10' '10/10')
+#setSpinner "${newSpinner[@]}"
 
 # for i in {1..10}; do
 #   spinChar
-#   sleep .5
+#   sleep .25
 # done
 # spinDel
