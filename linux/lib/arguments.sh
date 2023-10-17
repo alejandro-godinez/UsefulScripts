@@ -48,7 +48,7 @@ declare -A NEEDSVAL
 
 # Check if the specified option key exists
 # 
-# @param $1 - the option name
+# @param option - the option name
 # @return - 0 (zero) when true, 1 otherwise
 function hasOption {
   local option=$1
@@ -61,8 +61,8 @@ function hasOption {
 # Add an option code/name that should be captured. If a value needs to be
 # provided with the argument set value indicator to true.
 # 
-# @param $1 - the option name
-# @param $2 - argument value needed indicator true/false (optional)
+# @param option - the option name
+# @param needsValue - true/false indicator that option will have argument (optional)
 # @return - 0 (zero) when added, 1 otherwise
 function addOption {
   local option=$1
@@ -86,7 +86,7 @@ function addOption {
 
 # Check if the option needs to have a value provided following the code
 # 
-# @param $1 - the option name
+# @param option - the option name
 # @return - 0 (zero) when true, 1 otherwise
 function optionNeedsVal {
   local option=$1
@@ -98,8 +98,8 @@ function optionNeedsVal {
 
 # Sets the argument value for the specified option
 # 
-# @param $1 - the option name
-# @param $2 - the argument value
+# @param option - the option name
+# @param value - the argument value
 function setArgument {
   local option=$1
   local value=$2
@@ -108,7 +108,7 @@ function setArgument {
 
 # Get the argument value for an option name.
 # 
-# @param $1 - the option name
+# @param option - the option name
 # @return - 0 (zero) with valid option, 1 otherwise.
 # @output - the argument value
 function getArgument {
@@ -123,7 +123,7 @@ function getArgument {
 # Check if the specified option was parsed from the arguments.
 # This checks if the value is not 'false'
 # 
-# @param $1 - the option name
+# @param option - the option name
 # @return - 0 (zero) when true, 1 otherwise
 function hasArgument {
   local option=$1
@@ -144,7 +144,7 @@ function hasArgument {
 
 # Check if text starts with dash
 # 
-# @param $1 - the text to check
+# @param text - the text to check
 # @return - 0 (zero) when true, 1 otherwise
 function startsWithDash {
   if [[ $1 =~ ^- ]]; then
@@ -155,14 +155,14 @@ function startsWithDash {
 
 # Adds an entry to the argument remaining variable
 # 
-# @param $1 - argument value
+# @param arg - argument value
 function addToREM {
   REM_ARGS+=("$1")
 }
 
 # Parsing and processing of the argument list
 # 
-# @param $1 - array of arguments, use "$@" from script call
+# @param args - array of arguments, use "$@" from script call
 function parseArguments {
   # loop while there are still arguments
   while (( $# > 0 )); do

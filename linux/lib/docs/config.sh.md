@@ -18,7 +18,7 @@ Import Sample Code:
     fi
     source ~/lib/config.sh
   </pre>
- 
+
 Usage:
  <pre>
    # check if property exists
@@ -32,5 +32,5 @@ Usage:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| hasProperty($1,$2) | Check if the config file has property name  <br><br><u>Args:</u><br>$1 - The config file <br>$2 - the property name <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| getProperty($1,$2) | Get the property value  <br><br><u>Args:</u><br>$1 - The config file <br>$2 - the property name <br><br><u>Return:</u><br>0 (zero) when value is written to standard output, 1 otherwise<br> |
+| hasProperty(configFile,propName) | Check if the config file has property name  <br><br><u>Args:</u><br>configFile - The config file <br>propName - the property name <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| getProperty(configFile,propName) | Get the property value  <br><br><u>Args:</u><br>configFile - The config file <br>propName - the property name <br><br><u>Return:</u><br>0 (zero) when value is found and output, 1 otherwise<br><br><u>Output:</u><br>value writtent to standard output<br> |
