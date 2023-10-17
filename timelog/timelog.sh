@@ -6,7 +6,7 @@
 # @version 2023.08.21
 # 
 # Notes:<br>
-# - time range without task will add time to previous task
+# - time range without task will accumulated to a special 'NO_TASK' entry
 # 
 # Usage:<br>
 # <pre>
@@ -62,8 +62,6 @@ NO_TASK="NO_TASK"
 # summary of hours for all files parsed
 declare -A summaryTaskList
 
-
-
 # Print the usage information for this script to standard output.
 function printHelp {
   echo "This script will parse a time log ".hrs" file and output task work time"
@@ -88,7 +86,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
 
   # initialize expected options
@@ -117,7 +115,7 @@ function processArgs {
 
 # Determine if text is a task number
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 when true, 1 otherwise
 function isTaskNo {
   if [[ $1 =~ $rgxTaskNo ]]; then
@@ -128,7 +126,7 @@ function isTaskNo {
 
 # Determine if text is a time range
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
 # @return - 0 when true, 1 otherwise
 function isTimeRange {
   if [[ $1 =~ $rgxTimeRange ]]; then
@@ -139,8 +137,8 @@ function isTimeRange {
 
 # Calculate the elsapsed minutes from the provided time range
 # 
-# @param $1 - the start time in format (HH:mm)
-# @param $2 - the end time in format (HH:mm)
+# @param start - the start time in format (HH:mm)
+# @param end - the end time in format (HH:mm)
 # @output - elapsed minutes written to standard output
 function getElapsedMinutes {
   # split time into two part
@@ -163,9 +161,9 @@ function getElapsedMinutes {
 # Perform native bash division
 # Note: bash only works with integers, fake it using fixed point arithmetic
 # 
-# @param $1 - dividend
-# @param $2 - divisor
-# @param $3 - scale (precision)
+# @param dividend - number being divided
+# @param divisor - number to divide by
+# @param precision - decimal precision (scale factor), defaults to 2
 # @output - result of division, written to standard output
 function div {
   # default precision scale to 2 decimal places
@@ -194,7 +192,7 @@ function div {
 
 # Perform all the work to parse a single time log file
 # 
-# @param $1 - the log file path
+# @param inputFile - the log file path
 function parseFile {
   local inputFile=$1
 
@@ -212,8 +210,6 @@ function parseFile {
 
   # read and loop through lines
   while IFS= read -r line; do
-    #log "$line"
-
     # count number of line
     lineNo=$((++lineNo))
 
@@ -339,8 +335,8 @@ function parseFile {
 
 # Adds a task and time to the summary task list
 # 
-# @param $1 - task number to update
-# @param $2 - time to add
+# @param taskNo - task number to update
+# @param time - time to add in minutes
 function addTaskToSummary {
   local taskNo="$1"
   local elapsedMinutes=$2
@@ -413,7 +409,7 @@ for inputFile in "${REM_ARGS[@]}"; do
   fileCount=$((++fileCount))
   log "Input File ($fileCount of $argCount): ${inputFile}"
   
-  # print a dot indicator that work is being done
+  # update spinner to indicate that work is being done
   if ! hasArgument "-v"; then
     spinChar
   fi
