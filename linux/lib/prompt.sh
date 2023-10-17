@@ -23,8 +23,8 @@
 # Prompt for any user input without any validation. 
 # User input is stored in the bash $REPLY variable
 # 
-# @param $1 - prompt text
-# @return - exit value of zero indicates no error
+# @param text - prompt text
+# @output - use input stored in $REPLY variable
 function promptForInput {
   prompt=$1
   read -p "$prompt"
@@ -32,7 +32,7 @@ function promptForInput {
 
 # Prompt user for a yes or no response
 # 
-# @param $1 - prompt text
+# @param text - prompt text
 # @return - 0 (zero) when yes, 1 otherwise
 function promptYesNo {
   prompt=$1
@@ -52,7 +52,7 @@ function promptYesNo {
 # Prompt user for an integer number value
 # User input is stored in the bash $REPLY variable
 # 
-# @param $1 - prompt text
+# @param text - prompt text
 # @return - 0 (zero) when input is valid integer, 1 otherwise
 function promptForInteger {
   prompt=$1
@@ -69,9 +69,10 @@ function promptForInteger {
 # Prompt user to select from list
 # User selection value is stored in the bash $REPLY variable
 # 
-# @param $1 - the prompt text
-# @param $2..n - array of options
+# @param text - the prompt text
+# @param options - list of options (all remaining arguments)
 # @return - 0 (zero) when selection from list is valid, 1 otherwise
+# @output - use selection stored in $REPLY
 function promptSelection {
   # capture prompt from first argument and consume
   local prompt=$1
