@@ -39,10 +39,10 @@ Examples:
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.  |
-| processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script <br> |
-| promptForInstall() | Ask user which project they would like to install from the set  <br><u>Return:</u><br>exit value of zero (truthy) indicates installDir variable set<br> |
-| installProject($1) | Perform installation of scripts for the specified project sub directory.  <br><br><u>Args:</u><br>$1 - the project sub-directory from which to install scripts <br> |
-| installSingleFile() | Perform the work to find the single file to install  |
-| installFile($1, $2) | Perform install work for a file  <br><br><u>Args:</u><br>$1 - the file to install <br>$2 - the destination path into which file should be installed <br> |
-| findFile($1) | Find the first file that is found to match the name specified  <br><br><u>Args:</u><br>$1 - the file name to search <br><br><u>Output:</u><br>the file path, writtent to standard output<br> |
-| pathHasLibFolder($1) | Check if the specified path contains a lib folder  <br><br><u>Args:</u><br>$1 - the path to check <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
+| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u>Args:</u><br>args - array of argument values provided when calling the script <br> |
+| promptForInstall() | Ask user which project they would like to install from the set  <br><u>Return:</u><br>exit value of zero (truthy) indicates installDir variable set, 1 otherwise<br> |
+| installProject(projDir) | Perform installation of scripts for the specified project sub directory.  <br><br><u>Args:</u><br>projDir - the project sub-directory from which to install scripts <br> |
+| installSingleFile() | Perform the work to find the single file to install specified throug script option  |
+| installFile(file,dest) | Perform install work for a file  <br><br><u>Args:</u><br>file - the file to install <br>dest - the destination path into which file should be installed <br> |
+| findFile(fileName) | Find the first file that is found to match the name specified  <br><br><u>Args:</u><br>fileName - the file name to search <br><br><u>Return:</u><br>0 (zero) when match was found, 1 otherwise<br><br><u>Output:</u><br>the file path, writtent to standard output<br> |
+| pathHasLibFolder(path) | Check if the specified path contains a lib folder  <br><br><u>Args:</u><br>path - the path to check <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |

@@ -19,8 +19,8 @@
 # <u>Examples:</u><br>
 # arrayDelete 3 arrayName
 # 
-# @param $1 - the index position to delete from the aray
-# @param $2 - the array reference to the array
+# @param deleteIdx - the index position to delete from the aray
+# @param arr - the array reference to the array
 function arrayDelete {
   local deleteIdx=$1
   shift
@@ -43,7 +43,7 @@ function arrayDelete {
 # <u>Examples:</u><br>
 # lastIndex=$( getLastIndex arrayName )
 # 
-# @param $1 - the array reference to the array
+# @param arr - the array reference to the array
 # @output - the last index number it written to standard output
 function getLastIndex {
   #use nameref to array for indirection
@@ -57,7 +57,7 @@ function getLastIndex {
 # <u>Examples:</u><br>
 # sortArrayAsc arrayName )
 # 
-# @param $1 - the array reference to the array
+# @param arr - the array reference to the array
 function sortArrayAsc {
   #use nameref to array for indirection
   local -n arr=$1
@@ -71,7 +71,7 @@ function sortArrayAsc {
 # <u>Examples:</u><br>
 # sortArrayDec arrayName
 # 
-# @param $1 - the array reference to the array
+# @param arr - the array reference to the array
 function sortArrayDec {
   #use nameref to array for indirection
   local -n arr=$1

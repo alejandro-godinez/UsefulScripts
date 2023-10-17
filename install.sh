@@ -98,7 +98,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   
   # initialize expected options
@@ -133,7 +133,7 @@ function processArgs {
 
 # Ask user which project they would like to install from the set
 # 
-# @return - exit value of zero (truthy) indicates installDir variable set
+# @return - exit value of zero (truthy) indicates installDir variable set, 1 otherwise
 function promptForInstall {
   # reset install directory
   installDir=""
@@ -166,7 +166,7 @@ function promptForInstall {
 
 # Perform installation of scripts for the specified project sub directory.
 # 
-# @param $1 - the project sub-directory from which to install scripts
+# @param projDir - the project sub-directory from which to install scripts
 function installProject {
   local projSubDir=$1
   local isLib=false
@@ -209,7 +209,7 @@ function installProject {
   done
 }
 
-# Perform the work to find the single file to install
+# Perform the work to find the single file to install specified throug script option
 function installSingleFile {
   # get the file name from argument
   fileName=$(getArgument "-n")
@@ -243,8 +243,8 @@ function installSingleFile {
 
 # Perform install work for a file
 # 
-# @param $1 - the file to install
-# @param $2 - the destination path into which file should be installed
+# @param file - the file to install
+# @param dest - the destination path into which file should be installed
 function installFile {
   local srcFile="$1"
   local destDir="$2"
@@ -291,7 +291,8 @@ function installFile {
 
 # Find the first file that is found to match the name specified
 # 
-# @param $1 - the file name to search
+# @param fileName - the file name to search
+# @return - 0 (zero) when match was found, 1 otherwise
 # @output - the file path, writtent to standard output
 function findFile {
   local fileName="$1"
@@ -303,16 +304,17 @@ function findFile {
   # check if file list was empty/undefined
   if [[ -z "${fileList[@]}" ]]; then
     echo ""
-    return
+    return 1
   fi
 
   # echo the path
   echo "${fileList[0]}"
+  return 0
 }
 
 # Check if the specified path contains a lib folder
 # 
-# @param $1 - the path to check
+# @param path - the path to check
 # @return - 0 (zero) when true, 1 otherwise
 function pathHasLibFolder {
   if [[ "$1" =~ $RGX_LIB ]]; then

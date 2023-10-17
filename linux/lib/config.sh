@@ -30,8 +30,8 @@
 
 # Check if the config file has property name
 # 
-# @param $1 - The config file
-# @param $2 - the property name
+# @param configFile - The config file
+# @param propName - the property name
 # @return - 0 (zero) when true, 1 otherwise
 function hasProperty {
   local configFile="$1"
@@ -56,9 +56,10 @@ function hasProperty {
 
 # Get the property value
 # 
-# @param $1 - The config file
-# @param $2 - the property name
-# @return - 0 (zero) when value is written to standard output, 1 otherwise
+# @param configFile - The config file
+# @param propName - the property name
+# @return - 0 (zero) when value is found and output, 1 otherwise
+# @output - value writtent to standard output
 function getProperty {
   local configFile="$1"
   local propName="$2"
