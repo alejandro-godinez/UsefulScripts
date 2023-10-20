@@ -1,11 +1,11 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------------------
 # Parse documentation comments from bash script and generate markdown. The output file will
-# be saved in the same directory unless the optional output directory option is
+# be saved in a 'docs' sub-directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
 # A relative path option (-r) can be used to fix the link to the script in the header.<br>
 #
-# @version 2023.10.13
+# @version 2023.10.20
 #
 # Supported Function Formats:
 # - name() { }
@@ -54,10 +54,11 @@
 #
 # Usage Examples:
 # <pre>
-# Single:          bashdoc.sh script.sh"
-# Multiple:        bashdoc.sh script1.sh script2.sh script3.sh"
-# Output Dir:      bashdoc.sh -o /output/path *.sh"
-# Relative Path:   bashdoc.sh -r '../' -o /output/path *.sh"
+# Single:        bashdoc.sh script.sh"
+# Multiple:      bashdoc.sh script1.sh script2.sh script3.sh"
+# Output Dir:    bashdoc.sh -o /output/path *.sh"
+# Relative Link: bashdoc.sh -r '../' -o /output/path *.sh"
+#   Note: this is default
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -94,9 +95,9 @@ rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)?[ -]+(.+)"
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
 # output path to save document file, default to current directory
-OUTPUT_PATH="./"
+OUTPUT_PATH="./docs/"
 # relative path to use with the script link
-RELATIVE_PATH=""
+RELATIVE_PATH="../"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -258,7 +259,7 @@ function writeFunctionParameters {
 
       log "IsFirstParam:$isFirstParam"
       if [ "$isFirstParam" = false ]; then
-        echo -n "," >> $outputFile
+        echo -n ",&nbsp;" >> $outputFile
       fi
       isFirstParam=false
       echo -n "${keywordName}" >> $outputFile
@@ -270,7 +271,7 @@ function writeFunctionParameters {
 function writeParameterDescription {
   local paramCount=${#paramMap[@]}
   if (( paramCount > 0 )); then
-    echo -n "<br><br><u>Args:</u><br>" >> $outputFile
+    echo -n "<br><br><u><b>Args:</b></u><br>" >> $outputFile
   else
     return 0
   fi
@@ -299,7 +300,7 @@ function writeReturnDescription {
 
   local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
   logAll "  ${PUR}Return:${NC}${description}"
-  echo -n "<br><u>Return:</u><br>" >> $outputFile
+  echo -n "<br><u><b>Return:</b></u><br>" >> $outputFile
   log "Keyword Desc:$description"
   echo -n "${description}<br>" >> $outputFile
 }
@@ -314,7 +315,7 @@ function writeOutputDescription {
 
   local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
   logAll "  ${CYN}Output:${NC}${description}"
-  echo -n "<br><u>Output:</u><br>" >> $outputFile
+  echo -n "<br><u><b>Output:</b></u><br>" >> $outputFile
   log "Keyword Desc:$description"
   echo -n "${description}<br>" >> $outputFile
 }
@@ -482,9 +483,15 @@ processArgs "$@"
 # check that the output directory exists
 logAll "Output Path: $OUTPUT_PATH"
 if [ ! -d "$OUTPUT_PATH" ]; then
-  logAll "${RED}ERROR: output path not found${NC}"
-  exit
+  log "Creating the output directory"
+  mkdir "$OUTPUT_PATH"
+
+  if [ ! -d "$OUTPUT_PATH" ]; then
+    logAll "${RED}ERROR: output path not found${NC}"
+    exit
+  fi
 fi
+
 
 # print out the list of args that were not consumed by function (non-flag arguments)
 argCount=0
