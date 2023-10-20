@@ -54,7 +54,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   
   # initialize expected options

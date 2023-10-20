@@ -4,7 +4,7 @@
 # directory and move the file into a sub-folder of the year
 # equal to the last modified date.  
 # 
-# NOTE: modified date/time is used becuase the birth value isn't implemented on
+# NOTE: modified date/time is used because the birth value isn't implemented on
 #       older EXT file systems and cannot be relied.
 # 
 # TODO:  

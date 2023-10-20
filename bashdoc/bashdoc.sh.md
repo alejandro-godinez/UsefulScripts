@@ -34,9 +34,10 @@ Format Sample:
 #-------------------------------------------
 
 # This function does work
-# @param $1 - the first parameter
+# @param paramOne - the first parameter
+# @param paramTwo - the second parameter
 # @return - 0 when true, 1 otherwise
-# @output - the text ouput
+# @output - the text ouput to standard out
 function doWork() {
   echo "otuput value"
   return 0
@@ -66,12 +67,12 @@ Relative Path:   bashdoc.sh -r '../' -o /output/path *.sh"
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.  |
 | processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u>Args:</u><br>args - array of argument values provided when calling the script <br> |
-| isComment(text) | Determine if text is a comment  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isEmptyComment(text) | Determine if text is a completly empty comment (nothing but spaces)  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isHeader(text) | Determine if text is a special header section indicator  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isKeyword(text) | Determine if text is one a keyword  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| isFunction(text) | Determine if text is a function  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| newLinesToSpace(text) | Replace newline characters (cr and lf) to space  <br><br><u>Args:</u><br>text - text to perform replacement <br><br><u>Output:</u><br>the trimmed text on standard output<br> |
+| isComment(text) | Determine if text is a comment  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise <br> |
+| isEmptyComment(text) | Determine if text is a completly empty comment (nothing but spaces)  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise <br> |
+| isHeader(text) | Determine if text is a special header section indicator  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise <br> |
+| isKeyword(text) | Determine if text is one a keyword  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise <br> |
+| isFunction(text) | Determine if text is a function  <br><br><u>Args:</u><br>text - text to test with regex for match <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise <br> |
+| newLinesToSpace(text) | Replace newline characters (cr and lf) to space  <br><br><u>Args:</u><br>text - text to perform replacement <br><br><u>Output:</u><br>the trimmed text on standard output <br> |
 | writeComments() | Write the accumulated comments to the output file  |
 | writeCommentsFlat() | Write the accumulated comments to the output file trimmed of any newline  |
 | writeFunctionParameters() | write out the accumulated function parameters  |
