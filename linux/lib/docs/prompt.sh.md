@@ -24,7 +24,7 @@ Usage:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| promptForInput(text) | Prompt for any user input without any validation.  User input is stored in the bash $REPLY variable  <br><br><u>Args:</u><br>text - prompt text <br><br><u>Output:</u><br>use input stored in $REPLY variable <br> |
-| promptYesNo(text) | Prompt user for a yes or no response  <br><br><u>Args:</u><br>text - prompt text <br><br><u>Return:</u><br>0 (zero) when yes, 1 otherwise <br> |
-| promptForInteger(text) | Prompt user for an integer number value User input is stored in the bash $REPLY variable  <br><br><u>Args:</u><br>text - prompt text <br><br><u>Return:</u><br>0 (zero) when input is valid integer, 1 otherwise <br> |
-| promptSelection(options,text) | Prompt user to select from list User selection value is stored in the bash $REPLY variable  <br><br><u>Args:</u><br>options - list of options (all remaining arguments) <br>text - the prompt text <br><br><u>Return:</u><br>0 (zero) when selection from list is valid, 1 otherwise <br><br><u>Output:</u><br>use selection stored in $REPLY <br> |
+| promptForInput(text) | Prompt for any user input without any validation.  User input is stored in the bash $REPLY variable  <br><br><u><b>Args:</b></u><br>text - prompt text <br><br><u><b>Output:</b></u><br>use input stored in $REPLY variable <br> |
+| promptYesNo(text) | Prompt user for a yes or no response  <br><br><u><b>Args:</b></u><br>text - prompt text <br><br><u><b>Return:</b></u><br>0 (zero) when yes, 1 otherwise <br> |
+| promptForInteger(text) | Prompt user for an integer number value User input is stored in the bash $REPLY variable  <br><br><u><b>Args:</b></u><br>text - prompt text <br><br><u><b>Return:</b></u><br>0 (zero) when input is valid integer, 1 otherwise <br> |
+| promptSelection(options,&nbsp;text) | Prompt user to select from list User selection value is stored in the bash $REPLY variable  <br><br><u><b>Args:</b></u><br>options - list of options (all remaining arguments) <br>text - the prompt text <br><br><u><b>Return:</b></u><br>0 (zero) when selection from list is valid, 1 otherwise <br><br><u><b>Output:</b></u><br>use selection stored in $REPLY <br> |

@@ -12,6 +12,6 @@
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.   |
-| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u>Args:</u><br>args - array of argument values provided when calling the script  <br> |
-| waitForInput(repoDir,branch) | Ask user if they would like to perform pull for the repository/branch specified    <br><br><u>Args:</u><br>repoDir - path to local git project  <br>branch - the branch of the repo directory  <br><br><u>Return:</u><br>0 (zero) when user answered yes, 1 otherwise  <br> |
-| gitPullMain(repoDir) | Perform a git pull on the speicified local repository if it is the main branch.  Other branches are allowed if the 'All' (-a) option was specified when executing.    <br><br><u>Args:</u><br>repoDir - path to local git project  <br> |
+| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u><b>Args:</b></u><br>args - array of argument values provided when calling the script  <br> |
+| waitForInput(repoDir,&nbsp;branch) | Ask user if they would like to perform pull for the repository/branch specified    <br><br><u><b>Args:</b></u><br>repoDir - path to local git project  <br>branch - the branch of the repo directory  <br><br><u><b>Return:</b></u><br>0 (zero) when user answered yes, 1 otherwise  <br> |
+| gitPullMain(repoDir) | Perform a git pull on the speicified local repository if it is the main branch.  Other branches are allowed if the 'All' (-a) option was specified when executing.    <br><br><u><b>Args:</b></u><br>repoDir - path to local git project  <br> |
