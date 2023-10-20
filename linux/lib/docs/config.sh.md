@@ -32,5 +32,5 @@ Usage:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| hasProperty(configFile,propName) | Check if the config file has property name  <br><br><u>Args:</u><br>configFile - The config file <br>propName - the property name <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise<br> |
-| getProperty(configFile,propName) | Get the property value  <br><br><u>Args:</u><br>configFile - The config file <br>propName - the property name <br><br><u>Return:</u><br>0 (zero) when value is found and output, 1 otherwise<br><br><u>Output:</u><br>value writtent to standard output<br> |
+| hasProperty(configFile,propName) | Check if the config file has property name  <br><br><u>Args:</u><br>configFile - The config file <br>propName - the property name <br><br><u>Return:</u><br>0 (zero) when true, 1 otherwise <br> |
+| getProperty(configFile,propName) | Get the property value  <br><br><u>Args:</u><br>configFile - The config file <br>propName - the property name <br><br><u>Return:</u><br>0 (zero) when value is found and output, 1 otherwise <br><br><u>Output:</u><br>value writtent to standard output <br> |

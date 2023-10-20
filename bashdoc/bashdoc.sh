@@ -33,9 +33,10 @@
 # #-------------------------------------------
 # 
 # # This function does work
-# # @param $1 - the first parameter
+# # @param paramOne - the first parameter
+# # @param paramTwo - the second parameter
 # # @return - 0 when true, 1 otherwise
-# # @output - the text ouput
+# # @output - the text ouput to standard out
 # function doWork() {
 #   echo "otuput value"
 #   return 0
@@ -296,7 +297,7 @@ function writeReturnDescription {
     return 0
   fi
 
-  local description=${keywordMap[$keyword]}
+  local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
   logAll "  ${PUR}Return:${NC}${description}"
   echo -n "<br><u>Return:</u><br>" >> $outputFile
   log "Keyword Desc:$description"
@@ -311,7 +312,7 @@ function writeOutputDescription {
     return 0
   fi
 
-  local description=${keywordMap[$keyword]}
+  local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
   logAll "  ${CYN}Output:${NC}${description}"
   echo -n "<br><u>Output:</u><br>" >> $outputFile
   log "Keyword Desc:$description"

@@ -28,7 +28,7 @@ SPIN_IDX=-1
 
 # Set a different set of spinner characters
 # 
-# @param $@ - array of characters
+# @param chars - array of characters
 function setSpinner {
   SPINNER=("$@")
   SPIN_COUNT=${#SPINNER[@]}

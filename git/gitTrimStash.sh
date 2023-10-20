@@ -53,7 +53,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-h"
@@ -124,9 +124,9 @@ function waitForInput {
 
 # Print out the stash list with color highliting depending on the amount of entries
 # 
-# @param $1 - the local repo directory
-# @param $2 - the stash list array
-# @param $3 - number of stash entries
+# @param repoDir - path to local git project
+# @param stashList - the stash list array
+# @param stashCount - number of stash entries
 function printStashList {
   local repoDir=$1
   local stashList=$2
@@ -148,7 +148,7 @@ function printStashList {
 
 # Perform all the processing for a single repository
 # 
-# @param $1 - local repo directory
+# @param repoDir - path to local git project
 function processGitDirectory {
   local repoDir=$1
   

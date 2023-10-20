@@ -23,8 +23,8 @@ set -e #//exit on error
 # Example: arrayDelete 3 arrayName
 # </pre>
 # 
-# @param $1 - the index position to delete from the aray
-# @param $2 - the nameref of the array
+# @param index - the index position to delete from the aray
+# @param arr - the nameref of the array
 function arrayDelete {
   local delIndex=$1
   shift

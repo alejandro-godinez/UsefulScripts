@@ -1,8 +1,8 @@
 <small><i>Auto-generated using bashdoc.sh</i></small>
 # [spinner.sh](../spinner.sh)
 
-Library implementation with function to print a rotating character in place
-to demonstrate work being perform by long running script.
+Library implementation with function to print a rotating set of characters 
+in place to demonstrate work being perform by long running script.
 
 
 Import Sample Code:
@@ -13,12 +13,12 @@ Import Sample Code:
     fi
     source ~/lib/spinner.sh
   </pre>
- 
+
 Usage:
  <pre>
    # spin the caracter one step
    spinChar
-   # delete the spinner character at the end
+   # delete the spinner character(s) (clear line)
    spinDel
  </pre>
 
@@ -26,6 +26,6 @@ Usage:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| setSpinner() | Set a different set of spinner characters  @param $@ - array of characters  |
+| setSpinner(chars) | Set a different set of spinner characters  <br><br><u>Args:</u><br>chars - array of characters <br> |
 | spinChar() | Display the next step in the character spinner  |
-| spinDel() | delete the spinner character  |
+| spinDel() | delete the spinner character by clearing the currnet line content  |
