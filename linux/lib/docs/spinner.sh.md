@@ -26,6 +26,6 @@ Usage:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| setSpinner(chars) | Set a different set of spinner characters  <br><br><u>Args:</u><br>chars - array of characters <br> |
+| setSpinner(chars) | Set a different set of spinner characters  <br><br><u><b>Args:</b></u><br>chars - array of characters <br> |
 | spinChar() | Display the next step in the character spinner  |
 | spinDel() | delete the spinner character by clearing the currnet line content  |

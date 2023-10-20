@@ -28,15 +28,15 @@
 |----------|-------------|
 | debugOn() | enable debug/verbose mode   |
 | debugOff() | disable debug/verbose mode   |
-| setLogFile(file) | set the log file path    <br><br><u>Args:</u><br>file - path to log file  <br> |
+| setLogFile(file) | set the log file path    <br><br><u><b>Args:</b></u><br>file - path to log file  <br> |
 | resetLogFile() | clears the current log file of content   |
 | logFileOn() | enable logging to file   |
 | logFileOff() | disable logging to file   |
 | escapesOn() | turn on interpretation of escapes   |
 | escapesOff() | turn off interpretation of escapes   |
-| logPrefix(prefix) | set the prefix variable    <br><br><u>Args:</u><br>prefix - the prefix text  <br> |
+| logPrefix(prefix) | set the prefix variable    <br><br><u><b>Args:</b></u><br>prefix - the prefix text  <br> |
 | clearPrefix() | clear the prefix variable   |
-| log(content) | Performs console output of content only if debug is on.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u>Args:</u><br>content - the text content to log/output  <br> |
-| logN(content) | Performs console output of content with no newline only if debug is on.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u>Args:</u><br>content - the text content to log/output  <br> |
-| logAll(content) | Performs console output of content always.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u>Args:</u><br>content - the text content to log/output  <br> |
-| logAllN(content) | Performs console output of content always with no newline.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u>Args:</u><br>content - the text content to log/output  <br> |
+| log(content) | Performs console output of content only if debug is on.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u><b>Args:</b></u><br>content - the text content to log/output  <br> |
+| logN(content) | Performs console output of content with no newline only if debug is on.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u><b>Args:</b></u><br>content - the text content to log/output  <br> |
+| logAll(content) | Performs console output of content always.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u><b>Args:</b></u><br>content - the text content to log/output  <br> |
+| logAllN(content) | Performs console output of content always with no newline.  Writes to file when file logging is on.  Adds prefix to content if supplied.    <br><br><u><b>Args:</b></u><br>content - the text content to log/output  <br> |
