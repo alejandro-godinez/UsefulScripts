@@ -9,7 +9,7 @@ Script to install the various bash scripts and libraries from this project
 - **build_junit.xml**  
 A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
 
-### [BashDoc](bashdoc/bashdoc.sh.md)
+### [BashDoc](bashdoc/docs/bashdoc.sh.md)
 Parse documentation comments from bash script and generate markdown
 
 ### [Git](git/readme.md)
