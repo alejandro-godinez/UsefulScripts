@@ -31,7 +31,7 @@ RED='\033[0;31m'
 CYN='\033[1;36m'
 
 # path to template folder
-TEMPLATE_PATH="~/data/projectFolderes/TEMPLATE"
+TEMPLATE_PATH="~/data/projectFolders/TEMPLATE"
 
 # output path to save document file, default to current directory
 OUTPUT_PATH="."
