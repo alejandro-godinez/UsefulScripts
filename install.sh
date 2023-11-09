@@ -3,14 +3,15 @@
 # This script will perform installation and detect updates of scripts. Files are
 # identified as install if it does not exist. Updates are detect by comparing
 # and finding a difference in the md5 hash of the project script and the local
-# copy.
+# copy. The installation of the data folder for projects needs be explicit (-d)
+# and is a simple recursive copy (cp -r) without comparision.
 # 
 # Notes:<br>
 # - Files will be overwritten, any local config changes made will be lost
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2023.10.11
+# @version: 2023.11.08
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
@@ -24,13 +25,14 @@
 #   -v           Verbose/debug output
 #   -m           Mock run, will display what will be installed and updated
 #   -a           Install all pre-defined projects
+#   -d           Perform installation of data files
 #   -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed
 # </pre>
 # 
 # Examples:
 # <pre>
 #   install.sh -n bashdoc
-#   - install the bashdoc.sh script
+#     - install the bashdoc.sh script
 # </pre>
 #-------------------------------------------------------------------------------
 
@@ -66,7 +68,7 @@ RGX_NUM='^[0-9]+$'
 RGX_LIB='/lib/'
 
 # array of directories that contain scripts to be installed
-declare -a PROJECT_DIRS=("linux" "git" "bashdoc" "timelog")
+declare -a PROJECT_DIRS=("linux" "git" "bashdoc" "timelog" "projectFolders")
 
 # variable for selected project directory 
 projDir=""
@@ -74,6 +76,7 @@ projDir=""
 # install path
 binInstallPath=~/bin/
 libInstallPath=~/lib/
+dataInstallPath=~/data/
 
 # mock run variable
 IS_MOCK=false
@@ -88,6 +91,7 @@ function printHelp {
   echo "    -v           Verbose/debug output"
   echo "    -m           Mock run, will display what will be installed and updated"
   echo "    -a           Install all pre-defined projects"
+  echo "    -d           Perform installation of data files"
   echo "    -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed"
   echo ""
   echo "Examples:"
@@ -106,6 +110,7 @@ function processArgs {
   addOption "-h"
   addOption "-m"
   addOption "-a"
+  addOption "-d"
   addOption "-n" true
 
   # perform parsing of options
@@ -179,6 +184,7 @@ function installProject {
   fi
 
   local destDir="${binInstallPath}"
+  
   # switch paths to lib if 'lib' indicator was specified
   if [ "$isLib" = true ]; then 
     # add lib sub directory to source
@@ -207,6 +213,31 @@ function installProject {
     # perform installation for file
     installFile "$srcFile" "$destDir"
   done
+}
+
+# Perform installation of the data folder files to for the project
+#
+# @param projDir - the project sub-directory from which to install scripts
+function installData {
+  # add data sub directory to the project source
+  local projSubDir="${1}/data"
+  # add the project folder name to the install path
+  local destDir="${dataInstallPath}${projSubDir}"
+
+  log "Project Sub Dir: ${projSubDir}"
+  log "Dest Path: ${destDir}"
+
+  #  check if a data directory exists
+  if [ ! -d "$projSubDir" ]; then
+    logAll "  No project data directory"
+    return 0
+  fi
+
+  # dont perform copy if this is a mock run
+  if [ "$IS_MOCK" = true ]; then return; fi
+
+  # perform a recursive copy of the project data sub directory to the destination
+  cp -R "$projSubDir" "$destDir"
 }
 
 # Perform the work to find the single file to install specified throug script option
@@ -338,6 +369,9 @@ fi
 if [ ! -d "$libInstallPath" ]; then
   mkdir "$libInstallPath"
 fi
+if [ ! -d "$dataInstallPath" ]; then
+  mkdir "$dataInstallPath"
+fi
 
 # output mock run indicator
 if [ "$IS_MOCK" = true ]; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
@@ -351,6 +385,10 @@ if hasArgument "-a"; then
     installProject "$projDir"
     logAll "${BLU}LIB Scripts...${NC}"
     installProject "$projDir" "lib"
+    if hasArgument "-d"; then
+      logAll "${BLU}DATA Files...${NC}"
+      installData "$projDir"
+    fi
   done
   exit 0
 fi
@@ -373,3 +411,7 @@ logAll "${BLU}BIN Scripts...${NC}"
 installProject "$projDir"
 logAll "${BLU}LIB Scripts...${NC}"
 installProject "$projDir" "lib"
+if hasArgument "-d"; then
+  logAll "${BLU}DATA Files...${NC}"
+  installData "$projDir"
+fi
