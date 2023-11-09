@@ -82,6 +82,7 @@ function printHelp {
   echo "  Single:          timelog.sh 2023.06.28.hrs"
   echo "  Multiple:        timelog.sh 2023.06*hrs"
   echo "  Summary:         timelog.sh -s 2023.06*.hrs"
+  echo "  Task Filter:     timelog.sh -t ABC-1234"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
