@@ -31,7 +31,7 @@ RED='\033[0;31m'
 CYN='\033[1;36m'
 
 # path to template folder
-TEMPLATE_PATH="~/data/projectFolders/TEMPLATE"
+TEMPLATE_PATH=~/data/projectFolders/Template
 
 # output path to save document file, default to current directory
 OUTPUT_PATH="."
@@ -112,8 +112,12 @@ fi
 # check that template folder is defined and exists
 logAll "${CYN}Template Path:${NC} ${TEMPLATE_PATH}"
 log "Checking template folder exists..."
-if [[ -z $TEMPLATE_PATH ]] || [[ ! -d $TEMPLATE_PATH ]]; then
+if [[ -z $TEMPLATE_PATH ]]; then
   logAll "${RED}ERROR: Template folder name is not defined${NC}"
+  exit 0
+fi
+if [[ ! -d $TEMPLATE_PATH ]]; then
+  logAll "${RED}ERROR: Template folder path not found${NC}"
   exit 0
 fi
 
