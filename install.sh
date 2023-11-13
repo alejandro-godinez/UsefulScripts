@@ -11,7 +11,7 @@
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2023.11.08
+# @version: 2023.11.13
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
@@ -26,13 +26,15 @@
 #   -m           Mock run, will display what will be installed and updated
 #   -a           Install all pre-defined projects
 #   -d           Perform installation of data files
-#   -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed
+#   -n filename  install a single file matching the name specified, name must be exact, '.sh' extension is assumed
 # </pre>
 # 
 # Examples:
 # <pre>
-#   install.sh -n bashdoc
-#     - install the bashdoc.sh script
+#   install.sh -d
+#   - project data folder will be installed if one exists
+#   install.sh -n spinner
+#   - install the spinner.sh script from the linux library project
 # </pre>
 #-------------------------------------------------------------------------------
 
@@ -221,8 +223,9 @@ function installProject {
 function installData {
   # add data sub directory to the project source
   local projSubDir="${1}/data"
+
   # add the project folder name to the install path
-  local destDir="${dataInstallPath}${projSubDir}"
+  local destDir="${dataInstallPath}${1}"
 
   log "Project Sub Dir: ${projSubDir}"
   log "Dest Path: ${destDir}"
@@ -231,6 +234,10 @@ function installData {
   if [ ! -d "$projSubDir" ]; then
     logAll "  No project data directory"
     return 0
+  else
+    local fileList=$(find $projSubDir -mindepth 1)
+    # log the files from the data folder
+    for srcFile in $fileList; do logAll "$srcFile"; done
   fi
 
   # dont perform copy if this is a mock run
