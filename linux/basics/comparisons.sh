@@ -26,8 +26,22 @@ emptyString=""
 longString="One Two Three"
 declare -a unboundArray
 declare -a boundArray=("temp")
-echo "Numeric Comparisons"
+
+# assign builtin true/false
+isTrue=true
+isFalse=false
+
+#//boolean comparison
+echo "Boolean Comparisons"
+if [ "$isTrue" = true ]; then
+  echo "True boolean"
+fi
+if [ "$isFalse" = false ]; then
+  echo "False Boolean"
+fi
+
 #//numeric comparison
+echo "Numeric Comparisons"
 if (( myNum == 3 )); then 
   echo "  Equals"
 fi
