@@ -1,31 +1,32 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------------------
 # Parse documentation comments from bash script and generate markdown. The output file will
-# be saved in a 'docs' sub-directory unless the optional output directory option is
+# be saved in the same directory unless the optional output directory option is
 # specified.  The output file name will be the name of the script with '.md' extension.
-# A relative path option (-r) can be used to fix the link to the script in the header.<br>
-#
-# @version 2023.10.20
-#
+# A relative path option (-r) can be used to fix the link to the script in the header.
+# 
+# @version 2023.7.19
+# 
 # Supported Function Formats:
 # - name() { }
 # - function name { }
 # - function name() { }
-#
-# Supported Keywords:
-# - @param - Describes the parameters of a method.
-# - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
-# - @output - Describes the otuput of a method, normally written to standard output so it can be captured
-#
+# 
+# 
+# Supported Keywords:<br>
+# - @param - Specifies the parameters of a method.<br>
+# 
 # Limitation Notes:
-# - keyword descriptions are limited to single lines, multiple instances can be used to append description.
-#
+# - Comments lines cannot be empty, add a space to signal continuation of content  
+# <br>
+# 
 # TODO:<br>
 # - @author - Specifies the author of the class, method, or field.
 # - @version - Specifies the version of the class, method, or field.
+# - @return - Specifies the return value of a method.
 # - @see - Specifies a link to another class, method, or field.
-#
-# Format Sample:
+# 
+# Sample:
 # <pre>
 # #!/bin/bash
 # #-------------------------------------------
@@ -33,32 +34,10 @@
 # #-------------------------------------------
 # 
 # # This function does work
-# # @param paramOne - the first parameter
-# # @param paramTwo - the second parameter
-# # @return - 0 when true, 1 otherwise
-# # @output - the text ouput to standard out
+# # @param $1 - the first parameter
 # function doWork() {
-#   echo "otuput value"
-#   return 0
 # }
-# </pre>
-#
-# Usage:
-# <pre>
-# bashdoc.sh [options] [files]
-#   -h           This help info
-#   -v           Verbose/debug output
-#   -o path   optional, directory to which the output file will be saved
-#   -r path   optional, relative path to use for the script link in the header
-# </pre>
-#
-# Usage Examples:
-# <pre>
-# Single:        bashdoc.sh script.sh"
-# Multiple:      bashdoc.sh script1.sh script2.sh script3.sh"
-# Output Dir:    bashdoc.sh -o /output/path *.sh"
-# Relative Link: bashdoc.sh -r '../' -o /output/path *.sh"
-#   Note: this is default
+# 
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -71,11 +50,9 @@ RED='\033[0;31m'
 GRN='\033[0;32m'
 BLU='\033[0;34m'
 YEL='\033[1;33m'
-PUR='\033[0;35m'
-CYN='\033[1;36m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -89,15 +66,14 @@ done
 
 # Line regular expressions
 rgxComment="^[#][^!/]([ ]*(.*))$"
-rgxEmptyComment="^[#][ ]*$"
 rgxHeader="^[-]{5}"
-rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)?[ -]+(.+)"
+rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)[ -]+(.+)"
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
 # output path to save document file, default to current directory
-OUTPUT_PATH="./docs/"
+OUTPUT_PATH="./"
 # relative path to use with the script link
-RELATIVE_PATH="../"
+RELATIVE_PATH=""
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -124,7 +100,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param args - array of argument values provided when calling the script
+# @param $1 - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-v"
@@ -163,9 +139,8 @@ function processArgs {
 }
 
 # Determine if text is a comment
-# 
-# @param text - text to test with regex for match
-# @return - 0 (zero) when true, 1 otherwise
+#
+# @param $1 - text to test with regex for match
 function isComment {
   if [[ $1 =~ $rgxComment ]]; then
     return 0
@@ -173,21 +148,9 @@ function isComment {
   return 1
 }
 
-# Determine if text is a completly empty comment (nothing but spaces)
-#
-# @param text - text to test with regex for match
-# @return - 0 (zero) when true, 1 otherwise
-function isEmptyComment {
-  if [[ $1 =~ $rgxEmptyComment ]]; then
-    return 0
-  fi
-  return 1
-}
-
 # Determine if text is a special header section indicator
-# 
-# @param text - text to test with regex for match
-# @return - 0 (zero) when true, 1 otherwise
+#
+# @param $1 - text to test with regex for match
 function isHeader {
   if [[ $1 =~ $rgxHeader ]]; then
     return 0
@@ -196,9 +159,8 @@ function isHeader {
 }
 
 # Determine if text is one a keyword
-# 
-# @param text - text to test with regex for match
-# @return - 0 (zero) when true, 1 otherwise
+#
+# @param $1 - text to test with regex for match
 function isKeyword {
   if [[ $1 =~ $rgxKeyword ]]; then
     return 0
@@ -207,9 +169,8 @@ function isKeyword {
 }
 
 # Determine if text is a function
-# 
-# @param text - text to test with regex for match
-# @return - 0 (zero) when true, 1 otherwise
+#
+# @param $1 - text to test with regex for match
 function isFunction {
   if [[ $1 =~ $rgxFunction ]]; then
     return 0
@@ -218,9 +179,8 @@ function isFunction {
 }
 
 # Replace newline characters (cr and lf) to space
-# 
-# @param text - text to perform replacement
-# @output - the trimmed text on standard output
+#
+# @param $1 - text to perform replacement
 function newLinesToSpace() {
   echo "$1" | tr "\r\n" " "
 }
@@ -235,31 +195,29 @@ function writeComments {
 
 # Write the accumulated comments to the output file trimmed of any newline
 function writeCommentsFlat {
-  spinDel
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do 
-    local commentLine=$(newLinesToSpace "${commentArr[$index]}")
-    logAll "  ${GRN}Comment:${NC}${commentArr[$index]}"
+    commentLine=$(newLinesToSpace "${commentArr[$index]}")
+    logAll "${GRN}Comment:${NC}${commentArr[$index]}"
     echo -n "${commentLine}" >> $outputFile
   done
 }
 
 # write out the accumulated function parameters
 function writeFunctionParameters {
-  spinDel
   local isFirstParam=true
-  for index in "${!paramMap[@]}"; do 
-    local paramLine="${paramMap[$index]}"
-    logAll "  ${YEL}Param:${NC}${paramLine}"
+  for index in "${!paramArr[@]}"; do 
+    paramLine="${paramArr[$index]}"
+    logAll "${YEL}Param:${NC}${paramLine}"
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      local keywordName="${BASH_REMATCH[2]}"
+      keywordName="${BASH_REMATCH[2]}"
       log "Keyword Name:$keywordName"
 
       log "IsFirstParam:$isFirstParam"
       if [ "$isFirstParam" = false ]; then
-        echo -n ",&nbsp;" >> $outputFile
+        echo -n "," >> $outputFile
       fi
       isFirstParam=false
       echo -n "${keywordName}" >> $outputFile
@@ -269,20 +227,20 @@ function writeFunctionParameters {
 
 # write out the paramaters formatted for description in table
 function writeParameterDescription {
-  local paramCount=${#paramMap[@]}
+  local paramCount=${#paramArr[@]}
   if (( paramCount > 0 )); then
-    echo -n "<br><br><u><b>Args:</b></u><br>" >> $outputFile
+    echo -n "<br><br><u>Args:</u><br>" >> $outputFile
   else
     return 0
   fi
 
-  for index in "${!paramMap[@]}"; do 
-    local paramLine="${paramMap[$index]}"
+  for index in "${!paramArr[@]}"; do 
+    paramLine="${paramArr[$index]}"
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      local keywordName="${BASH_REMATCH[2]}"
-      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
+      keywordName="${BASH_REMATCH[2]}"
+      keywordDesc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
       log "Keyword Name:$keywordName"
       log "Keyword Desc:$keywordDesc"
       echo -n "${keywordName} - ${keywordDesc}<br>" >> $outputFile
@@ -290,39 +248,9 @@ function writeParameterDescription {
   done
 }
 
-# write out the output description
-function writeReturnDescription {
-  spinDel
-  local keyword='return'
-  if [[ ! -v keywordMap[$keyword] ]]; then
-    return 0
-  fi
-
-  local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
-  logAll "  ${PUR}Return:${NC}${description}"
-  echo -n "<br><u><b>Return:</b></u><br>" >> $outputFile
-  log "Keyword Desc:$description"
-  echo -n "${description}<br>" >> $outputFile
-}
-
-# write out the output description
-function writeOutputDescription {
-  spinDel
-  local keyword='output'
-  if [[ ! -v keywordMap[$keyword] ]]; then
-    return 0
-  fi
-
-  local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
-  logAll "  ${CYN}Output:${NC}${description}"
-  echo -n "<br><u><b>Output:</b></u><br>" >> $outputFile
-  log "Keyword Desc:$description"
-  echo -n "${description}<br>" >> $outputFile
-}
-
 # perform all the work to parse the documentation from the specified bash script file
 # 
-# @param file - the script file to parse
+# @param $1 - the script file to parse
 function parseBashScript {
   local inputFile="$1"
   
@@ -345,28 +273,17 @@ function parseBashScript {
 
   # declare an array to store comments before function
   local -a commentArr=()
-  local -A paramMap=()
-  local -A keywordMap=()
+  local -a paramArr=()
   local isFirstFunction=true
 
 
   # Read the file line by line
   while IFS= read -r line; do
-    spinChar
-
     # count number of lines
     lineNo=$((++lineNo))
     
     # pad line number with spaces
     lineNoPadded=$(printf %4d $lineNo)
-
-    # skip empty comment lines to allow for break in descriptions
-    if isEmptyComment "$line"; then
-      log "  BREAK"
-      # add an actual blank line to comment line to array
-      commentArr+=("")
-      continue
-    fi
 
     # detect if this is a comment line
     if isComment "$line"; then
@@ -382,31 +299,13 @@ function parseBashScript {
         log "Writing out comments..."
         writeComments
         echo "" >> $outputFile
+
       elif isKeyword "$commentText"; then
         local keywordType="${BASH_REMATCH[1]}"
         log "  Keyword Type:$keywordType"
         if [ "$keywordType" = "param" ]; then
-
-          # capture the parameter name to use as map key, replace any '$' to '_' to avoid variable expansion issue
-          local paramName="${BASH_REMATCH[2]//$/_}"
-
-          # check if parameter name already exists in map, if so append text
-          if [[ ! -v paramMap[$paramName] ]]; then
-            log "  Adding parameter '${paramName}' to list..."
-            paramMap[$paramName]="$commentText"
-          else
-            log "    Append additional comment to '[$paramName]'..."
-            paramMap[$paramName]="${paramMap[$paramName]} ${BASH_REMATCH[3]}"
-          fi
-        else
-          log " Capturing $keywordType to list..."
-          if [[ ! -v keywordMap[$keywordType] ]]; then
-            log "  Adding keyword '[$keywordType]' to map..."
-            keywordMap[$keywordType]="${BASH_REMATCH[3]}"
-          else
-            log "    Append text to keyword '[$keywordType]'..."
-            keywordMap[$keywordType]="${keywordMap[$keywordType]} ${BASH_REMATCH[3]}"
-          fi
+          log "  Adding parameter to list..."
+          paramArr+=("$commentText")
         fi
       else
         # add comment line to array
@@ -429,7 +328,6 @@ function parseBashScript {
       local functionName="${BASH_REMATCH[2]}"
 
       # write function with open parenthesis
-      spinDel
       logAll "${BLU}Function:${NC}${functionName}"
       echo -n "| ${functionName}(" >> $outputFile
 
@@ -447,29 +345,21 @@ function parseBashScript {
       log "Writing parameter descriptions..."
       writeParameterDescription
 
-      log "Writing return description..."
-      writeReturnDescription
-
-      log "Writing output description..."
-      writeOutputDescription
-
       echo " |" >> $outputFile
       
       # clear arrays for next function
       log "Clearing arrays..."
       commentArr=()
-      paramMap=()
-      keywordMap=()
+      paramArr=()
     else
       # clear arrays when we encounter break in expected continuous comment/function
       log "Clearing arrays..."
       commentArr=()
-      paramMap=()
-      keywordMap=()
+      paramArr=()
     fi
 
   done < $inputFile
-  spinDel
+
 }
 
 #< - - - Main - - - >
@@ -483,15 +373,9 @@ processArgs "$@"
 # check that the output directory exists
 logAll "Output Path: $OUTPUT_PATH"
 if [ ! -d "$OUTPUT_PATH" ]; then
-  log "Creating the output directory"
-  mkdir "$OUTPUT_PATH"
-
-  if [ ! -d "$OUTPUT_PATH" ]; then
-    logAll "${RED}ERROR: output path not found${NC}"
-    exit
-  fi
+  logAll "${RED}ERROR: output path not found${NC}"
+  exit
 fi
-
 
 # print out the list of args that were not consumed by function (non-flag arguments)
 argCount=0
