@@ -31,10 +31,10 @@
 # 
 # Examples:
 # <pre>
-#   install.sh -d
-#   - project data folder will be installed if one exists
-#   install.sh -n spinner
-#   - install the spinner.sh script from the linux library project
+# install.sh -d
+# - enable project data folder installation
+# install.sh -n spinner
+# - install the spinner.sh script from the linux library project
 # </pre>
 #-------------------------------------------------------------------------------
 
@@ -97,8 +97,10 @@ function printHelp {
   echo "    -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed"
   echo ""
   echo "Examples:"
-  echo "  ./install.sh -n bashdoc"
-  echo "    - install the bashdoc.sh script"
+  echo "  install.sh -d"
+  echo "  - enable project data folder installation"
+  echo "  install.sh -n spinner"
+  echo "  - install the spinner.sh script from the linux library project"
 }
 
 
@@ -117,9 +119,6 @@ function processArgs {
 
   # perform parsing of options
   parseArguments "$@"
-
-  #printArgs
-  #printRemArgs
   
   # check for help
   if hasArgument "-h"; then
@@ -130,6 +129,8 @@ function processArgs {
   # check for vebose/debug
   if hasArgument "-v"; then
     DEBUG=true
+    printArgs
+    printRemArgs
   fi
 
   # check for mock run
@@ -370,13 +371,22 @@ escapesOn
 processArgs "$@"
 
 # create the install bin path if it does not exist
+logAll "${GRN}BIN Path:${NC} $binInstallPath"
+log "Checking if the BIN install path exists"
 if [ ! -d "$binInstallPath" ]; then
+  log "${YEL}  Creating BIN install directory${NC}"
   mkdir "$binInstallPath"
 fi
+logAll "${GRN}LIB Path:${NC} $libInstallPath"
+log "Checking if the LIB install path exists"
 if [ ! -d "$libInstallPath" ]; then
+  log "${YEL}  Creating LIB install directory${NC}"
   mkdir "$libInstallPath"
 fi
+logAll "${GRN}DATA Path:${NC} $dataInstallPath"
+log "Checking if the DATA install path exists"
 if [ ! -d "$dataInstallPath" ]; then
+  logAll "${YEL}  Creating DATA install directory${NC}"
   mkdir "$dataInstallPath"
 fi
 
