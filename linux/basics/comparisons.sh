@@ -15,10 +15,11 @@ set -u #//error on unset variable
 set -e #//exit on error
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-IFS=$'\n'
+#IFS=$'\n'
 
 #//numeric regex
 RGX_NUM='^[0-9]+$'
+RGX_UPPERCASE='^[A-Z]+$'
 
 myNum=3
 myText="test"
@@ -90,13 +91,21 @@ if [[ "$longString" == *"Two"* ]]; then
 fi
 
 echo "Regular Expression"
-
 if [[ "$myNum" =~ $RGX_NUM ]]; then
   echo "  Regex Match"
 fi
-
 if [[ ! "$myText" =~ $RGX_NUM ]]; then
   echo "  Regex Not Match"
+fi
+if [[ "ABCDEF" =~ $RGX_UPPERCASE ]]; then
+  echo "  Upper Case Matched"
+else
+  echo "  ERROR: Unexpected Upper Case NO Match"
+fi
+if [[ ! "Abc" =~ $RGX_UPPERCASE ]]; then
+  echo "  Upper Case Not Matched"
+else
+  echo "  ERROR: Unexpected Upper Case Match"
 fi
 
 echo "Array Initialized"
