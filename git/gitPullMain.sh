@@ -18,7 +18,7 @@ YEL='\033[1;33m'
 U_CYN='\033[4;36m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh ~/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -57,7 +57,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-v"
@@ -106,8 +106,9 @@ function processArgs {
 
 # Ask user if they would like to perform pull for the repository/branch specified
 # 
-# param $1 - the local repo directory
-# param $2 - the branch of the repo directory
+# @param repoDir - path to local git project
+# @param branch - the branch of the repo directory
+# @return - 0 (zero) when user answered yes, 1 otherwise
 function waitForInput {
   local repoDir=$1
   local branch=$2
@@ -119,16 +120,14 @@ function waitForInput {
     logAll "${repoDir} - ${YEL}${branch}${NC}"
   fi
 
-  read -p "  Perform Pull? [Y/N] or Q to Quit: "
-
-  #//exit script if quit is entered
-  log "  Input: ${REPLY}"
-  if [ "${REPLY^^}" = "Q" ];  then
-    logAll "Quitting Script"
-    exit 0
-  elif [ "${REPLY^^}" = "Y" ];  then
+  if promptYesNo "  Perform Pull? [Y/N] or Q to Quit: "; then
     return 0
   else
+    #//exit script if quit is entered
+    if [ "${REPLY^^}" = "Q" ];  then
+      logAll "Quitting Script"
+      exit 0  
+    fi
     return 1
   fi
 }
@@ -136,7 +135,7 @@ function waitForInput {
 # Perform a git pull on the speicified local repository if it is the main branch.
 # Other branches are allowed if the 'All' (-a) option was specified when executing.
 # 
-# @param $1 - the local repo directory
+# @param repoDir - path to local git project
 function gitPullMain {
   local repoDir=$1
   logAll "${U_CYN}${repoDir}${NC}"

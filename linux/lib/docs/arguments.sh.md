@@ -42,14 +42,14 @@ Limitation Notes:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| hasOption($1) | Check if the specified option key exists  <br><br><u>Args:</u><br>$1 - the option name <br> |
-| addOption($1,$2) | Add an option code/name that should be captured. If a value needs to be provided with the argument set value indicator to true.  <br><br><u>Args:</u><br>$1 - the option name <br>$2 - argument value needed indicator true/false (optional) <br> |
-| optionNeedsVal($1) | Check if the option needs to have a value provided following the code  <br><br><u>Args:</u><br>$1 - the option name <br> |
-| setArgument($1,$2) | <br><br><u>Args:</u><br>$1 - the option name <br>$2 - the argument value <br> |
-| getArgument($1) | Get the argument value for an option name  <br><br><u>Args:</u><br>$1 - the option name <br> |
-| hasArgument($1) | Check if the specified option was parsed from the arguments. This checks if the value is not empty  <br><br><u>Args:</u><br>$1 - the option name <br> |
-| startsWithDash($1) | Check if text starts with dash  <br><br><u>Args:</u><br>$1 - the text to check <br> |
-| addToREM() |  |
-| parseArguments($1) | Parsing and processing of the argument list  <br><br><u>Args:</u><br>$1 - array of arguments, use "$@" from script call <br> |
-| printArgs() | Print to standard output the captured argument options and values  |
-| printRemArgs() | Prints to standard output all the remaining arguments that were not match to a defined option  |
+| hasOption(option) | Check if the specified option key exists    <br><br><u><b>Args:</b></u><br>option - the option name  <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise  <br> |
+| addOption(option,&nbsp;needsValue) | Add an option code/name that should be captured. If a value needs to be  provided with the argument set value indicator to true.    <br><br><u><b>Args:</b></u><br>option - the option name  <br>needsValue - true/false indicator that option will have argument (optional)  <br><br><u><b>Return:</b></u><br>0 (zero) when added, 1 otherwise  <br> |
+| optionNeedsVal(option) | Check if the option needs to have a value provided following the code    <br><br><u><b>Args:</b></u><br>option - the option name  <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise  <br> |
+| setArgument(option,&nbsp;value) | Sets the argument value for the specified option    <br><br><u><b>Args:</b></u><br>option - the option name  <br>value - the argument value  <br> |
+| getArgument(option) | Get the argument value for an option name.    <br><br><u><b>Args:</b></u><br>option - the option name  <br><br><u><b>Return:</b></u><br>0 (zero) with valid option, 1 otherwise.  <br><br><u><b>Output:</b></u><br>the argument value  <br> |
+| hasArgument(option) | Check if the specified option was parsed from the arguments.  This checks if the value is not 'false'    <br><br><u><b>Args:</b></u><br>option - the option name  <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise  <br> |
+| startsWithDash(text) | Check if text starts with dash    <br><br><u><b>Args:</b></u><br>text - the text to check  <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise  <br> |
+| addToREM(arg) | Adds an entry to the argument remaining variable    <br><br><u><b>Args:</b></u><br>arg - argument value  <br> |
+| parseArguments(args) | Parsing and processing of the argument list    <br><br><u><b>Args:</b></u><br>args - array of arguments, use "$@" from script call  <br> |
+| printArgs() | Print to standard output the captured argument options and values   |
+| printRemArgs() | Prints to standard output all the remaining arguments that were not match to a defined option   |

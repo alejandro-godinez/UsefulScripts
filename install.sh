@@ -3,14 +3,15 @@
 # This script will perform installation and detect updates of scripts. Files are
 # identified as install if it does not exist. Updates are detect by comparing
 # and finding a difference in the md5 hash of the project script and the local
-# copy.
+# copy. The installation of the data folder for projects needs be explicit (-d)
+# and is a simple recursive copy (cp -r) without comparision.
 # 
 # Notes:<br>
 # - Files will be overwritten, any local config changes made will be lost
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2023.8.3
+# @version: 2023.11.13
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
@@ -24,13 +25,16 @@
 #   -v           Verbose/debug output
 #   -m           Mock run, will display what will be installed and updated
 #   -a           Install all pre-defined projects
-#   -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed
+#   -d           Perform installation of data files
+#   -n filename  install a single file matching the name specified, name must be exact, '.sh' extension is assumed
 # </pre>
 # 
 # Examples:
 # <pre>
-#   install.sh -n bashdoc
-#   - install the bashdoc.sh script
+# install.sh -d
+# - enable project data folder installation
+# install.sh -n spinner
+# - install the spinner.sh script from the linux library project
 # </pre>
 #-------------------------------------------------------------------------------
 
@@ -48,7 +52,7 @@ U_CYN='\033[4;36m'
 
 
 # define list of libraries and import them
-declare -a libs=( ./linux/lib/logging.sh ./linux/lib/arguments.sh)
+declare -a libs=( ./linux/lib/logging.sh ./linux/lib/arguments.sh ./linux/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -66,16 +70,15 @@ RGX_NUM='^[0-9]+$'
 RGX_LIB='/lib/'
 
 # array of directories that contain scripts to be installed
-declare -a SOURCE_DIRS=("linux" "git" "bashdoc" "timelog")
+declare -a PROJECT_DIRS=("linux" "git" "bashdoc" "timelog" "projectFolders")
 
 # variable for selected project directory 
 projDir=""
 
 # install path
 binInstallPath=~/bin/
-#binInstallPath=~/temp/bin/  #testing
 libInstallPath=~/lib/
-#libInstallPath=~/temp/lib/  #testing
+dataInstallPath=~/data/
 
 # mock run variable
 IS_MOCK=false
@@ -90,17 +93,20 @@ function printHelp {
   echo "    -v           Verbose/debug output"
   echo "    -m           Mock run, will display what will be installed and updated"
   echo "    -a           Install all pre-defined projects"
+  echo "    -d           Perform installation of data files"
   echo "    -n filename  install a file matching the name specified, name must be exact, '.sh' extension is assumed"
   echo ""
   echo "Examples:"
-  echo "  ./install.sh -n bashdoc"
-  echo "    - install the bashdoc.sh script"
+  echo "  install.sh -d"
+  echo "  - enable project data folder installation"
+  echo "  install.sh -n spinner"
+  echo "  - install the spinner.sh script from the linux library project"
 }
 
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   
   # initialize expected options
@@ -108,13 +114,11 @@ function processArgs {
   addOption "-h"
   addOption "-m"
   addOption "-a"
+  addOption "-d"
   addOption "-n" true
 
   # perform parsing of options
   parseArguments "$@"
-
-  #printArgs
-  #printRemArgs
   
   # check for help
   if hasArgument "-h"; then
@@ -125,6 +129,8 @@ function processArgs {
   # check for vebose/debug
   if hasArgument "-v"; then
     DEBUG=true
+    printArgs
+    printRemArgs
   fi
 
   # check for mock run
@@ -133,69 +139,42 @@ function processArgs {
   fi
 }
 
-# Ask user to confirm if the file that was found is the one intended
-# to be installed.
-function showYestNoPrompt {
-  read -p "Continue with install [Y/N]: "
-  # check if user reply is numeric
-  if [[ "$REPLY" == "y" ]] || [[ "$REPLY" == "Y" ]]; then
-    return 0
-  fi
-  return 1
-}
-
 # Ask user which project they would like to install from the set
 # 
-# @return - exit value of zero (truthy) indicates installDir variable set
+# @return - exit value of zero (truthy) indicates installDir variable set, 1 otherwise
 function promptForInstall {
   # reset install directory
   installDir=""
 
   local optionNo=0
-  local optionCount=${#SOURCE_DIRS[@]}
+  local optionCount=${#PROJECT_DIRS[@]}
   log "Option Count: ${optionCount}"
 
   # print the list of source options
   logAll "${U_CYN}Project To Install:${NC}"
-  for srcPath in "${SOURCE_DIRS[@]}"; do
-    # count number of lines
-    optionNo=$((++optionNo))
-    logAll "  ${optionNo}. ${srcPath}"
-  done
-  logAll ""
-  read -p "Enter number of project to install or Q to Quit: "
-
-  # check if user reply is numeric
-  if [[ "$REPLY" =~ $RGX_NUM ]]; then
-    # capture index from option number specified
-    optionNo=$((--REPLY))
-    log "Option Index: $optionNo"
-
-    # check if the number is within range of option array
-    if (( REPLY > -1 )) && (( REPLY < optionCount )); then
-      # return the selected path
-      projDir=${SOURCE_DIRS[$REPLY]}
-
-      # return success value
-      return 0
-    fi
-    
-    # return error value
-    return 1
-  elif [ "${REPLY^^}" = "Q" ];  then
-    logAll "Quitting Script"
-    exit 0
-  else
-    logAll "${RED}ERROR:${NC} Invalid Input"
+  local prompt="Enter number of project to install or Q to Quit: "
+  if promptSelection "$prompt" "${PROJECT_DIRS[@]}"; then
+    # capture the user selection reply
+    projDir=$REPLY
+    log "Selected Option: $projDir"
     
     # return success value
-    return 1
+    return 0
+  else
+    if [ "${REPLY^^}" = "Q" ];  then
+      logAll "Quitting Script"
+      exit 0
+    else
+      logAll "${RED}ERROR:${NC} Invalid Input" 
+      # return error code
+      return 1
+    fi
   fi
 }
 
 # Perform installation of scripts for the specified project sub directory.
 # 
-# @param $1 - the project sub-directory from which to install scripts
+# @param projDir - the project sub-directory from which to install scripts
 function installProject {
   local projSubDir=$1
   local isLib=false
@@ -208,6 +187,7 @@ function installProject {
   fi
 
   local destDir="${binInstallPath}"
+  
   # switch paths to lib if 'lib' indicator was specified
   if [ "$isLib" = true ]; then 
     # add lib sub directory to source
@@ -238,7 +218,37 @@ function installProject {
   done
 }
 
-# Perform the work to find the single file to install
+# Perform installation of the data folder files to for the project
+#
+# @param projDir - the project sub-directory from which to install scripts
+function installData {
+  # add data sub directory to the project source
+  local projSubDir="${1}/data"
+
+  # add the project folder name to the install path
+  local destDir="${dataInstallPath}${1}"
+
+  log "Project Sub Dir: ${projSubDir}"
+  log "Dest Path: ${destDir}"
+
+  #  check if a data directory exists
+  if [ ! -d "$projSubDir" ]; then
+    logAll "  No project data directory"
+    return 0
+  else
+    local fileList=$(find $projSubDir -mindepth 1)
+    # log the files from the data folder
+    for srcFile in $fileList; do logAll "$srcFile"; done
+  fi
+
+  # dont perform copy if this is a mock run
+  if [ "$IS_MOCK" = true ]; then return; fi
+
+  # perform a recursive copy of the project data sub directory to the destination
+  cp -R "$projSubDir" "$destDir"
+}
+
+# Perform the work to find the single file to install specified throug script option
 function installSingleFile {
   # get the file name from argument
   fileName=$(getArgument "-n")
@@ -253,7 +263,8 @@ function installSingleFile {
   logAll "File Found: $srcFile"
 
   # prompt user if the found file should be installed
-  if ! showYestNoPrompt ; then
+  if ! promptYesNo "Continue with install? [Y/N]: "; then
+    logAll "Quitting Script"
     exit 0
   fi
 
@@ -270,9 +281,9 @@ function installSingleFile {
 }
 
 # Perform install work for a file
-#
-# @param $1 - the file to install
-# @param $2 - the destination path into which file should be installed
+# 
+# @param file - the file to install
+# @param dest - the destination path into which file should be installed
 function installFile {
   local srcFile="$1"
   local destDir="$2"
@@ -319,7 +330,9 @@ function installFile {
 
 # Find the first file that is found to match the name specified
 # 
-# @param $1 - the file name to search
+# @param fileName - the file name to search
+# @return - 0 (zero) when match was found, 1 otherwise
+# @output - the file path, writtent to standard output
 function findFile {
   local fileName="$1"
 
@@ -330,16 +343,18 @@ function findFile {
   # check if file list was empty/undefined
   if [[ -z "${fileList[@]}" ]]; then
     echo ""
-    return
+    return 1
   fi
 
   # echo the path
   echo "${fileList[0]}"
+  return 0
 }
 
 # Check if the specified path contains a lib folder
 # 
-# @param $1 - the path to check
+# @param path - the path to check
+# @return - 0 (zero) when true, 1 otherwise
 function pathHasLibFolder {
   if [[ "$1" =~ $RGX_LIB ]]; then
     return 0
@@ -356,11 +371,23 @@ escapesOn
 processArgs "$@"
 
 # create the install bin path if it does not exist
+logAll "${GRN}BIN Path:${NC} $binInstallPath"
+log "Checking if the BIN install path exists"
 if [ ! -d "$binInstallPath" ]; then
+  log "${YEL}  Creating BIN install directory${NC}"
   mkdir "$binInstallPath"
 fi
+logAll "${GRN}LIB Path:${NC} $libInstallPath"
+log "Checking if the LIB install path exists"
 if [ ! -d "$libInstallPath" ]; then
+  log "${YEL}  Creating LIB install directory${NC}"
   mkdir "$libInstallPath"
+fi
+logAll "${GRN}DATA Path:${NC} $dataInstallPath"
+log "Checking if the DATA install path exists"
+if [ ! -d "$dataInstallPath" ]; then
+  logAll "${YEL}  Creating DATA install directory${NC}"
+  mkdir "$dataInstallPath"
 fi
 
 # output mock run indicator
@@ -369,12 +396,16 @@ if [ "$IS_MOCK" = true ]; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
 # check if option for all project install
 if hasArgument "-a"; then
   # loop through and install all predefined directories
-  for projDir in "${SOURCE_DIRS[@]}"; do
+  for projDir in "${PROJECT_DIRS[@]}"; do
     logAll "${U_CYN}${projDir}${NC}"
     logAll "${BLU}BIN Scripts...${NC}"
     installProject "$projDir"
     logAll "${BLU}LIB Scripts...${NC}"
     installProject "$projDir" "lib"
+    if hasArgument "-d"; then
+      logAll "${BLU}DATA Files...${NC}"
+      installData "$projDir"
+    fi
   done
   exit 0
 fi
@@ -397,3 +428,7 @@ logAll "${BLU}BIN Scripts...${NC}"
 installProject "$projDir"
 logAll "${BLU}LIB Scripts...${NC}"
 installProject "$projDir" "lib"
+if hasArgument "-d"; then
+  logAll "${BLU}DATA Files...${NC}"
+  installData "$projDir"
+fi

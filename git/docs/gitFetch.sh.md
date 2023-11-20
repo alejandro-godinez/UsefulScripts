@@ -11,5 +11,5 @@
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.   |
-| processArgs($1) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script  <br> |
-| processRepo($1) | Perform a git fetch for the specific repo directory    <br><br><u>Args:</u><br>$1 - the local repo directory  <br> |
+| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u><b>Args:</b></u><br>args - array of argument values provided when calling the script  <br> |
+| processRepo(repoDir) | Perform a git fetch for the specific repo directory    <br><br><u><b>Args:</b></u><br>repoDir - path to local git project  <br> |

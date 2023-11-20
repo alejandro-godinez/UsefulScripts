@@ -3,10 +3,10 @@
 # Parse time log work hour files and output time spend on each task as well as total for
 # each file day.
 # 
-# @version 2023.08.07
+# @version 2023.11.15
 # 
 # Notes:<br>
-# - time range without task will add time to previous task
+# - time range without task will accumulated to a special 'NO_TASK' entry
 # 
 # Usage:<br>
 # <pre>
@@ -15,6 +15,7 @@
 #   -v           Verbose/debug output
 #   -s           Summary output
 #   -t           Task filter
+#   -c           Generate CSV File
 # </pre>
 # 
 # Examples:
@@ -62,7 +63,9 @@ NO_TASK="NO_TASK"
 # summary of hours for all files parsed
 declare -A summaryTaskList
 
-
+# define variable for output file
+OUTPUT_FILE=""
+WRITE_CSV=false
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -78,17 +81,19 @@ function printHelp {
   echo "    -v        Verbose/debug output"
   echo "    -s        Summary output"
   echo "    -t        Task filter"
+  echo "    -c        Generage CSV file"
   echo ""
   echo "Examples:"
   echo "  All .hrs Files:  timelog.sh -s"
   echo "  Single:          timelog.sh 2023.06.28.hrs"
   echo "  Multiple:        timelog.sh 2023.06*hrs"
   echo "  Summary:         timelog.sh -s 2023.06*.hrs"
+  echo "  Task Filter:     timelog.sh -t ABC-1234"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
 
   # initialize expected options
@@ -96,6 +101,7 @@ function processArgs {
   addOption "-h"
   addOption "-s"
   addOption "-t" true
+  addOption "-c"
   
   # perform parsing of options
   parseArguments "$@"
@@ -113,21 +119,31 @@ function processArgs {
   if hasArgument "-v"; then
     DEBUG=true
   fi
+
+  # check for CSV otput file
+  if hasArgument "-c"; then
+    WRITE_CSV=true
+  fi
 }
 
 # Determine if text is a task number
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
+# @return - 0 when true, 1 otherwise
 function isTaskNo {
+  logN "  isTaskNo($1)"
   if [[ $1 =~ $rgxTaskNo ]]; then
+    log " - TRUE"
     return 0
   fi
+  log " - FALSE"
   return 1
 }
 
 # Determine if text is a time range
 # 
-# @param $1 - text to test with regex for match
+# @param text - text to test with regex for match
+# @return - 0 when true, 1 otherwise
 function isTimeRange {
   if [[ $1 =~ $rgxTimeRange ]]; then
     return 0
@@ -137,8 +153,9 @@ function isTimeRange {
 
 # Calculate the elsapsed minutes from the provided time range
 # 
-# @param $1 - the start time in format (HH:mm)
-# @param $2 - the end time in format (HH:mm)
+# @param start - the start time in format (HH:mm)
+# @param end - the end time in format (HH:mm)
+# @output - elapsed minutes written to standard output
 function getElapsedMinutes {
   # split time into two part
   local hour="${timeStart%%:*}"
@@ -160,9 +177,10 @@ function getElapsedMinutes {
 # Perform native bash division
 # Note: bash only works with integers, fake it using fixed point arithmetic
 # 
-# @param $1 - dividend
-# @param $2 - divisor
-# @param $3 - scale (precision)
+# @param dividend - number being divided
+# @param divisor - number to divide by
+# @param precision - decimal precision (scale factor), defaults to 2
+# @output - result of division, written to standard output
 function div {
   # default precision scale to 2 decimal places
   local precision=2
@@ -188,9 +206,53 @@ function div {
   echo "${result}"
 }
 
+# Gets a date time string ("date_time") to use in file names
+#
+# @output - date time string written to standard output
+# @return - 0 when true, 1 otherwise
+function getDateTimeFileName {
+  date +"%Y%m%d_%H%M%S"
+}
+
+# Write values to this run's output csv file
+#
+# @param inputFile - the file that was parsed for the values
+# @param taskNo - the task number
+# @param minutes - the work minutes
+function writeToCSV {
+
+  # check if we have not yet created the csv file and create it
+  if [[ -z $OUTPUT_FILE ]]; then
+    OUTPUT_FILE="$(getDateTimeFileName).csv"
+    log "Creating blank CSV file '$OUTPUT_FILE'"
+    touch $OUTPUT_FILE
+
+    if [[ ! -e $OUTPUT_FILE ]]; then
+      logAll "${RED}ERROR: Failed to create output file${NC}"
+      exit 0
+    fi
+
+    # write headers
+    echo "file,task no,minutes" >> $OUTPUT_FILE
+  fi
+
+  local inputFile="$1"
+  local taskNo="$2"
+  local minutes="$3"
+  echo "${inputFile},${taskNo},${minutes}" >> $OUTPUT_FILE
+}
+
+# Trim newline characters (cr and lf)
+# 
+# @param text - text to perform trim
+# @output - the trimmed text on standard output
+function trimNewLines() {
+  echo "$1" | tr -d "\r\n"
+}
+
 # Perform all the work to parse a single time log file
 # 
-# @param $1 - the log file path
+# @param inputFile - the log file path
 function parseFile {
   local inputFile=$1
 
@@ -208,7 +270,8 @@ function parseFile {
 
   # read and loop through lines
   while IFS= read -r line; do
-    #log "$line"
+    # trim newlines from line
+    line=$(trimNewLines "$line")
 
     # count number of line
     lineNo=$((++lineNo))
@@ -219,7 +282,7 @@ function parseFile {
     log "[$lineNoPadded]$line"
 
     # detect if this is a task number line
-    if isTaskNo "$line"; then
+    if isTaskNo "${line}"; then
 
       # get the task number capture
       currentTaskNo="${BASH_REMATCH[1]}"
@@ -308,8 +371,7 @@ function parseFile {
     # get the task minutes value
     local taskMin=${taskList[$index]}
     log "    Minutes: $taskMin"
-
-    # bash doesn't do dicimals, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
+    
     log "    Dividing by 60 to get hours"
     local taskHours=$(div "$taskMin" "60")
 
@@ -317,6 +379,10 @@ function parseFile {
       logAll "${YEL}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
     else
       logAll "${BLU}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+    fi
+
+    if [[ "$WRITE_CSV" == "true" ]]; then
+      writeToCSV "${inputFile}" "${index}" "${taskMin}"
     fi
   done
 
@@ -335,8 +401,8 @@ function parseFile {
 
 # Adds a task and time to the summary task list
 # 
-# @param $1 - task number to update
-# @param $2 - time to add
+# @param taskNo - task number to update
+# @param time - time to add in minutes
 function addTaskToSummary {
   local taskNo="$1"
   local elapsedMinutes=$2
@@ -350,6 +416,9 @@ function addTaskToSummary {
 
 # Print the summary of all task files parsed
 function printSummary {
+  #delete the spinner character
+  spinDel
+  
   for index in "${!summaryTaskList[@]}"; do
     log "  Task: $index"
 
@@ -406,7 +475,7 @@ for inputFile in "${REM_ARGS[@]}"; do
   fileCount=$((++fileCount))
   log "Input File ($fileCount of $argCount): ${inputFile}"
   
-  # print a dot indicator that work is being done
+  # update spinner to indicate that work is being done
   if ! hasArgument "-v"; then
     spinChar
   fi
@@ -430,6 +499,10 @@ for inputFile in "${REM_ARGS[@]}"; do
   log "Parsing File..."
   parseFile $inputFile
 done
+
+if hasArgument "-c"; then
+  logAll "${GRN}Output File:${NC} $OUTPUT_FILE"
+fi
 
 # check for the print summary option
 if hasArgument "-s"; then

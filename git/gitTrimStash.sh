@@ -3,7 +3,7 @@
 #  This script will trim the stash of entries from the end/oldest down to
 #  a specified number of entries.
 #  
-#  version: 2023.3.13
+#  version: 2023.10.11
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -16,7 +16,7 @@ RED='\033[1;31m'
 NC='\033[0m' # No Color
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh ~/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -53,7 +53,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-h"
@@ -108,26 +108,25 @@ function processArgs {
 
 # Prompt user with option to perform trim, skip, or quit
 function waitForInput {
-  #//wait for input 
-  read -p "Perform Trim down to ${TRIM_SIZE}? [Y/N] or Q to Quit: "
-  
-  #//exit script if quit is entered
-  log "  Input: ${REPLY}"
-  if [ "${REPLY^^}" = "Q" ];  then
-    logAll "Quitting Script"
-    exit 0
-  elif [ "${REPLY^^}" = "Y" ];  then
+  #//wait for input
+  if promptYesNo "Perform Trim down to ${TRIM_SIZE}? [Y/N] or Q to Quit: "; then
     return 0
   else
+    #//exit script if quit is entered
+    log "  Input: ${REPLY}"
+    if [ "${REPLY^^}" = "Q" ];  then
+      logAll "Quitting Script"
+      exit 0
+    fi
     return 1
   fi
 }
 
 # Print out the stash list with color highliting depending on the amount of entries
 # 
-# @param $1 - the local repo directory
-# @param $2 - the stash list array
-# @param $3 - number of stash entries
+# @param repoDir - path to local git project
+# @param stashList - the stash list array
+# @param stashCount - number of stash entries
 function printStashList {
   local repoDir=$1
   local stashList=$2
@@ -149,7 +148,7 @@ function printStashList {
 
 # Perform all the processing for a single repository
 # 
-# @param $1 - local repo directory
+# @param repoDir - path to local git project
 function processGitDirectory {
   local repoDir=$1
   

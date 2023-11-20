@@ -13,6 +13,7 @@
 #--------------------------------------------------------------------------------
 
 # value is substituted when unset
+echo "-- substitution --"
 unset val
 echo ${val-hello}
 val="world"
@@ -24,6 +25,7 @@ echo ${val+hello}
 echo ""
 
 # value is replaced when uset
+echo "-- replacement --"
 : ${val:=DEFAULT}
 echo ${val}
 unset val
@@ -39,19 +41,29 @@ echo ""
 # echo ""
 
 # substring expansions
+echo "-- substring --"
 val="0123456789"
-echo ${val:5}       # offset from start
-echo ${val: -3}     # offset from end
-echo ${val:3:3}     # offset with length
-echo ${val: -3:2}   # offset from end length towards right
-echo ${val: -5: -1} # offset from end length from end towards left
+echo "${val:5}"       # offset from start
+echo "${val: -3}"     # offset from end
+echo "${val:3:3}"     # offset with length
+echo "${val: -3:2}"   # offset from end length towards right
+echo "${val: -5: -1}" # offset from end length from end towards left
 
 # array offset
-myArr=("zero" "one" "two" "three" "four" "five" "six")
-echo ${myArr[@]:4}
-echo ${myArr[@]:1:3}
+echo "-- array offset --"
+myArr=("zero" "one uno" "two" "three" "four" "five" "six")
+echo "${myArr[@]:4}"
+echo "${myArr[@]:1:3}"
+echo "${myArr[@]: -3:2}"
+
+echo "-- IFS Positional ('@' vs '*') --"
+IFS="|"
+echo "${myArr[@]}"
+echo "${myArr[*]}"
+unset IFS
 
 # length of characters
+echo "-- character length --"
 val="Test"
 echo "${val}:${#val}"
 

@@ -2,10 +2,13 @@
 # [config.sh](../config.sh)
 
 Library implementation with functions to read from a configuration file
-with simple name value pair (name=value).
+with simple name value pair (i.e. name=value). The value is acquired after
+the first instance of the equal sign, therefore equals character is valid in
+the value.
 
 TODO:
 - Add write functionality
+- Get a list of available property names
 
 Import Sample Code:
   <pre>
@@ -15,7 +18,7 @@ Import Sample Code:
     fi
     source ~/lib/config.sh
   </pre>
- 
+
 Usage:
  <pre>
    # check if property exists
@@ -29,5 +32,5 @@ Usage:
 ## Functions:
 | Function | Description |
 |----------|-------------|
-| hasProperty($1,$2) | Check if the config file has property name  <br><br><u>Args:</u><br>$1 - The config file <br>$2 - the property name <br> |
-| getProperty($1,$2) | Get the property value  <br><br><u>Args:</u><br>$1 - The config file <br>$2 - the property name <br> |
+| hasProperty(configFile,&nbsp;propName) | Check if the config file has property name  <br><br><u><b>Args:</b></u><br>configFile - The config file <br>propName - the property name <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise <br> |
+| getProperty(configFile,&nbsp;propName) | Get the property value  <br><br><u><b>Args:</b></u><br>configFile - The config file <br>propName - the property name <br><br><u><b>Return:</b></u><br>0 (zero) when value is found and output, 1 otherwise <br><br><u><b>Output:</b></u><br>value writtent to standard output <br> |

@@ -45,7 +45,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-h"
@@ -82,7 +82,7 @@ currDir=$(pwd)
 log "Current Dir: ${currDir}"
 
 #//if the directory is not supplied default to current work directory
-message="${ARG_VALUES[0]}"
+message="${REM_ARGS[0]}"
 log "  Message:  ${message}"
 
 log "Checking current directory..."

@@ -9,7 +9,7 @@ Script to install the various bash scripts and libraries from this project
 - **build_junit.xml**  
 A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
 
-### [BashDoc](bashdoc/bashdoc.sh.md)
+### [BashDoc](bashdoc/docs/bashdoc.sh.md)
 Parse documentation comments from bash script and generate markdown
 
 ### [Git](git/readme.md)
@@ -64,6 +64,7 @@ Extract all '.tar.gz' file into the working directory.
     - **[arguments.sh](linux/lib/docs/arguments.sh.md)** - Implementation of script argument processing
     - **[config.sh](linux/lib/docs/config.sh.md)** - Implementation of reader for name/value pair from config file
     - **[spinner.sh](linux/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
+    - **[prompt.sh](linux/lib/docs/prompt.sh.md)** - Re-usable user input prompt methods
 
 
 ### Maven  
@@ -74,8 +75,11 @@ Installs a java project to your local maven repository. Useful for re-using in-h
 - **[createNanoRCFile.sh](nanorc/docs/createNanoRCFile.sh.md)**  
 Create the .nanorc file in the home directory that is needed to enable the code highlighting in the nano editor.   
 
-- **unibasic.nanorc**  
+- **[unibasic.nanorc](nanorc/unibasic.nanorc)**  
 Syntax highlighting for the UniBasic database language.
+
+- **[delphi.nanorc](nanorc/delphi.nanorc)**  
+Syntax highlighting for the Delphi7 language.
 
 ### Notepad++
 - **TimeLog.xml**  

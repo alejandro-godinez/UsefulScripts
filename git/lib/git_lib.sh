@@ -3,13 +3,13 @@
 #  Library of common GIT functionality.
 #  
 #  Import Sample Code:
-#      <pre>
+#    <pre>
 #      if [[ ! -f ~/lib/git_lib.sh ]]; then
 #        echo "ERROR: Missing git_lib.sh library"
 #        exit
 #      fi
 #      source ~/lib/git_lib.sh
-#      </pre>  
+#    </pre>  
 #  
 #  version: 2023.5.24  
 #  project:  https://github.com/alejandro-godinez/UsefulScripts  
@@ -26,7 +26,8 @@ TRIM_SIZE=3
 
 # Check if a directory is a git working directory
 # 
-# @param $1 - the path to check for git project
+# @param repoDir - path to local git project
+# @return - 0 (zero) when true, 1 otherwise
 function isGitDir {
   local theDir=$1
   if [ -d "${theDir}" ] && [ -d "${theDir}/.git" ]; then
@@ -37,7 +38,8 @@ function isGitDir {
 
 # Get the current repo branch name
 # 
-# @param $1 - path to the local git project
+# @param repoDir - path to local git project
+# @output - current branch name of project, written to standard out
 function gitBranchName {
   #//check if there are still more arguments where the number could be provided
   if (( $# > 0 )); then
@@ -48,7 +50,9 @@ function gitBranchName {
 # Get the main branch name used by the specified repo
 # note: checks for one of (main, master, or trunk)
 # 
-# @param $1 - path to the local git project
+# @param repoDir - path to local git project
+# @return - 0 (zero) with successful matched main branch, 1 otherwise
+# @output - main branch name used in the git project, writtent to standard out
 function gitMainBranch {
 
   #//check for missing argument
@@ -66,11 +70,14 @@ function gitMainBranch {
       return 0
     fi
   done
+
+  # branch not matched
+  return 1
 }
 
 # Perform a fetch
 # 
-# @param $1 - path to the local git project
+# @param repoDir - path to local git project
 function gitFetch {
   if (( $# > 0 )); then
     git -C "${1}" fetch
@@ -79,7 +86,7 @@ function gitFetch {
 
 # Perform a git pull on the repo
 # 
-# @param $1 - path to the local git project
+# @param repoDir - path to local git project
 function gitPull {
   if (( $# > 0 )); then
     git -C "${1}" pull
@@ -89,7 +96,7 @@ function gitPull {
 # Perform the stash list command and ouputs to standard output.
 # You can capture output using command substitution "$( getStashList )"
 # 
-# @param $1 - path to the local git project
+# @param repoDir - path to local git project
 function gitStashList {
   if (( $# > 0 )); then
     git -C "${1}" stash list
@@ -98,8 +105,8 @@ function gitStashList {
 
 # Perform a stash of code
 # 
-# @param $1 - path to the local git project
-# @param $2 - message for the stash entry
+# @param repoDir - path to local git project
+# @param message - message for the stash entry
 function gitStash {
   if (( $# > 1 )); then
     git -C "${1}" stash -m "${2}"
@@ -108,7 +115,7 @@ function gitStash {
 
 # Perform a stash apply
 # 
-# @param $1 - path to the local git project
+# @param repoDir - path to local git project
 function gitApply {
   if (( $# > 0 )); then
     git -C "${1}" stash apply
@@ -118,8 +125,8 @@ function gitApply {
 # Perform a git stash show.
 # You can capture output using substitution "$( getStashShow )"
 # 
-# @param $1 - path to the local git project
-# @param $2 - optional index number of stash entry to show
+# @param repoDir - path to local git project
+# @param index - optional index number of stash entry to show
 function gitStashShow {
   if (( $# > 1 )); then
     git -C "${1}" stash show "stash@{${2}}"
@@ -133,8 +140,8 @@ function gitStashShow {
 
 # Trim stash entries from the end of the list down to the stash count specified
 # 
-# @param $1 - the path to the local project
-# @param $2 - the number of stash entries that should remain after trim
+# @param repoDir - path to local git project
+# @param count - the number of stash entries that should remain after trim
 function trimStash {
   local repoDir=$1
   local stashCount=$2
@@ -157,9 +164,9 @@ function trimStash {
 # Get revision counts comparing current working branch against the local master
 # or if you specify the remote orign master.
 # 
-# @param $1 - the path to the local project
-# @param $2 - ["remote"] optional to indicate counts against remote, local otherwise
-# @return - two tab separated count numbers, indicating revision ahead and behind
+# @param repoDir - path to local git project
+# @param remote - optional, TRUE to indicate counts against remote, local otherwise
+# @output - two tab separated count numbers, indicating revision ahead and behind
 function gitRevisionCounts {
   local repoDir=$1
   local doRemote=false

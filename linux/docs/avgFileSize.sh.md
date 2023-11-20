@@ -7,12 +7,13 @@ that meet the specified name filter.
 
 Dependencies:  
   ../UsefulScripts/linux/lib/logging.sh  
+  ../UsefulScripts/linux/lib/arguments.sh
 
-version: 2023.3.16
+version: 2023.7.25
 
 
 ## Functions:
 | Function | Description |
 |----------|-------------|
 | printHelp() | Print the usage information for this script to standard output.   |
-| processArgs($1) | Process and capture the common execution options from the arguments used when  running the script. All other arguments specific to the script are retained  in array variable.    <br><br><u>Args:</u><br>$1 - array of argument values provided when calling the script  <br> |
+| processArgs(args) | Setup and execute the argument processing functionality imported from arguments.sh.    <br><br><u><b>Args:</b></u><br>args - array of argument values provided when calling the script  <br> |

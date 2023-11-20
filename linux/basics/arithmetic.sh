@@ -12,9 +12,10 @@ set -e #//exit on error
 # Perform native bash division
 # Note: bash only works with integers, fake it using fixed point arithmetic
 # 
-# @param $1 - dividend
-# @param $2 - divisor
-# @param $3 - scale (precision)
+# @param dividend - number being divided
+# @param divisor - number to divide by
+# @param precision - decimal precision (scale factor), defaults to 2
+# @output - result of division, written to standard output
 function div {
   # default precision scale to 2 decimal places
   local precision=2

@@ -1,0 +1,58 @@
+syntax "delphi" "\.pas$"
+#magic "delphi"
+
+## --------------------------------------------------------------------------
+## REF: https://www.nano-editor.org/dist/latest/nanorc.5.html
+##
+## \< - start of word
+## \> - end of word
+##
+## COLOR OPTIONS: color fgcolor,bgcolor
+##   icolor - case insensitive
+##
+## Valid colors: white, black, red, blue, green, yellow, magenta, and cyan
+## - use prefix "bright" for a stronger color highlight for the foreground.
+## --------------------------------------------------------------------------
+
+## Keywords
+##icolor blue "(^|\s|\;)(And|Array|As|Begin|Case|Class|Const|Constructor|Destructor|Div|Do|DownTo|Else|End|Except|File|Finally|For|Function|Goto|If|Implementation|In|Inherited|Interface|Is|Mod|Not|Object|Of|On|Or|Packed|Procedure|Program|Property|Raise|Record|Repeat|Set|Shl|Shr|Then|ThreadVar|To|Try|Type|Unit|Until|Uses|Var|While|With|Xor)(\;|\s|\(|$)"
+icolor blue "\<(And|Array|As|Begin|Case|Class|Const|Constructor|Destructor|Div|Do|DownTo|Else|End|Except|File|Finally|For|Function|Goto|If|Implementation|In|Inherited|Interface|Is|Mod|Not|Object|Of|On|Or|Packed|Procedure|Program|Property|Raise|Record|Repeat|Set|Shl|Shr|Then|ThreadVar|To|Try|Type|Unit|Until|Uses|Var|While|With|Xor)\>"
+
+
+## Directives
+icolor cyan "\<(Abstract|Default|Dynamic|Export|Index|Out|Overload|Override|Private|Protected|Public|Published|Virtual)\>"
+
+## Types
+icolor blue "\<(AnsiChar|AnsiString|Boolean|Byte|Cardinal|Char|Comp|Currency|Double|Extended|Int64|Integer|LongInt|LongWord|PAnsiChar|PAnsiString|PChar|PCurrency|PDateTime|PExtended|PInt64|Pointer|PShortString|PString|PVariant|PWideChar|PWideString|Real|Real48|ShortInt|ShortString|Single|SmallInt|String|TBits|TConvType|TDateTime|TextFile|TFloatFormat|TFormatSettings|TList|TObject|TOpenDialog|TPoint|TPrintDialog|TRect|TReplaceFlags|TSaveDialog|TSearchRec|TStringList|TSysCharSet|TThreadFunc|Variant|WideChar|WideString|Word)\>"
+
+## Variables
+icolor blue "\<(AbstractErrorProc|CmdLine|CurrencyDecimals|CurrencyFormat|CurrencyString|DateSeparator|DecimalSeparator|ErrorAddr|ExitCode|FileMode|Input|LongDateFormat|LongDayNames|LongMonthNames|LongTimeFormat|NegCurrFormat|Null|Output|RandSeed|Result|Self|ShortDateFormat|ShortDayNames|ShortMonthNames|ShortTimeFormat|TConvFamily|ThousandSeparator|TimeAMString|TimePMString|TimeSeparator|TwoDigitYearCenturyWindow)\>"
+
+## Constants
+icolor cyan "\<(Infinity|MaxInt|MaxLongInt|MinsPerDay|MonthDays|NaN|Nil|SecsPerDay|VarTypeMask)\>"
+
+## Functions
+icolor brightcyan "\<(Abs|Addr|AnsiCompareStr|AnsiCompareText|AnsiContainsStr|AnsiContainsText|AnsiEndsStr|AnsiIndexStr|AnsiLeftStr|AnsiLowerCase|AnsiMatchStr|AnsiMidStr|AnsiPos|AnsiReplaceStr|AnsiReverseString|AnsiRightStr|AnsiStartsStr|AnsiUpperCase|ArcCos|ArcSin|ArcTan|Assigned|BeginThread|Bounds|CelsiusToFahrenheit|ChangeFileExt|Chr|CompareStr|CompareText|CompareValue|Concat|Convert|Copy|Cos|CreateDir|CurrToStr|CurrToStrF|Date|DateTimeToFileDate|DateTimeToStr|DateToStr|DayOfTheMonth|DayOfTheWeek|DayOfTheYear|DayOfWeek|DaysBetween|DaysInAMonth|DaysInAYear|DaySpan|DegToRad|DeleteFile|DirectoryExists|DiskFree|DiskSize|DupeString|EncodeDate|EncodeDateTime|EncodeTime|EndOfADay|EndOfAMonth|Eof|Eoln|Exp|ExtractFileDir|ExtractFileDrive|ExtractFileExt|ExtractFileName|ExtractFilePath|FahrenheitToCelsius|FileAge|FileDateToDateTime|FileExists|FileGetAttr|FilePos|FileSearch|FileSetAttr|FileSetDate|FileSize|FindClose|FindCmdLineSwitch|FindFirst|FindNext|FloatToStr|FloatToStrF|ForceDirectories|Format|FormatCurr|FormatDateTime|FormatFloat|Frac|GetCurrentDir|GetLastError|GetMem|Hi|High|IncDay|IncHour|IncMillisecond|IncMinute|IncMonth|IncSecond|IncYear|InputBox|InputQuery|Int|IntToHex|IntToStr|IOResult|IsInfinite|IsLeapYear|IsMultiThread|IsNaN|LastDelimiter|Length|Ln|Lo|Log10|Low|LowerCase|Max|Mean|MessageDlg|MessageDlgPos|Min|MonthOfTheYear|Now|Odd|Ord|ParamCount|ParamStr|Pi|Point|PointsEqual|Pos|Pred|Printer|PromptForFileName|PtInRect|RadToDeg|Random|RandomRange|RecodeDate|RecodeTime|Rect|RemoveDir|RenameFile|Round|SeekEof|SeekEoln|SelectDirectory|SetCurrentDir|Sin|SizeOf|Slice|Sqr|Sqrt|StringOfChar|StringReplace|StringToWideChar|StrScan|StrToCurr|StrToDate|StrToDateTime|StrToFloat|StrToInt|StrToInt64|StrToInt64Def|StrToIntDef|StrToTime|StuffString|Succ|Sum|Tan|Time|TimeToStr|Tomorrow|Trim|TrimLeft|TrimRight|Trunc|UpCase|UpperCase|VarType|WideCharToString|WrapText|Yesterday)\>"
+
+## Procedures
+icolor brightcyan "\<(Abort|Append|AppendStr|Assign|AssignFile|AssignPrn|Beep|BlockRead|BlockWrite|Break|ChDir|Close|CloseFile|Continue|DateTimeToString|Dec|DecodeDate|DecodeDateTime|DecodeTime|Delete|Dispose|EndThread|Erase|Exclude|Exit|FillChar|Flush|FreeAndNil|FreeMem|GetDir|GetLocaleFormatSettings|Halt|Inc|Include|Insert|MkDir|Move|New|ProcessPath|Randomize|Read|ReadLn|ReallocMem|Rename|ReplaceDate|ReplaceTime|Reset|ReWrite|RmDir|RunError|Seek|SetLength|SetString|ShowMessage|ShowMessageFmt|ShowMessagePos|Str|Truncate|Val|Write|WriteLn)\>"
+
+## numerical values, try to match them all as long as they are not part of other text (variables)
+color brightyellow "[^a-zA-Z0-9\.]-?[0-9]+(\.[0-9]+)?"
+
+## operator color
+## color magenta "[=+*:\-\/\^]"
+
+## revert comma and semicolon back to white if they were detect as part of another match
+color brightwhite "[,;]"
+
+## literal highlighting
+color yellow "["'][^'"]*["']"
+
+## comment
+color green start="\{" end="\}"
+color green "//.*"
+
+## Compiler Directives
+icolor brightred "\$(A|Align|AppType|B|BoolEval|D|DebugInfo|Define|DefinitionInfo|Else|EndIf|ExtendedSyntax|H|Hints|I|IfDef|IfNDef|IfOpt|Include|IOChecks|L|LocalSymbols|LongStrings|MinEnumSize|O|Optimization|OverFlowChecks|Q|R|RangeChecks|ReferenceInfo|Resource|UnDef|Warnings|X|Y|Z)\>"
+## icolor brightred "\$(I|B|IF|IFDEF|ELSE|ENDIF)\>"
