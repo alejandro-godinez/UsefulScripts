@@ -16,8 +16,18 @@ export PATH=$PATH:/path/to/binary:/path/to/another/binary
 #//command with leading space or duplicates will not be added to history
 HISTCONTROL=ignoreboth
 
+#//save default IFS for reseting
+IFS_DEFAULT=$IFS
+
 #//set the Internal Field Separator to newline (useful for windows git bash)
+IFS_NEWLINE=$'\n'
 IFS=$'\n'
+
+#------------------------------------------------
+# Alias for changes to bash environment
+#------------------------------------------------
+alias ifsDefault='IFS=$IFS_DEFAULT'
+alias ifsNewline='IFS=$IFS_NEWLINE'
 
 #------------------------------------------------
 # Alias for confing of common files (i use nano)
