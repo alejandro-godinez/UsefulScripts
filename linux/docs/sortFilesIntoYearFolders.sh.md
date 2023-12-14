@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [sortFilesIntoYearFolders.sh](../sortFilesIntoYearFolders.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [sortFilesIntoYearFolders.sh](.././linux/sortFilesIntoYearFolders.sh)
 
 This script will list all the files in the current working
 directory and move the file into a sub-folder of the year

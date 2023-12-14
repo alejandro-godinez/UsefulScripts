@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [gitStashPullApply.sh](../gitStashPullApply.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [gitStashPullApply.sh](.././git/gitStashPullApply.sh)
 
  This script will perform a stash-pull-apply sequence of operations.
  

@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [gitBranchList.sh](../gitBranchList.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [gitBranchList.sh](.././git/gitBranchList.sh)
 
  This script will list the current branch for each of the git project folders
  in the current directory.

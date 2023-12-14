@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [timelog.sh](../timelog.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [timelog.sh](.././timelog/timelog.sh)
 
 Parse time log work hour files and output time spend on each task as well as total for
 each file day.

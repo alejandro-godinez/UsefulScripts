@@ -254,7 +254,7 @@ function writeCommentsFlat {
 # @param functionName - the function name to write
 function writeFunctionName {
   spinDel
-  
+
   local functionName="$1"
   # ommit output with quiet option
   if ! hasArgument "-q"; then
@@ -363,7 +363,8 @@ function parseBashScript {
   local lineNoPadded="000"
 
   # Reset the output file
-  local outputFile="${OUTPUT_PATH}/${inputFile}.md"
+  local fileName=$(basename $inputFile)
+  local outputFile="${OUTPUT_PATH}/${fileName}.md"
   log "Output File: $outputFile"
   if [ -f ${outputFile} ]; then
     rm ${outputFile}
@@ -374,7 +375,7 @@ function parseBashScript {
   echo "<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>" >> $outputFile
 
   # add file title header, check if a relative path was specified
-  echo "# [${inputFile}](${RELATIVE_PATH}${inputFile})" >> $outputFile
+  echo "# [${fileName}](${RELATIVE_PATH}${inputFile})" >> $outputFile
 
   # declare an array to store comments before function
   local -a commentArr=()
