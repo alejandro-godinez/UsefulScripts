@@ -1,4 +1,4 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
 # [bashdoc.sh](../bashdoc.sh)
 
 Parse documentation comments from bash script and generate markdown. The output file will
@@ -47,8 +47,9 @@ function doWork() {
 Usage:
 <pre>
 bashdoc.sh [options] [files]
-  -h           This help info
-  -v           Verbose/debug output
+  -h        This help info
+  -v        Verbose/debug output
+  -q        Quiet output
   -o path   optional, directory to which the output file will be saved
   -r path   optional, relative path to use for the script link in the header
 </pre>
@@ -76,6 +77,8 @@ Relative Link: bashdoc.sh -r '../' -o /output/path *.sh"
 | newLinesToSpace(text) | Replace newline characters (cr and lf) to space    <br><br><u><b>Args:</b></u><br>text - text to perform replacement  <br><br><u><b>Output:</b></u><br>the trimmed text on standard output  <br> |
 | writeComments() | Write the accumulated comments to the output file   |
 | writeCommentsFlat() | Write the accumulated comments to the output file trimmed of any newline   |
+| writeFunctionName(functionName) | write out the function name  <br><br><u><b>Args:</b></u><br>functionName - the function name to write  <br> |
+| writeFunctionClose() | write out function signature close   |
 | writeFunctionParameters() | write out the accumulated function parameters   |
 | writeParameterDescription() | write out the paramaters formatted for description in table   |
 | writeReturnDescription() | write out the output description   |
