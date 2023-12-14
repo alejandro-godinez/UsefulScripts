@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [avgFileSize.sh](../avgFileSize.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [avgFileSize.sh](.././linux/avgFileSize.sh)
 
 This script will get an average file size of all the file
 that meet the specified name filter.

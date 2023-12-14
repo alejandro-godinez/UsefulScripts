@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [gitStatusList.sh](../gitStatusList.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [gitStatusList.sh](.././git/gitStatusList.sh)
 
  This script will show the current status, in short form of each of the 
  project in the current directory

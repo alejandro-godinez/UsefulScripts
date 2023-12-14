@@ -1,5 +1,5 @@
-<small><i>Auto-generated using bashdoc.sh</i></small>
-# [arguments.sh](../arguments.sh)
+<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
+# [arguments.sh](.././linux/lib/arguments.sh)
 
 Library implementation of common script argument processing functionality. The
 developer pre-defines the expected option codes along with indicator if the

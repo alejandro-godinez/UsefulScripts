@@ -175,6 +175,7 @@ function promptForInstall {
 # Perform installation of scripts for the specified project sub directory.
 # 
 # @param projDir - the project sub-directory from which to install scripts
+# @param isLib - indicator to process lib sub folder
 function installProject {
   local projSubDir=$1
   local isLib=false
