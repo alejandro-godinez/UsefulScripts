@@ -46,8 +46,9 @@
 # Usage:
 # <pre>
 # bashdoc.sh [options] [files]
-#   -h           This help info
-#   -v           Verbose/debug output
+#   -h        This help info
+#   -v        Verbose/debug output
+#   -q        Quiet output
 #   -o path   optional, directory to which the output file will be saved
 #   -r path   optional, relative path to use for the script link in the header
 # </pre>
@@ -112,6 +113,7 @@ function printHelp {
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -q        Quiet output"
   echo "    -o path   optional, directory to which the output file will be saved"
   echo "    -r path   optional, relative path to use for the script link in the header"
   echo ""
@@ -129,6 +131,7 @@ function processArgs {
   # initialize expected options
   addOption "-v"
   addOption "-h"
+  addOption "-q"
   addOption "-o" true
   addOption "-r" true
 
@@ -239,9 +242,30 @@ function writeCommentsFlat {
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do 
     local commentLine=$(newLinesToSpace "${commentArr[$index]}")
-    logAll "  ${GRN}Comment:${NC}${commentArr[$index]}"
+    # ommit output with quiet option
+    if ! hasArgument "-q"; then
+      logAll "  ${GRN}Comment:${NC}${commentArr[$index]}"
+    fi
     echo -n "${commentLine}" >> $outputFile
   done
+}
+
+# write out the function name
+# @param functionName - the function name to write
+function writeFunctionName {
+  spinDel
+  
+  local functionName="$1"
+  # ommit output with quiet option
+  if ! hasArgument "-q"; then
+    logAll "${BLU}Function:${NC}${functionName}"
+  fi
+  echo -n "| ${functionName}(" >> $outputFile
+}
+
+# write out function signature close
+function writeFunctionClose {
+  echo -n ") | " >> $outputFile
 }
 
 # write out the accumulated function parameters
@@ -250,7 +274,10 @@ function writeFunctionParameters {
   local isFirstParam=true
   for index in "${!paramMap[@]}"; do 
     local paramLine="${paramMap[$index]}"
-    logAll "  ${YEL}Param:${NC}${paramLine}"
+    # ommit output with quiet option
+    if ! hasArgument "-q"; then
+      logAll "  ${YEL}Param:${NC}${paramLine}"
+    fi
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
@@ -299,7 +326,10 @@ function writeReturnDescription {
   fi
 
   local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
-  logAll "  ${PUR}Return:${NC}${description}"
+  # ommit output with quiet option
+  if ! hasArgument "-q"; then
+    logAll "  ${PUR}Return:${NC}${description}"
+  fi
   echo -n "<br><u><b>Return:</b></u><br>" >> $outputFile
   log "Keyword Desc:$description"
   echo -n "${description}<br>" >> $outputFile
@@ -314,7 +344,10 @@ function writeOutputDescription {
   fi
 
   local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
-  logAll "  ${CYN}Output:${NC}${description}"
+  # ommit output with quiet option
+  if ! hasArgument "-q"; then
+    logAll "  ${CYN}Output:${NC}${description}"
+  fi
   echo -n "<br><u><b>Output:</b></u><br>" >> $outputFile
   log "Keyword Desc:$description"
   echo -n "${description}<br>" >> $outputFile
@@ -338,7 +371,7 @@ function parseBashScript {
   touch ${outputFile}
 
   # add auto-generated comment
-  echo "<small><i>Auto-generated using bashdoc.sh</i></small>" >> $outputFile
+  echo "<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>" >> $outputFile
 
   # add file title header, check if a relative path was specified
   echo "# [${inputFile}](${RELATIVE_PATH}${inputFile})" >> $outputFile
@@ -430,15 +463,14 @@ function parseBashScript {
 
       # write function with open parenthesis
       spinDel
-      logAll "${BLU}Function:${NC}${functionName}"
-      echo -n "| ${functionName}(" >> $outputFile
+      writeFunctionName $functionName
 
       # write out the parameters if any
       log "Writing function parameters..."
       writeFunctionParameters
 
       # close the function
-      echo -n ") | " >> $outputFile
+      writeFunctionClose
 
       # write out the accumulated comments
       log "Writing comments flat..."
