@@ -5,7 +5,7 @@
 # output path if the provided option (-o) is used. The template directory is expected to
 # be installed to a data home directory but can be changed to be elsewhere.
 #
-# @version 2023.11.08
+# @version 2023.12.18
 #
 # Usage:<br>
 # <pre>
@@ -32,6 +32,12 @@ CYN='\033[1;36m'
 
 # path to template folder
 TEMPLATE_PATH=~/data/projectFolders/Template
+
+# project tracking base url, when present creats url link file
+LINK_URL=
+
+# additional file extension to insert in file name (file.[ext].url), NOTE: Windows hides the url extension
+LINK_EXT=
 
 # output path to save document file, default to current directory
 OUTPUT_PATH="."
@@ -160,3 +166,16 @@ cp -R "${TEMPLATE_PATH}" "${projectDir}"
 # rename the notes file with the ticket number
 log "Renaming notes file to '${ticketNumber}.notes"
 mv "${projectDir}/project.notes" "${projectDir}/${ticketNumber}.notes"
+
+# create url shortcut if link is not empty
+if [[ -n "${LINK_URL}" ]]; then
+  if [[ -n "${LINK_EXT}" ]]; then
+    urlFile="${projectDir}/${ticketNumber}.${LINK_EXT}.url"
+  else
+    urlFile="${projectDir}/${ticketNumber}.url"
+  fi
+  log "Creating url shortcut file to project item"
+  touch "$urlFile"
+  echo "[InternetShortcut]" >> $urlFile
+  echo "URL=${LINK_URL}${ticketNumber}" >> $urlFile
+fi
