@@ -15,7 +15,7 @@ set -u #//error on unset variable
 set -f #//turn off globbing so that our file filer doesn't expand to files
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -24,8 +24,8 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
-#//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-#IFS=$'\n'
+#//set the Internal Field Separator to newline (needed for find file loop)
+IFS=$'\n'
 
 #//search depth
 MAX_DEPTH=1
@@ -48,6 +48,7 @@ function printHelp {
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -s        show located test line results from grep"
   echo "    -d num    Search depth (default 1)"
   echo ""
   echo "  Example: findFileWidthText.sh \"hello\" \"*.txt\""
@@ -60,8 +61,9 @@ function printHelp {
 # @param args - array of argument values provided when calling the script
 function processArgs {
    # initialize expected options
-  addOption "-v"
   addOption "-h"
+  addOption "-v"
+  addOption "-s"
   addOption "-d" true
   
   # perform parsing of options
@@ -91,6 +93,7 @@ function processArgs {
     fi
   fi
 }
+
 
 #< - - - Main - - - >
 
@@ -122,7 +125,7 @@ search="${REM_ARGS[0]}"
 log "Search: ${search}"
 
 #//define default filter command arguments
-filterCommand=("find" "-mindepth" "1" "-maxdepth" "${MAX_DEPTH}" "-type" "f" )
+filterCommand=("find" . "-mindepth" "1" "-maxdepth" "${MAX_DEPTH}" "-type" "f" )
 
 #//add file name filter option if provided
 if (( argCount > 1 )); then
@@ -131,11 +134,25 @@ fi
 log "File Filter: ${filterCommand[*]}"
 
 for f in $(${filterCommand[@]})
-do 
-  #//perform grep search on file and capture the located lines
-  result=$( grep -m 1 "${search}" ${f} )
+do
+  spinChar
+  log "$f"
+
+  #//perform grep search on file and capture match result
+  if hasArgument "-s"; then
+    result=$( grep -n "${search}" "${f}" )
+  else
+    result=$( grep -m 1 -n "${search}" "${f}" )
+  fi
+
   if [ ! -z "${result// }" ]; then
+    spinDel
     logAll "${f}"
+    
+    # output line match output when not quiet
+    if hasArgument "-s"; then
+      logAll "${result}"
+    fi
   fi
 done
 
