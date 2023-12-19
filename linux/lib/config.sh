@@ -85,7 +85,7 @@ function getProperty {
 
 # -- TESTING --
 # configFile="./test/test.config"
-# declare -a props=("name" "country" "lastupdate" "somekey") 
+# declare -a props=("name" "country" "lastupdate" "somekey" "link.url") 
 # for property in "${props[@]}"; do
 #   if hasProperty "$configFile" "$property"; then
 #     echo -n "${property} - "
