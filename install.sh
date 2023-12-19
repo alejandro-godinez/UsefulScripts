@@ -11,7 +11,7 @@
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2023.11.13
+# @version: 2023.12.19
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
