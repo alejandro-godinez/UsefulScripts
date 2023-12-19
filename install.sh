@@ -245,8 +245,8 @@ function installData {
   # dont perform copy if this is a mock run
   if [ "$IS_MOCK" = true ]; then return; fi
 
-  # perform a recursive copy of the project data sub directory to the destination
-  cp -R "$projSubDir" "$destDir"
+  # perform a recursive copy of the project data folder to the destination, ommit the 'data' folder itself (hence 'src/data/.' )
+  cp -R "${projSubDir}/." "${destDir}"
 }
 
 # Perform the work to find the single file to install specified throug script option
