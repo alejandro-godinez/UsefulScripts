@@ -21,9 +21,9 @@
 # Usage:
 #  <pre>
 #    # check if property exists
-#    if hasProperty "name" "file.config"; then
+#    if hasProperty "file.config" "propName"; then
 #      # get the value
-#      value=$(getProperty "name" "file.config")
+#      value=$(getProperty "file.config" "propName")
 #    fi
 #  </pre>
 #-------------------------------------------------------------------------------
