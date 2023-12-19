@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [config.sh](.././linux/lib/config.sh)
+# [config.sh](../config.sh)
 
 Library implementation with functions to read from a configuration file
 with simple name value pair (i.e. name=value). The value is acquired after
@@ -22,9 +22,9 @@ Import Sample Code:
 Usage:
  <pre>
    # check if property exists
-   if hasProperty "name" "file.config"; then
+   if hasProperty "file.config" "propName"; then
      # get the value
-     value=$(getProperty "name" "file.config")
+     value=$(getProperty "file.config" "propName")
    fi
  </pre>
 
