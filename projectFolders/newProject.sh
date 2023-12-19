@@ -5,7 +5,7 @@
 # output path if the provided option (-o) is used. The template directory is expected to
 # be installed to a data home directory but can be changed to be elsewhere.
 #
-# @version 2023.12.18
+# @version 2023.12.19
 #
 # Usage:<br>
 # <pre>
@@ -30,6 +30,9 @@ NC='\033[0m'       # No Color
 RED='\033[0;31m'
 CYN='\033[1;36m'
 
+# configuration file
+CONFIG_FILE=~/data/projectFolders/projects.config
+
 # path to template folder
 TEMPLATE_PATH=~/data/projectFolders/Template
 
@@ -43,7 +46,7 @@ LINK_EXT=
 OUTPUT_PATH="."
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/prompt.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/prompt.sh ~/lib/config.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -65,6 +68,41 @@ function printHelp {
   echo "Examples:"
   echo "  ./newProject.sh ABC-1245 \"New script to create project folder\""
   echo "  ./newProject.sh -o \"01-Assigned\" \"ABC-1245\" \"New script to create project folder\""
+}
+
+# Load configuration properties from config file
+function loadConfig {
+  if [ -z $CONFIG_FILE ]; then
+    log "Config file was not defined"
+    return
+  fi
+
+  log "Config File: $CONFIG_FILE"
+
+  # return if the config file does not exists, not required
+  if [ ! -e $CONFIG_FILE ]; then
+    log "Config file was not found"
+    return
+  fi
+
+  # load the link url property
+  logN "Link URL: "
+  if hasProperty "$CONFIG_FILE" "link.url" ; then
+    LINK_URL=$(getProperty "$CONFIG_FILE" "link.url")
+    log "$LINK_URL"
+  else
+    log ""
+  fi
+  
+
+  # load the link file extension property
+  logN "Link EXT: "
+  if hasProperty "$CONFIG_FILE" "link.ext"; then
+    LINK_EXT=$(getProperty "$CONFIG_FILE" "link.ext")
+    log "$LINK_EXT"
+  else
+    log ""
+  fi
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -109,6 +147,9 @@ escapesOn
 # check the command arguments
 processArgs "$@"
 
+# load configurations from file
+loadConfig
+
 # check if there were no non-option arguments specified
 if [[ ! -v REM_ARGS ]]; then
   printHelp
@@ -147,6 +188,21 @@ fi
 projectDir="${OUTPUT_PATH}/${projectFolder}"
 logAll "${CYN}New Project folder:${NC} ${projectDir}"
 
+# get URL link to item if URL was provided
+ticketUrl=''
+urlFile=''
+if [[ -n "${LINK_URL}" ]]; then
+  ticketUrl="${LINK_URL}${ticketNumber}"
+  logAll "${CYN}Ticket URL:${NC} ${ticketUrl}"
+
+  # generate shortcut file name
+  if [[ -n "${LINK_EXT}" ]]; then
+    urlFile="${projectDir}/${ticketNumber}.${LINK_EXT}.url"
+  else
+    urlFile="${projectDir}/${ticketNumber}.url"
+  fi
+fi
+
 # check to make sure project folder does not already exist
 if [[ -d $projectDir ]]; then
   logAll "${RED}ERROR:${NC} Project directory already exists"
@@ -167,15 +223,10 @@ cp -R "${TEMPLATE_PATH}" "${projectDir}"
 log "Renaming notes file to '${ticketNumber}.notes"
 mv "${projectDir}/project.notes" "${projectDir}/${ticketNumber}.notes"
 
-# create url shortcut if link is not empty
-if [[ -n "${LINK_URL}" ]]; then
-  if [[ -n "${LINK_EXT}" ]]; then
-    urlFile="${projectDir}/${ticketNumber}.${LINK_EXT}.url"
-  else
-    urlFile="${projectDir}/${ticketNumber}.url"
-  fi
+# create url shortcut file if one was created
+if [[ -n "${ticketUrl}" ]]; then
   log "Creating url shortcut file to project item"
   touch "$urlFile"
-  echo "[InternetShortcut]" >> $urlFile
-  echo "URL=${LINK_URL}${ticketNumber}" >> $urlFile
+  echo "[InternetShortcut]" >> "$urlFile"
+  echo "URL=${ticketUrl}" >> "$urlFile"
 fi
