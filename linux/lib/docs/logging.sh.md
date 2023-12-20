@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [logging.sh](.././linux/lib/logging.sh)
+# [logging.sh](../logging.sh)
 
  Library of common debug/logging functionality.
    Debug Mode:  You can code your script with verbose console output that will 

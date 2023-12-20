@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [bashdoc.sh](.././bashdoc/bashdoc.sh)
+# [bashdoc.sh](../bashdoc.sh)
 
 Parse documentation comments from bash script and generate markdown. The output file will
 be saved in a 'docs' sub-directory unless the optional output directory option is

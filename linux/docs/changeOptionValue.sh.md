@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [changeOptionValue.sh](.././linux/changeOptionValue.sh)
+# [changeOptionValue.sh](../changeOptionValue.sh)
 
 This script will change the value of a standard name=value pair file
 such as ini or config files.  

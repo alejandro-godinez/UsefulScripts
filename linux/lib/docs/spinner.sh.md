@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [spinner.sh](.././linux/lib/spinner.sh)
+# [spinner.sh](../spinner.sh)
 
 Library implementation with function to print a rotating set of characters 
 in place to demonstrate work being perform by long running script.

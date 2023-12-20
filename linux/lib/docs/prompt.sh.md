@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [prompt.sh](.././linux/lib/prompt.sh)
+# [prompt.sh](../prompt.sh)
 
  Library of common re-usable prompt methods.
 

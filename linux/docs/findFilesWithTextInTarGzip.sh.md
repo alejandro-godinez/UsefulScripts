@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [findFilesWithTextInTarGzip.sh](.././linux/findFilesWithTextInTarGzip.sh)
+# [findFilesWithTextInTarGzip.sh](../findFilesWithTextInTarGzip.sh)
 
 This script will search the contents of tar gzip files
 in the specified directory for entries with matching

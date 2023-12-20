@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [gitStashList.sh](.././git/gitStashList.sh)
+# [gitStashList.sh](../gitStashList.sh)
 
  This script will list the stash entries of each of the git project folders 
  in the current directory.

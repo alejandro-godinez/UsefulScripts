@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [gitRevCount.sh](.././git/gitRevCount.sh)
+# [gitRevCount.sh](../gitRevCount.sh)
 
  This script will get a count of revisions ahead and behind from master both
  against local and remote.

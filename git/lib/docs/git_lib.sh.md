@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [git_lib.sh](.././git/lib/git_lib.sh)
+# [git_lib.sh](../git_lib.sh)
 
  Library of common GIT functionality.
  
