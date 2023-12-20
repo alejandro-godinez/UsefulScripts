@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [gitTrimStash.sh](.././git/gitTrimStash.sh)
+# [gitTrimStash.sh](../gitTrimStash.sh)
 
  This script will trim the stash of entries from the end/oldest down to
  a specified number of entries.

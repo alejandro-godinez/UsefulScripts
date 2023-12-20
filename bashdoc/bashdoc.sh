@@ -375,7 +375,7 @@ function parseBashScript {
   echo "<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>" >> $outputFile
 
   # add file title header, check if a relative path was specified
-  echo "# [${fileName}](${RELATIVE_PATH}${inputFile})" >> $outputFile
+  echo "# [${fileName}](${RELATIVE_PATH}${fileName})" >> $outputFile
 
   # declare an array to store comments before function
   local -a commentArr=()

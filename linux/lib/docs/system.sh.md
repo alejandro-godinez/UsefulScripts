@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [system.sh](.././linux/lib/system.sh)
+# [system.sh](../system.sh)
 
  Library of common operating system functions
 

@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [findFilesWithText.sh](.././linux/findFilesWithText.sh)
+# [findFilesWithText.sh](../findFilesWithText.sh)
 
 This script will search the contents of file in
 sub-directories from the working path for content that

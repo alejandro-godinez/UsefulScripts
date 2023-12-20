@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [comment.sh](.././linux/comment.sh)
+# [comment.sh](../comment.sh)
 
 This script will add a comment "#" to the start of the line number(s)
 specified.  

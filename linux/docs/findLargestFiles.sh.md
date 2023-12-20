@@ -1,5 +1,5 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
-# [findLargestFiles.sh](.././linux/findLargestFiles.sh)
+# [findLargestFiles.sh](../findLargestFiles.sh)
 
 This script will find the largest files for the specified
 directory recursively.  
