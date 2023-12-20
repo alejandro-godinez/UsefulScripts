@@ -38,6 +38,8 @@ alias profileconfig='nano ~/.bash_profile'
 alias logoutconfig='nano ~/.bash_logout'
 #//config nano
 alias nanoconfig='nano ~/.nanorc'
+#//git bash prompt config
+alias gitpromptconfig='nano /c/Program\ Files/Git/etc/profile.d/git-prompt.sh'
 
 #------------------------------------------------
 # Shortcut to applications
