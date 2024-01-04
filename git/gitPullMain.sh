@@ -4,7 +4,7 @@
 #  current directory if it is pointing to the main branch.  The user will
 #  be interrogated to confirm pull.
 #  
-#  version: 2023.4.7
+#  version: 2024.1.4
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -151,6 +151,14 @@ function gitPullMain {
       return
     fi
   fi
+
+  #// get the main branch
+  mainBranch=$(gitMainBranch $repoDir)
+  log "Main Branch: ${mainBranch}"
+
+  #//get revision count info
+  remoteCounts=$(gitRevisionCounts $repoDir remote)
+  logAll "Rev [ahead behind]: ${remoteCounts}\t${branch}->origin/${mainBranch}"
 
   #//wait for input, unless force option was specified
   if [ ! "$FORCE_PULL" = true ]; then
