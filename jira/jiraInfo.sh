@@ -42,7 +42,7 @@ function printHelp {
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
 # 
-# @param $1 - array of argument values provided when calling the script
+# @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
   addOption "-v"      #verbose
@@ -108,7 +108,7 @@ function loadConfig {
 
 # Get the next file name increasing the number suffix 
 # 
-# @param $1 - full file path
+# @param $filePath - full file path
 function getNextOutputFile {
   local filePath="$1"
   
@@ -131,7 +131,7 @@ function getNextOutputFile {
 
 # Perform a get request for issue information
 # 
-# @param $1 - the issueID or key
+# @param $issueId - the issueId or key
 function getIssueInfo {
   issueIdOrKey="$1"
 
@@ -173,12 +173,23 @@ if [ -f "${outputFile}" ]; then
   logAll "New File Name: ${outputFile}"
 
   # make sure the calculated output file does not exist
-  # if [ -f $outputFile ]; then
-  #   echo -e "${RED}ERROR: Output file name already exists.${NC}"
-  #   exit
-  # fi
+  if [ -f $outputFile ]; then
+    echo -e "${RED}ERROR: Output file name already exists.${NC}"
+    exit
+  fi
 fi
 
+# create new empty file
+touch "${outputFile}"
+
 # perform issue info request
-# logAll "Getting Issue Info..."
-# getIssueInfo "$issueID" > "${outputFile}"
+logAll "Getting Issue Info..."
+issueInfo=$(getIssueInfo "$issueID")
+
+# perform json pretty formatting if command exists on system
+if command -v json_pp @> /dev/null; then
+  issueInfo=$(echo -n "$issueInfo" | json_pp)
+fi
+
+# write issue info to file
+echo -n "$issueInfo" > "${outputFile}"
