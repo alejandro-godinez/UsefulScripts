@@ -81,7 +81,7 @@ Syntax highlighting for the UniBasic database language.
 - **[delphi.nanorc](nanorc/delphi.nanorc)**  
 Syntax highlighting for the Delphi7 language.
 
-### Notepad++
+### [Notepad++](notepad++/readme.md)
 - **TimeLog.xml**  
 Syntax highlighting for simple time tracking text file.
 
