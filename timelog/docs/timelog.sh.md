@@ -24,6 +24,7 @@ Examples:
 All .hrs Files:  timelog.sh -s
 Single:          timelog.sh 2023.06.28.hrs
 Multiple:        timelog.sh 2023.06*hrs
+                 timelog.sh $(find -type f -name 202401*.hrs)
 Summary:         timelog.sh -s 2023.06*.hrs
 Task Filter:     timelog.sh -t "ABC-1234"
 </pre>
