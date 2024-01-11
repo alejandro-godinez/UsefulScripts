@@ -2,15 +2,21 @@
 
 #--------------------------------------------------------------------------------
 #  Bash Notes:
-#    [@]   - expands values to separate words
-#    ${!   - the ! here expands the indices (keys) instead of the values
-#    local - can be used instead of declare when in a function
+#    [@]      - expands values to separate words
+#    ${!      - the ! here expands the indices (keys) instead of the values
+#    local -n - "nameref" indirection used to make a variable by name
 #--------------------------------------------------------------------------------
 
 
 #//bash shell options
 set -u #//error on unset variable
 set -e #//exit on error
+
+# use of indexed arrays requires bash 3 and greater
+if ((BASH_VERSINFO[0] < 3)); then
+  echo "Sorry, you need at least bash-3.0 to run this script."
+  exit 1
+fi
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'

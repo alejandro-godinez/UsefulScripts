@@ -9,6 +9,12 @@
 set -u #//error on unset variable
 set -e #//exit on error
 
+# use of associative arrays requires bash 4 and greater
+if ((BASH_VERSINFO[0] < 4)); then
+  echo "Sorry, you need at least bash-4.0 to run this script."
+  exit 1
+fi
+
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
 for lib in "${libs[@]}"; do 
