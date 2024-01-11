@@ -5,7 +5,7 @@
 # output path if the provided option (-o) is used. The template directory is expected to
 # be installed to a data home directory but can be changed to be elsewhere.
 #
-# @version 2023.12.19
+# @version 2024.01.11
 #
 # Usage:<br>
 # <pre>
@@ -228,6 +228,10 @@ cp -R "${TEMPLATE_PATH}" "${projectDir}"
 # rename the notes file with the ticket number
 log "Renaming notes file to '${ticketNumber}.notes"
 mv "${projectDir}/project.notes" "${projectDir}/${ticketNumber}.notes"
+
+# update the jira task item number in place
+log "Updating jira item number"
+sed -i -e "s/Item:/Item: ${projectFolder}/g" "${projectDir}/${ticketNumber}.notes"
 
 # create url shortcut file if one was created
 if [[ -n "${ticketUrl}" ]]; then
