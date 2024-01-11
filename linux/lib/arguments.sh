@@ -38,6 +38,12 @@
 # - arguments without dash will be interpreted as value for the previous option
 #-------------------------------------------------------------------------------
 
+# use of associative arrays requires bash 4 and greater
+if ((BASH_VERSINFO[0] < 4)); then
+  echo "Sorry, you need at least bash-4.0 to run this script."
+  exit 1
+fi
+
 # indexed array of arguments that were not defined
 declare -a REM_ARGS
 

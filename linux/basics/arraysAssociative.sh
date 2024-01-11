@@ -11,11 +11,20 @@
 set -u #//error on unset variable
 set -e #//exit on error
 
+# use of associative arrays requires bash 4 and greater
+if ((BASH_VERSINFO[0] < 4)); then
+  echo "Sorry, you need at least bash-4.0 to run this script."
+  exit 1
+fi
+
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 IFS=$'\n'
 
-#//associative array
+#//associative array with upper case keys
 echo "Declare Associative Array"
+declare -A -u upperArr=(["one"]="uno" ["two"]="dos")
+for index in "${!upperArr[@]}"; do echo "  $index -> ${upperArr[$index]}"; done
+echo ""
 
 #//explicit associative array using 'declare -A'
 declare -A myArr=(["one"]="uno" ["two"]="dos" ["three"]="tres") 

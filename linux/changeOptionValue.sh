@@ -18,6 +18,12 @@
 
 set -u #//error on unset variable
 
+# use of associative arrays requires bash 4 and greater
+if ((BASH_VERSINFO[0] < 4)); then
+  echo "Sorry, you need at least bash-4.0 to run this script."
+  exit 1
+fi
+
 #//echo print colors
 NC='\033[0m'       # No Color
 GRN='\033[0;32m'
