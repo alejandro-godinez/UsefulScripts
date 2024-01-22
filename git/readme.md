@@ -7,6 +7,8 @@ As is common you can post scripts in your home bin folder so that they are avail
   - [logging.sh](../linux/lib/docs/logging.sh.md)
   - [arguments.sh](../linux/lib/docs/arguments.sh.md)
 
+  For convenience [Install](../docs/install.sh.md) script is provided at the root of this repo.
+
 <br><br>
 
 # [gitBranchList.sh](docs/gitBranchList.sh.md)
@@ -95,6 +97,17 @@ Changes to be committed:
   (use "git restore --staged <file>..." to unstage)
         new file:   git/readme.md
 ```
+
+# [gitStatusList.sh](docs/gitStatusList.sh.md)
+This script will perform a git status, in short form, for each project in the current directory
+```
+$ gitStatusList.sh
+./UsefulScripts
+ M README.md
+ M git/readme.md
+DONE
+```
+
 
 # [gitTrimStash.sh](docs/gitTrimStash.sh.md)
 This script will trim the stash of entries from the end/oldest down to a specified number of entries.  The script default to 3 but can be adjusted with -t option.

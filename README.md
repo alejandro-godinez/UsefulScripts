@@ -16,11 +16,23 @@ Parse documentation comments from bash script and generate markdown
 - **[gitBranchList.sh](git/docs/gitBranchList.sh.md)**  
 List the current branch name for git projects in the current directory
 
+- **[gitFetch.sh](git/docs/gitFetch.sh.md)**  
+Perform a fetch on each project in the current directory 
+
 - **[gitPullMain.sh](git/docs/gitPullMain.sh.md)**  
 Prompts to perform a pull for git projects in the current directory
 
+- **[gitRevCount.sh](git/docs/gitRevCount.sh.md)**  
+Gets a count of revisions ahead and behind from main
+
 - **[gitStashList.sh](git/docs/gitStashList.sh.md)**  
 Lists the stash entries for each project in the current directory
+
+- **[gitStashPullApply.sh](git/docs/gitStashPullApply.sh.md)**  
+Perform a stash-pull-apply sequence of operations for the project in the current directory
+
+- **[gitStatusList.sh](git/docs/gitStatusList.sh.md)**  
+This script will perform a git status, in short form, for each project in the current directory.
 
 - **[gitTrimStash.sh](git/docs/gitTrimStash.sh.md)**  
 Perform a trim (drop) of the oldes stash entries down to a set number of items.
@@ -91,6 +103,11 @@ Autocomplete Function definitions for the UniBasic database language.
 - **UniBasic_Highlight.xml**  
 Syntax highlighting for the UniBasic database language.
 
+### [ProjectFolders](projectFolders/docs/newProject.sh.md)
+Bash script to create new project notes folders from a template.
+
+### [TimeLog](timelog/docs/timelog.sh.md)
+Bash script to parse through and output time information for tasks in [TimeLog](notepad++/TimeLog.xml) files.
 
 ### Windows
 - **ClearNetUse.bat**  

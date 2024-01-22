@@ -3,7 +3,11 @@ As is common you can post scripts in your home bin folder so that they are avail
 
 **Dependencies**  
   _Include the following in a lib folder in your bash home directory_  
-  - [logging.sh](../linux/lib/logging.sh)
+  - [logging.sh](../linux/lib/docs/arguments.sh.md)
+  - [arguments.sh](../linux/lib/docs/arguments.sh.md)
+  - [spinner.sh](../linux/lib/docs/spinner.sh.md)
+
+  For convenience [Install](../docs/install.sh.md) script is provided at the root of this repo.
 
 <br><br>
 
