@@ -16,14 +16,15 @@
 # - @param - Describes the parameters of a method.
 # - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
 # - @output - Describes the otuput of a method, normally written to standard output so it can be captured
+# - @ignore - ommit a function from the documentation output
 #
 # Limitation Notes:
 # - keyword descriptions are limited to single lines, multiple instances can be used to append description.
 #
 # TODO:<br>
-# - @author - Specifies the author of the class, method, or field.
-# - @version - Specifies the version of the class, method, or field.
-# - @see - Specifies a link to another class, method, or field.
+# - @author - Specifies the author of the script
+# - @version - Specifies the version of the script
+# - @see - Specifies a link to another method or field.
 #
 # Format Sample:
 # <pre>
@@ -82,7 +83,7 @@ PUR='\033[0;35m'
 CYN='\033[1;36m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh ~/lib/arrays.sh )
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -98,13 +99,19 @@ done
 rgxComment="^[#][^!/]([ ]*(.*))$"
 rgxEmptyComment="^[#][ ]*$"
 rgxHeader="^[-]{5}"
-rgxKeyword="^[@]([a-zA-Z0-9_]+)[ ]([a-zA-Z0-9_$]+)?[ -]+(.+)"
+rgxKeyword="^[@]([a-zA-Z0-9_]+)([ ]([a-zA-Z0-9_$]+)?[ -]+(.+))?"
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
 
 # output path to save document file, default to current directory
 OUTPUT_PATH="./docs/"
 # relative path to use with the script link
 RELATIVE_PATH="../"
+
+#supported keywords
+PARAMETER_KEYWORD="param"
+RETURN_KEYWORD="return"
+OUTPUT_KEYWORD="output"
+IGNORE_KEYWORD="ignore"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -287,7 +294,7 @@ function writeFunctionParameters {
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      local keywordName="${BASH_REMATCH[2]}"
+      local keywordName="${BASH_REMATCH[3]}"
       log "Keyword Name:$keywordName"
 
       log "IsFirstParam:$isFirstParam"
@@ -314,8 +321,8 @@ function writeParameterDescription {
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      local keywordName="${BASH_REMATCH[2]}"
-      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[3]}" )
+      local keywordName="${BASH_REMATCH[3]}"
+      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[4]}" )
       log "Keyword Name:$keywordName"
       log "Keyword Desc:$keywordDesc"
       echo -n "${keywordName} - ${keywordDesc}<br>" >> $outputFile
@@ -389,7 +396,6 @@ function parseBashScript {
   local -A keywordMap=()
   local isFirstFunction=true
 
-
   # Read the file line by line
   while IFS= read -r line; do
     spinChar
@@ -424,28 +430,28 @@ function parseBashScript {
         echo "" >> $outputFile
       elif isKeyword "$commentText"; then
         local keywordType="${BASH_REMATCH[1]}"
-        log "  Keyword Type:$keywordType"
-        if [ "$keywordType" = "param" ]; then
 
+        log "  Keyword Type:$keywordType"
+        if [ "$keywordType" = $PARAMETER_KEYWORD ]; then
           # capture the parameter name to use as map key, replace any '$' to '_' to avoid variable expansion issue
-          local paramName="${BASH_REMATCH[2]//$/_}"
+          local paramName="${BASH_REMATCH[3]//$/_}"
 
           # check if parameter name already exists in map, if so append text
-          if [[ ! -v paramMap[$paramName] ]]; then
+          if ! arrayHasKey paramMap $paramName; then
             log "  Adding parameter '${paramName}' to list..."
             paramMap[$paramName]="$commentText"
           else
             log "    Append additional comment to '[$paramName]'..."
-            paramMap[$paramName]="${paramMap[$paramName]} ${BASH_REMATCH[3]}"
+            paramMap[$paramName]="${paramMap[$paramName]} ${BASH_REMATCH[4]}"
           fi
         else
           log " Capturing $keywordType to list..."
-          if [[ ! -v keywordMap[$keywordType] ]]; then
+          if ! arrayHasKey keywordMap $keywordType; then
             log "  Adding keyword '[$keywordType]' to map..."
-            keywordMap[$keywordType]="${BASH_REMATCH[3]}"
+            keywordMap[$keywordType]="${BASH_REMATCH[4]}"
           else
             log "    Append text to keyword '[$keywordType]'..."
-            keywordMap[$keywordType]="${keywordMap[$keywordType]} ${BASH_REMATCH[3]}"
+            keywordMap[$keywordType]="${keywordMap[$keywordType]} ${BASH_REMATCH[4]}"
           fi
         fi
       else
@@ -456,44 +462,51 @@ function parseBashScript {
 
     elif isFunction "$line"; then
 
-      # add function header when first function is encountered
-      if [ "$isFirstFunction" = true ]; then 
-        echo "" >> $outputFile
-        echo "## Functions:" >> $outputFile
-        echo "| Function | Description |" >> $outputFile
-        echo "|----------|-------------|" >> $outputFile
-        isFirstFunction=false
-      fi
-
       # get the function name from first group capture
       local functionName="${BASH_REMATCH[2]}"
 
-      # write function with open parenthesis
-      spinDel
-      writeFunctionName $functionName
+      # check if description contained 'IGNORE' keyword and skip this function
+      log "  Checking for '$IGNORE_KEYWORD' keyword"
+      if arrayHasKey keywordMap $IGNORE_KEYWORD; then
+        spinDel
+        logAll "${BLU}Function ${RED}(ignore)${NC}:${functionName}"
+      else 
+        # add function header when first function is encountered
+        if [ "$isFirstFunction" = true ]; then 
+          echo "" >> $outputFile
+          echo "## Functions:" >> $outputFile
+          echo "| Function | Description |" >> $outputFile
+          echo "|----------|-------------|" >> $outputFile
+          isFirstFunction=false
+        fi
 
-      # write out the parameters if any
-      log "Writing function parameters..."
-      writeFunctionParameters
+        # write function with open parenthesis
+        spinDel
+        writeFunctionName $functionName
 
-      # close the function
-      writeFunctionClose
+        # write out the parameters if any
+        log "Writing function parameters..."
+        writeFunctionParameters
 
-      # write out the accumulated comments
-      log "Writing comments flat..."
-      writeCommentsFlat
+        # close the function
+        writeFunctionClose
 
-      log "Writing parameter descriptions..."
-      writeParameterDescription
+        # write out the accumulated comments
+        log "Writing comments flat..."
+        writeCommentsFlat
 
-      log "Writing return description..."
-      writeReturnDescription
+        log "Writing parameter descriptions..."
+        writeParameterDescription
 
-      log "Writing output description..."
-      writeOutputDescription
+        log "Writing return description..."
+        writeReturnDescription
 
-      echo " |" >> $outputFile
-      
+        log "Writing output description..."
+        writeOutputDescription
+
+        echo " |" >> $outputFile
+      fi
+
       # clear arrays for next function
       log "Clearing arrays..."
       commentArr=()
