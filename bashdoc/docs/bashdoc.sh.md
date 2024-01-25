@@ -6,7 +6,6 @@ be saved in a 'docs' sub-directory unless the optional output directory option i
 specified.  The output file name will be the name of the script with '.md' extension.
 A relative path option (-r) can be used to fix the link to the script in the header.<br>
 
-@version 2023.10.20
 
 Supported Function Formats:
 - name() { }
@@ -17,14 +16,15 @@ Supported Keywords:
 - @param - Describes the parameters of a method.
 - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
 - @output - Describes the otuput of a method, normally written to standard output so it can be captured
+- @ignore - ommit a function from the documentation output
 
 Limitation Notes:
 - keyword descriptions are limited to single lines, multiple instances can be used to append description.
 
 TODO:<br>
-- @author - Specifies the author of the class, method, or field.
-- @version - Specifies the version of the class, method, or field.
-- @see - Specifies a link to another class, method, or field.
+- @author - Specifies the author of the script
+- @version - Specifies the version of the script
+- @see - Specifies a link to another method or field.
 
 Format Sample:
 <pre>
