@@ -17,6 +17,7 @@ Supported Keywords:
 - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
 - @output - Describes the otuput of a method, normally written to standard output so it can be captured
 - @ignore - ommit a function from the documentation output
+- @break - stop the parsing at when keyword is encountered
 
 Limitation Notes:
 - keyword descriptions are limited to single lines, multiple instances can be used to append description.
