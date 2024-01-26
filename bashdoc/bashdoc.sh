@@ -17,9 +17,11 @@
 # - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
 # - @output - Describes the otuput of a method, normally written to standard output so it can be captured
 # - @ignore - ommit a function from the documentation output
+# - @break - stop the parsing at when keyword is encountered
 #
 # Limitation Notes:
 # - keyword descriptions are limited to single lines, multiple instances can be used to append description.
+# - comments lines need to start with a space, easy ommit special lines like 'shebang' and also for readability
 #
 # TODO:<br>
 # - @author - Specifies the author of the script
@@ -96,7 +98,7 @@ done
 #IFS=$'\n'
 
 # Line regular expressions
-rgxComment="^[#][^!/]([ ]*(.*))$"
+rgxComment="^[#][^!/@]([ ]*(.*))$"
 rgxEmptyComment="^[#][ ]*$"
 rgxHeader="^[-]{5}"
 rgxKeyword="^[@]([a-zA-Z0-9_]+)([ ]([a-zA-Z0-9_$]+)?[ -]+(.+))?"
@@ -112,6 +114,7 @@ PARAMETER_KEYWORD="param"
 RETURN_KEYWORD="return"
 OUTPUT_KEYWORD="output"
 IGNORE_KEYWORD="ignore"
+BREAK_KEYWORD="break"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -334,7 +337,7 @@ function writeParameterDescription {
 function writeReturnDescription {
   spinDel
   local keyword='return'
-  if [[ ! -v keywordMap[$keyword] ]]; then
+  if ! arrayHasKey keywordMap $keyword; then
     return 0
   fi
 
@@ -352,7 +355,7 @@ function writeReturnDescription {
 function writeOutputDescription {
   spinDel
   local keyword='output'
-  if [[ ! -v keywordMap[$keyword] ]]; then
+  if ! arrayHasKey keywordMap $keyword; then
     return 0
   fi
 
@@ -430,6 +433,12 @@ function parseBashScript {
         echo "" >> $outputFile
       elif isKeyword "$commentText"; then
         local keywordType="${BASH_REMATCH[1]}"
+
+        if [ "$keywordType" = $BREAK_KEYWORD ]; then
+          spinDel
+          logAll "${RED}BREAK${NC}"
+          break
+        fi
 
         log "  Keyword Type:$keywordType"
         if [ "$keywordType" = $PARAMETER_KEYWORD ]; then
@@ -525,6 +534,7 @@ function parseBashScript {
 }
 
 #< - - - Main - - - >
+# @break
 
 # enable logging library escapes
 escapesOn
@@ -570,4 +580,6 @@ for inputFile in "${REM_ARGS[@]}"; do
   fi
 
   parseBashScript "$inputFile"
+
+  logAll "Completed: $inputFile"
 done
