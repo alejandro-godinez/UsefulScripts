@@ -11,7 +11,7 @@
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2023.12.19
+# @version: 2024.1.29
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
@@ -345,7 +345,10 @@ function findFile {
 
   # perform find command and capture to an array
   #fileList=$( find -type f -iname "${fileName}.sh" )
-  readarray -d '' fileList < <(find -type f -iname "${fileName}.sh" -print0)
+  #readarray -d '' fileList < <(find . -type f -iname "${fileName}.sh" -print0)
+  
+  # ignore (prune) 'test' directory
+  readarray -d '' fileList < <(find . -type d -name "test" -prune -type f -iname "${fileName}.sh" -print0)
 
   # check if file list was empty/undefined
   if [[ -z "${fileList[@]}" ]]; then
@@ -370,6 +373,7 @@ function pathHasLibFolder {
 }
 
 #< - - - Main - - - >
+# @break
 
 # enable logging library escapes
 escapesOn
