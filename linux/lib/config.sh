@@ -10,22 +10,22 @@
 # - Get a list of available property names
 # 
 # Import Sample Code:
-#   <pre>
-#     if [[ ! -f ~/lib/config.sh ]]; then
-#       echo "ERROR: Missing config.sh library"
-#       exit
-#     fi
-#     source ~/lib/config.sh
-#   </pre>
+# <pre>
+# if [[ ! -f ~/lib/config.sh ]]; then
+#   echo "ERROR: Missing config.sh library"
+#   exit
+# fi
+# source ~/lib/config.sh
+# </pre>
 #  
 # Usage:
-#  <pre>
-#    # check if property exists
-#    if hasProperty "file.config" "propName"; then
-#      # get the value
-#      value=$(getProperty "file.config" "propName")
-#    fi
-#  </pre>
+# <pre>
+# # check if property exists
+# if hasProperty "file.config" "propName"; then
+#   # get the value
+#   value=$(getProperty "file.config" "propName")
+# fi
+# </pre>
 #-------------------------------------------------------------------------------
 
 # Check if the config file has property name
@@ -84,6 +84,8 @@ function getProperty {
 }
 
 # -- TESTING --
+# @break
+
 # configFile="./test/test.config"
 # declare -a props=("name" "country" "lastupdate" "somekey" "link.url") 
 # for property in "${props[@]}"; do

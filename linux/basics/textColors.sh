@@ -124,6 +124,15 @@ for color in "${colorList[@]}"; do
 done
 echo ""
 
+echo "Orange Colors:"
+ORNG='\033[38;5;202m'
+colorList=("$ORNG" '\033[38;5;214m' '\033[38;5;166m') 
+for color in "${colorList[@]}"; do
+  echo -en "  ${color}Test Color${NC}"
+done
+echo ""
+
+
 #// start color and reset later
 # echo -en "${GRN}"
 # echo -n "Color Start - "

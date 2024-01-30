@@ -1,27 +1,29 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  Library of common GIT functionality.
+# Library of common GIT functionality.
 #  
-#  Import Sample Code:
-#    <pre>
-#      if [[ ! -f ~/lib/git_lib.sh ]]; then
-#        echo "ERROR: Missing git_lib.sh library"
-#        exit
-#      fi
-#      source ~/lib/git_lib.sh
-#    </pre>  
+# Import Sample Code:
+# <pre>
+# if [[ ! -f ~/lib/git_lib.sh ]]; then
+#   echo "ERROR: Missing git_lib.sh library"
+#   exit
+# fi
+# source ~/lib/git_lib.sh
+# </pre>  
 #  
-#  version: 2023.5.24  
-#  project:  https://github.com/alejandro-godinez/UsefulScripts  
+# version: 2023.5.24  
 #-------------------------------------------------------------------------------
 
-#//main branch name regex
+# main branch name regex
+# @var regex
 RGX_MAIN='^(master|main|trunk)$'
 
-#//array of main branch names
+# list of common main branch names
+# @var array
 declare -a MAIN_BRANCHES=("master" "main" "trunk")
 
-#//stash trim size
+# stash trim size
+# @var int
 TRIM_SIZE=3
 
 # Check if a directory is a git working directory
@@ -47,7 +49,7 @@ function gitBranchName {
   fi  
 }
 
-# Get the main branch name used by the specified repo
+# Get the main branch name used by the specified repo  
 # note: checks for one of (main, master, or trunk)
 # 
 # @param repoDir - path to local git project

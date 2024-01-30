@@ -184,6 +184,7 @@ function processGitDirectory {
 }
 
 #< - - - Main - - - >
+# @break
 
 #//enable logging library escapes
 escapesOn

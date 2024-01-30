@@ -76,6 +76,7 @@ function processArgs {
 }
 
 #< - - - Main - - - >
+# @break
 
 #//enable logging library escapes
 escapesOn

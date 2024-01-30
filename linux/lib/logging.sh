@@ -1,43 +1,47 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  Library of common debug/logging functionality.
-#    Debug Mode:  You can code your script with verbose console output that will 
-#                 be displayed only if debug is enabled.
-#    Escapes:  Enable to use escapes option for echo command (-e)
-#    Prefix:  Set a prefix that will be added to every log output.
-#             - TIP: you can use color escape with escape mode to resume color
-#    LogFile:  Simple echo redirect to log file
+# Library of common debug/logging functionality.
+# - Debug Mode:  You can code your script with verbose console output that will be displayed only if debug is enabled.
+# - Escapes:  Enable to use escapes option for echo command (-e)
+# - Prefix:  Set a prefix that will be added to every log output.
+#   - TIP: you can use color escape with escape mode to resume color
+# - LogFile:  Simple echo redirect to log file  
+# <br>
 # 
+# Import Sample Code:
+# <pre>
+# if [[ ! -f ~/lib/logging.sh ]]; then
+#   echo "ERROR: Missing logging.sh library"
+#   exit
+# fi
+# source ~/lib/logging.sh
+# </pre>
 # 
-#  Import Sample Code:
-#      <pre>
-#      if [[ ! -f ~/lib/logging.sh ]]; then
-#        echo "ERROR: Missing logging.sh library"
-#        exit
-#      fi
-#      source ~/lib/logging.sh
-#      </pre>
-# 
-#  version: 2023.5.11  
-#  project:  https://github.com/alejandro-godinez/UsefulScripts  
+# @version: 2023.5.11  
 #-------------------------------------------------------------------------------
 
-#toggle debug output
+# toggle debug output
+# @var bool
 DEBUG=false
 
-#log file path
+# log file path
+# @var path
 LOGFILE=logging.log
 
-#toggle if log should output to file
+# toggle if log should output to file
+# @var bool
 WRITELOG=false
 
-#toggle if log uses -e option (escapse)
+# toggle if log uses -e option (escapse)
+# @var bool
 ESCAPES=false
 
-#prefix that will be applied to every log output
+# prefix that will be applied to every log output
+# @var string
 LOGPREFIX=""
 
-#toggle if log uses -n option (no newline)
+# toggle if log uses -n option (no newline)
+# @var bool
 NO_NEW_LINE=false
 
 # enable debug/verbose mode

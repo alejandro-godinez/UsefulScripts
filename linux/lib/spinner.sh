@@ -5,25 +5,33 @@
 # 
 # 
 # Import Sample Code:
-#   <pre>
-#     if [[ ! -f ~/lib/spinner.sh ]]; then
-#       echo "ERROR: Missing spinner.sh library"
-#       exit
-#     fi
-#     source ~/lib/spinner.sh
-#   </pre>
+# <pre>
+# if [[ ! -f ~/lib/spinner.sh ]]; then
+#   echo "ERROR: Missing spinner.sh library"
+#   exit
+# fi
+# source ~/lib/spinner.sh
+# </pre>
 #  
 # Usage:
-#  <pre>
-#    # spin the caracter one step
-#    spinChar
-#    # delete the spinner character(s) (clear line)
-#    spinDel
-#  </pre>
+# <pre>
+# # spin the caracter one step
+# spinChar
+# # delete the spinner character(s) (clear line)
+# spinDel
+# </pre>
 #-------------------------------------------------------------------------------
 
-SPINNER=("|" "/" "-" "\\")
+# array of spinner characters
+# @var array
+declare -a SPINNER=("|" "/" "-" "\\")
+
+# count of spinner characters
+# @var int
 SPIN_COUNT=4
+
+# current spinner character index
+# @var int
 SPIN_IDX=-1
 
 # Set a different set of spinner characters
@@ -59,6 +67,8 @@ function spinDel {
 }
 
 # - - - TESTING - - - #
+# @break
+
 #newSpinner=('10' '9' '8' '7' '6' '5') 
 #newSpinner=('1/10' '2/10' '3/10' '4/10' '5/10' '6/10' '7/10' '8/10' '9/10' '10/10')
 #setSpinner "${newSpinner[@]}"

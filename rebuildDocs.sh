@@ -142,6 +142,7 @@ function processFile {
 }
 
 #< - - - Main - - - >
+# @break
 
 # enable logging library escapes
 escapesOn

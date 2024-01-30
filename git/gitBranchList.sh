@@ -106,6 +106,7 @@ function printRepoBranch {
 }
 
 #< - - - Main - - - >
+# @break
 
 #//enable logging library escapes
 escapesOn

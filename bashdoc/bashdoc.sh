@@ -1,4 +1,5 @@
 #!/bin/bash
+
 #-------------------------------------------------------------------------------------------
 # Parse documentation comments from bash script and generate markdown. The output file will
 # be saved in a 'docs' sub-directory unless the optional output directory option is
@@ -11,13 +12,18 @@
 # - name() { }
 # - function name { }
 # - function name() { }
+# 
+# Supported General Keywords: 
+# - @break - stop the parsing at when keyword is encountered
 #
-# Supported Keywords:
+# Supported Variable Keywords: 
+# - @var - describes a global variable exposed by the script
+#
+# Supported Function Keywords:
 # - @param - Describes the parameters of a method.
 # - @return - Describes the return code of a method. Normally 0 (success), 1 (error)
 # - @output - Describes the otuput of a method, normally written to standard output so it can be captured
 # - @ignore - ommit a function from the documentation output
-# - @break - stop the parsing at when keyword is encountered
 #
 # Limitation Notes:
 # - keyword descriptions are limited to single lines, multiple instances can be used to append description.
@@ -34,7 +40,10 @@
 # #-------------------------------------------
 # # This is the script description section
 # #-------------------------------------------
-# 
+# # Toggle debug mode
+# # @var bool
+# # DEBUG=true
+# #
 # # This function does work
 # # @param paramOne - the first parameter
 # # @param paramTwo - the second parameter
@@ -98,23 +107,25 @@ done
 #IFS=$'\n'
 
 # Line regular expressions
-rgxComment="^[#][^!/@]([ ]*(.*))$"
-rgxEmptyComment="^[#][ ]*$"
-rgxHeader="^[-]{5}"
-rgxKeyword="^[@]([a-zA-Z0-9_]+)([ ]([a-zA-Z0-9_$]+)?[ -]+(.+))?"
+rgxComment="^[#]([ ]*([^! ].*))[[:space:]]$"
+rgxEmptyComment="^[#][[:space:]]*$"
+rgxHeader="^[\-]{5}"
+rgxKeyword='^[@]([a-zA-Z0-9_]+)([ ]([a-zA-Z0-9_]+))?([ \-]+(.+))?$'
 rgxFunction="^(function[ ])?([a-zA-Z0-9_]+)(\(\))?[ ]?[{]"
+rgxVariable='^(declare[ ]-[aA][ ])?([a-zA-Z0-9_]+)(=.+)?[[:space:]]$'
 
 # output path to save document file, default to current directory
 OUTPUT_PATH="./docs/"
 # relative path to use with the script link
 RELATIVE_PATH="../"
 
-#supported keywords
+# method keyword
 PARAMETER_KEYWORD="param"
 RETURN_KEYWORD="return"
 OUTPUT_KEYWORD="output"
 IGNORE_KEYWORD="ignore"
 BREAK_KEYWORD="break"
+VAR_KEYWORD="var"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -186,9 +197,14 @@ function processArgs {
 # @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isComment {
+  log "  isComment()"
+  log "    param1:$1"
+
   if [[ $1 =~ $rgxComment ]]; then
+    log "  return 0"
     return 0
   fi
+  log "  return 1"
   return 1
 }
 
@@ -197,9 +213,14 @@ function isComment {
 # @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isEmptyComment {
+  log "  isEmptyComment()"
+  log "    param1:$1"
+
   if [[ $1 =~ $rgxEmptyComment ]]; then
+    log "  return 0"
     return 0
   fi
+  log "  return 1"
   return 1
 }
 
@@ -208,9 +229,14 @@ function isEmptyComment {
 # @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isHeader {
+  log "  isHeader()"
+  log "    param1:$1"
+
   if [[ $1 =~ $rgxHeader ]]; then
+  log "  return 0"
     return 0
   fi
+  log "  return 1"
   return 1
 }
 
@@ -219,9 +245,14 @@ function isHeader {
 # @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isKeyword {
+  log "  isKeyword()"
+  log "    param1:$1"
+
   if [[ $1 =~ $rgxKeyword ]]; then
+    log "  return 0"
     return 0
   fi
+  log "  return 1"
   return 1
 }
 
@@ -230,9 +261,27 @@ function isKeyword {
 # @param text - text to test with regex for match
 # @return - 0 (zero) when true, 1 otherwise
 function isFunction {
+  log "  isFunction()"
+  log "    param1:$1"
+
   if [[ $1 =~ $rgxFunction ]]; then
+    log "  return 0"
     return 0
   fi
+  log "  return 1"
+  return 1
+}
+
+# Determine if text is a varaible declaration
+function isVariable {
+  log "  isVariable()"
+  log "    param1:$1"
+
+  if [[ $1 =~ $rgxVariable ]]; then
+    log "  return 0"
+    return 0
+  fi
+  log "  return 1"
   return 1
 }
 
@@ -246,6 +295,9 @@ function newLinesToSpace() {
 
 # Write the accumulated comments to the output file
 function writeComments {
+  spinDel
+  log "  writeComments()"
+
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do
     echo "${commentArr[$index]}" >> $outputFile
@@ -264,6 +316,28 @@ function writeCommentsFlat {
     fi
     echo -n "${commentLine}" >> $outputFile
   done
+}
+
+# write out the variable name
+# @param variableName - the variable name to write
+function writeVariableName {
+  spinDel
+  local variableName="$1"
+
+  # ommit output with quiet option
+  if ! hasArgument "-q"; then
+    logAll "${BLU}Variable:${NC}${variableName}"
+  fi
+  echo -n "| ${variableName} |" >> $outputFile
+}
+
+# write out the variable type
+# @param variableType - the variable type to write
+function writeVariableType {
+  spinDel
+  local variableType="$1"
+
+  echo -n " $variableType | " >> $outputFile
 }
 
 # write out the function name
@@ -325,7 +399,7 @@ function writeParameterDescription {
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
       local keywordName="${BASH_REMATCH[3]}"
-      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[4]}" )
+      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[5]:-""}" )
       log "Keyword Name:$keywordName"
       log "Keyword Desc:$keywordDesc"
       echo -n "${keywordName} - ${keywordDesc}<br>" >> $outputFile
@@ -398,10 +472,13 @@ function parseBashScript {
   local -A paramMap=()
   local -A keywordMap=()
   local isFirstFunction=true
+  local isFirstVariable=true
 
-  # Read the file line by line
+  # Read the file line by line (-r prevent backslash escape intepretation)
   while IFS= read -r line; do
     spinChar
+
+    #line=$(echo "$line" | tr -d '\r' | tr -d '\n')
 
     # count number of lines
     lineNo=$((++lineNo))
@@ -409,9 +486,11 @@ function parseBashScript {
     # pad line number with spaces
     lineNoPadded=$(printf %4d $lineNo)
 
+    log "Start Line: [$lineNoPadded]"
+
     # skip empty comment lines to allow for break in descriptions
     if isEmptyComment "$line"; then
-      log "  BREAK"
+      log "[$lineNoPadded] - Empty Comment: $line"
       # add an actual blank line to comment line to array
       commentArr+=("")
       continue
@@ -422,7 +501,8 @@ function parseBashScript {
       log "[$lineNoPadded] - Comment: $line"
 
       # get the comment text
-      local commentText="${BASH_REMATCH[1]}"
+      local commentLine="${BASH_REMATCH[1]}"
+      local commentText="${BASH_REMATCH[2]}"
       log "  Comment Text:$commentText"
 
       # if this is a header indicator line output as description
@@ -433,17 +513,19 @@ function parseBashScript {
         echo "" >> $outputFile
       elif isKeyword "$commentText"; then
         local keywordType="${BASH_REMATCH[1]}"
+        log "  Keyword Type:$keywordType"
 
         if [ "$keywordType" = $BREAK_KEYWORD ]; then
           spinDel
-          logAll "${RED}BREAK${NC}"
+          logAll "[Parse Break]"
           break
         fi
 
-        log "  Keyword Type:$keywordType"
         if [ "$keywordType" = $PARAMETER_KEYWORD ]; then
+          log "  Is Parameter"
           # capture the parameter name to use as map key, replace any '$' to '_' to avoid variable expansion issue
           local paramName="${BASH_REMATCH[3]//$/_}"
+          log "  Param Name:$paramName"
 
           # check if parameter name already exists in map, if so append text
           if ! arrayHasKey paramMap $paramName; then
@@ -453,26 +535,73 @@ function parseBashScript {
             log "    Append additional comment to '[$paramName]'..."
             paramMap[$paramName]="${paramMap[$paramName]} ${BASH_REMATCH[4]}"
           fi
+        elif [ "$keywordType" = $VAR_KEYWORD ]; then
+          log "  Is Variable"
+                    
+          # capture the variable type, default to empty string when unset
+          local variableType=${BASH_REMATCH[3]:-""}
+          log "  Variable Type: ${RED}$variableType${NC}"
+
+          # add variable var indicator to keyword
+          if ! arrayHasKey keywordMap $VAR_KEYWORD; then
+            log "  Adding keyword '[$VAR_KEYWORD]' to map..."
+            keywordMap[$VAR_KEYWORD]="$variableType"
+          fi
         else
+          log "  Is Keyword"
+
           log " Capturing $keywordType to list..."
           if ! arrayHasKey keywordMap $keywordType; then
             log "  Adding keyword '[$keywordType]' to map..."
-            keywordMap[$keywordType]="${BASH_REMATCH[4]}"
+            keywordMap[$keywordType]="${BASH_REMATCH[5]}"
           else
             log "    Append text to keyword '[$keywordType]'..."
-            keywordMap[$keywordType]="${keywordMap[$keywordType]} ${BASH_REMATCH[4]}"
+            keywordMap[$keywordType]="${keywordMap[$keywordType]} ${BASH_REMATCH[5]}"
           fi
         fi
       else
         # add comment line to array
         log "  Adding comment to list..."
-        commentArr+=("$commentText")
+        commentArr+=("$commentLine")
+      fi
+
+    elif isVariable "$line"; then
+      log "[$lineNoPadded] - Variable: $line"
+
+      # check if the variable keyword was encountered in the comment keywords
+      if arrayHasKey keywordMap $VAR_KEYWORD; then
+
+        # get the variable name from the group captrue
+        local variableName="${BASH_REMATCH[2]}"
+        log "  Variable Name:$variableName"
+          
+        # add variable header when first variable is encountered
+        if [ "$isFirstVariable" = true ]; then
+          echo "" >> $outputFile
+          echo "## Variables:" >> $outputFile
+          echo "| Variables | Type | description |" >> $outputFile
+          echo "|-----------|------|-------------|" >> $outputFile
+          isFirstVariable=false
+        fi
+
+        # write variable with 
+        spinDel
+        writeVariableName $variableName
+
+        # write variable type
+        writeVariableType "${keywordMap[$VAR_KEYWORD]}"
+
+        # write comments flat as description
+        writeCommentsFlat
+
+        echo " |" >> $outputFile
       fi
 
     elif isFunction "$line"; then
-
+      log "[$lineNoPadded] - Function: $line"
       # get the function name from first group capture
       local functionName="${BASH_REMATCH[2]}"
+      log "  Function Name:$functionName"
 
       # check if description contained 'IGNORE' keyword and skip this function
       log "  Checking for '$IGNORE_KEYWORD' keyword"
@@ -517,13 +646,14 @@ function parseBashScript {
       fi
 
       # clear arrays for next function
-      log "Clearing arrays..."
+      log "  Clearing arrays..."
       commentArr=()
       paramMap=()
       keywordMap=()
     else
+      log "[$lineNoPadded] - NONE: $line"
       # clear arrays when we encounter break in expected continuous comment/function
-      log "Clearing arrays..."
+      log "  Clearing arrays..."
       commentArr=()
       paramMap=()
       keywordMap=()

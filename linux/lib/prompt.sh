@@ -1,23 +1,23 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  Library of common re-usable prompt methods.
+# Library of common re-usable prompt methods.
 # 
 # Import Sample Code:
-#   <pre>
-#     if [[ ! -f ~/lib/prompt.sh ]]; then
-#       echo "ERROR: Missing prompt.sh library"
-#       exit
-#     fi
-#     source ~/lib/prompt.sh
-#   </pre>
+# <pre>
+# if [[ ! -f ~/lib/prompt.sh ]]; then
+#   echo "ERROR: Missing prompt.sh library"
+#   exit
+# fi
+# source ~/lib/prompt.sh
+# </pre>
 #  
 # Usage:
-#  <pre>
-#    # prompt for list of option
-#    if promptSelection "one" "two" "three" ; then
-#      selection=$REPLY
-#    fi
-#  </pre>
+# <pre>
+# # prompt for list of option
+# if promptSelection "one" "two" "three" ; then
+#   selection=$REPLY
+# fi
+# </pre>
 #-------------------------------------------------------------------------------
 
 # Prompt for any user input without any validation. 
@@ -107,6 +107,7 @@ function promptSelection {
 }
 
 # - - - TESTING - - - 
+# @break
 
 #//prompt for any type of input
 #promptForInput "What is your name?"
