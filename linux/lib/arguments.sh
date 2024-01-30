@@ -10,28 +10,28 @@
 # 
 # 
 # Import Sample Code:
-#   <pre>
-#     if [[ ! -f ~/lib/arguments.sh ]]; then
-#       echo "ERROR: Missing arguments.sh library"
-#       exit
-#     fi
-#     source ~/lib/arguments.sh
-#   </pre>
+# <pre>
+# if [[ ! -f ~/lib/arguments.sh ]]; then
+#   echo "ERROR: Missing arguments.sh library"
+#   exit
+# fi
+# source ~/lib/arguments.sh
+# </pre>
 #  
 # Usage:
-#  <pre>
-#    # define expected options
-#    addOption "-v"
-#    addOption "-file" true
+# <pre>
+# # define expected options
+# addOption "-v"
+# addOption "-file" true
 # 
-#    # run processing of argument
-#    parseArguments "$@"
+# # run processing of argument
+# parseArguments "$@"
 # 
-#    # check and get argument value
-#    if hasArgument "-file"; then
-#      file=$(getArgument "-file")
-#    fi
-#  </pre>
+# # check and get argument value
+# if hasArgument "-file"; then
+#   file=$(getArgument "-file")
+# fi
+# </pre>
 # 
 # Limitation Notes:
 # - option codes should start with dash (ie. -v, -test, -filePath)
@@ -45,11 +45,15 @@ if ((BASH_VERSINFO[0] < 4)); then
 fi
 
 # indexed array of arguments that were not defined
+# @var array
 declare -a REM_ARGS
 
 # associative array for option key and value
+# @var map
 declare -A ARGS
+
 # associative array for option key and boolean indicator if it needs a subsequence value
+# @var map
 declare -A NEEDSVAL
 
 # Check if the specified option key exists
@@ -231,6 +235,8 @@ function printRemArgs {
 }
 
 # - - - TESTING - - - 
+# @break
+
 #//add options
 # addOption "-v"
 # addOption "-h"

@@ -98,6 +98,7 @@ function printStatus {
 }
 
 #< - - - Main - - - >
+# @break
 
 #//enable logging library escapes
 escapesOn

@@ -26,7 +26,6 @@ function shouldNotBeDocumented {
 
 
 #< - - - Main - - - >
-#@break
 # @break
 
 runTest

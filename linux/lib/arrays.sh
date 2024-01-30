@@ -3,19 +3,20 @@
 # Library of common functions for manipulating arrays or maps (associative).
 # 
 # Import Sample Code:
-#   <pre>
-#     if [[ ! -f ~/lib/arrays.sh ]]; then
-#       echo "ERROR: Missing arrays.sh library"
-#       exit
-#     fi
-#     source ~/lib/arrays.sh
-#   </pre>
+# <pre>
+# if [[ ! -f ~/lib/arrays.sh ]]; then
+#   echo "ERROR: Missing arrays.sh library"
+#   exit
+# fi
+# source ~/lib/arrays.sh
+# </pre>
 #-------------------------------------------------------------------------------
 
-# Check if the array/map has an index or key position
+# Check if the array/map has an index or key position<br>
+# <br>
 # <u>Examples:</u><br>
-# arrayHasKey myArray 3
-# arrayHasKey myMap "thekey"
+# arrayHasKey myArray 3<br>
+# arrayHasKey myMap "thekey"<br>
 #
 # @param arr - the reference to the array or map (named reference)
 # @param arrKey - the index or key to check
@@ -58,7 +59,7 @@ function arrayDeleteIndex {
   unset myArr[-1]
 }
 
-# Delete (unset) a map entry by the key.
+# Delete (unset) a map entry by the key.<br>
 # <br>
 # <u>Examples:</u><br>
 # mapDeleteKey myMap 'thekey'
@@ -90,7 +91,7 @@ function arrayLastIndex {
 # Sorts the array in acending order<br>
 # <br>
 # <u>Examples:</u><br>
-# arraySortAsc arrayName )
+# arraySortAsc arrayName
 # 
 # @param arr - the array reference to the array
 function arraySortAsc {
@@ -116,11 +117,11 @@ function arraySortDesc {
 }
 
 # Print the contents of the array to standard output
-# Prints out entries in the format "key:value"
-# 
+# Prints out entries in the format "key:value"<br>
+# <br>
 # <u>Examples:</u><br>
 # arrayPrint arrayName
-#
+# 
 # @param arr - the reference to the array or map (named reference)
 function arrayPrint {
   local -n arr=$1
@@ -128,6 +129,8 @@ function arrayPrint {
 }
 
 # - - - TESTING - - - 
+# @break
+
 # declare -a myArr=("zero" "one" "two" "three" "four" "five" "six")
 # declare -A myMap=(["one"]="uno" ["two"]="dos" ["three"]="tres")
 

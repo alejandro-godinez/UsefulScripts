@@ -180,6 +180,7 @@ function gitPullMain {
 }
 
 #< - - - Main - - - >
+# @break
 
 #//enable logging library escapes
 escapesOn
