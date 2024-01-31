@@ -348,7 +348,7 @@ function findFile {
   #readarray -d '' fileList < <(find . -type f -iname "${fileName}.sh" -print0)
   
   # ignore (prune) 'test' directory
-  readarray -d '' fileList < <(find . -type d -name "test" -prune -type f -iname "${fileName}.sh" -print0)
+  readarray -d '' fileList < <(find . -type d -name "test" -prune -o -iname "${fileName}.sh" -print0)
 
   # check if file list was empty/undefined
   if [[ -z "${fileList[@]}" ]]; then
