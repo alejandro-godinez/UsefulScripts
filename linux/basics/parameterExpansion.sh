@@ -70,3 +70,17 @@ echo "${val}:${#val}"
 val="test testing tester"
 echo "${val#*test}"
 echo "${val##*test}"
+
+# upper case (note: not posix )
+echo "-- Uppercase --"
+val="uppercase"
+echo "${val}"
+echo "  ${val^}"          #first character
+echo "  ${val^^}"         #all characters
+echo "  ${val^^[aeiou]}"  #all characters matching pattern
+echo "-- Lowercase --"
+val="LOWERCASE"
+echo "${val}"
+echo "  ${val,}"          #first character
+echo "  ${val,,}"         #all characters
+echo "  ${val,,[AEIOU]}"  #all characters matching pattern
