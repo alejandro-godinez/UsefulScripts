@@ -37,6 +37,9 @@ done
 #//search depth
 MAX_DEPTH=1
 
+#//numeric regex
+RGX_NUM='^[0-9]+$'
+
 # Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitRevCount.sh [-h] [-v] [-d num]"
