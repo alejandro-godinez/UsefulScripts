@@ -89,6 +89,13 @@ currDir=$(pwd)
 log "Current Dir: ${currDir}"
 
 #//if the directory is not supplied default to current work directory
+argCount=0
+if [[ ! -v REM_ARGS ]]; then
+  #log "No Process Arguments Identified"
+  printHelp
+  exit 0
+fi
+
 message="${REM_ARGS[0]}"
 log "  Message:  ${message}"
 
