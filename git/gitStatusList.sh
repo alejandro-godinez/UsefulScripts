@@ -107,12 +107,11 @@ escapesOn
 processArgs "$@"
 
 #//identify if current directory is a git project directory
-currDir=$(pwd)
+#currDir=$(pwd)
+currDir="./"
 log "Current Dir: ${currDir}"
 if isGitDir "${currDir}"; then
   printStatus "${currDir}"
-  logAll "DONE"
-  exit 0
 fi
 
 logAll "Depth Search: $MAX_DEPTH"

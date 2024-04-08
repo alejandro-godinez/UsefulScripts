@@ -193,7 +193,8 @@ escapesOn
 processArgs "$@"
 
 #//identify if current directory is a git project directory
-currDir=$(pwd)
+#currDir=$(pwd)
+currDir="./"
 log "Current Dir: ${currDir}"
 
 log "Checking current directory..."
@@ -201,8 +202,6 @@ if isGitDir "${currDir}"; then
 
   log "Processing current directory..."
   processGitDirectory "${currDir}"
-
-  exit 0
 fi
 
 #//get list of all directories at the current location

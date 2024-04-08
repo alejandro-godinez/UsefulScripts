@@ -116,12 +116,13 @@ processArgs "$@"
 
 
 #//identify if current directory is a git project directory
-currDir=$(pwd)
+#currDir=$(pwd)
+currDir="./"
 log "Current Dir: ${currDir}"
 if isGitDir "${currDir}"; then
   printRepoBranch "${currDir}"
-  logAll "DONE"
-  exit 0
+  #logAll "DONE"
+  #exit 0
 fi
 
 #//get list of all directories at the current location

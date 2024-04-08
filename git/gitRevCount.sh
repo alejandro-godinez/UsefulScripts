@@ -127,7 +127,8 @@ logAll ""
 logAll "${U_CYN}Ahead\tBehind\tBranch${NC}"
 
 #//identify if current directory is a git project directory
-currDir=$(pwd)
+#//currDir=$(pwd)
+currDir="./"
 log "Current Dir: ${currDir}"
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
