@@ -1,7 +1,26 @@
 #!/bin/bash
 
 #-------------------------------------------------------------------------------------------
-#
+# This script will perform uppercase operation on any SQL keyword in the specified
+# input file. A new copy of the script with '_ucase' in the name will be generated in the
+# same directory.
+# 
+# @version 2024.4.26
+# 
+# Notes:
+# - small set of keywords is currently defined, still need to add more
+# 
+# Usage:
+# <pre>
+# upcaseSql.sh [options] [files]
+#   -h        This help info
+#   -v        Verbose/debug output
+# </pre>
+# 
+# Usage Examples:
+# <pre>
+# upcaseSql.sh myscript.sql
+# </pre>
 #-------------------------------------------------------------------------------------------
 
 set -u # error on unset variable
@@ -33,7 +52,7 @@ for lib in "${libs[@]}"; do
 done
 
 # line bash match regex (\b not supported)
-rgxKeywordsMatch='[^:alnum:](use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)[^:alnum:]'
+#rgxKeywordsMatch='[^:alnum:](use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)[^:alnum:]'
 
 # line replace regex (\b ok with sed)
 rgxKeywords='\b(use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)\b'
