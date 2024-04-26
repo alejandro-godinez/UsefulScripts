@@ -32,9 +32,11 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
-# line regular expressions
+# line bash match regex (\b not supported)
+rgxKeywordsMatch='[^:alnum:](use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)[^:alnum:]'
+
+# line replace regex (\b ok with sed)
 rgxKeywords='\b(use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)\b'
-#rgxKeywordsOnly='(use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)'
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -82,6 +84,28 @@ function processArgs {
   fi
 }
 
+# Check if a line contains an sql keyword
+# 
+# @param line - the line of text to test
+# @return - exit value of zero indicates yes
+function hasKeyword {
+  local line=$1
+
+  #log "Line:$line"
+  local matchResult=$(grep -iE "$rgxKeywords" <<< "$line")
+  #local cmdResult=$?
+
+  #log "Match Result: $matchResult"
+  #log "Cmd Result: $cmdResult"
+
+  # if [[ $? -eq 0 ]]; then
+  if [[ -n $matchResult ]]; then 
+    return 0
+  fi
+  
+  return 1
+}
+
 # Perform all the work to upercase keywords in speified file
 # 
 # @param file - the sql script file to convert
@@ -115,37 +139,25 @@ function processFile {
     log "LINE:$line"
     
     # perform regex on whole line
-    if [[ $line =~ $rgxKeywords ]]; then
-      #log "  ${RED}HAS KEYWORD${NC}"
-      #log "  ${BASH_REMATCH[1]}"
-      local ucaseLine=''
+    if hasKeyword "$line"; then
+      log "  ${RED}HAS KEYWORD${NC}"
 
-      #echo $line | sed -E 's/select/SELECT/I'
-
-      # perform uppercase ()
+      # perform keyword uppercase operation
       ucaseLine=$(echo $line | sed -E "s/$rgxKeywords/\U\1/gI")
-      
+      log "  ${GRN}UCASE:${NC}${ucaseLine}"
 
-      # for word in $line; do
-      #   if [[ $word =~ $rgxKeywordsOnly ]]; then
-      #     keyword=${BASH_REMATCH[1]}
-      #     log "  ${RED}KEYWORD:${NC}${keyword} -> ${keyword^^}"
-      #     echo -n ${word^^} >> $outputFile
-      #   else
-      #     echo -n $word >> $outputFile
-      #   fi
-      #   echo -n ' ' >> $outputFile
-      # done
+      # output uppercase line to file
+      echo -n "${ucaseLine}" >> $outputFile
     else
       # output line to output file as is
       echo -n "$line" >> $outputFile
     fi
+    
     echo "" >> $outputFile
   done < $inputFile
+
   spinDel
 }
-
-
 
 #< - - - Main - - - >
 # @break
