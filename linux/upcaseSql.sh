@@ -132,12 +132,30 @@ function hasKeyword {
   return 1
 }
 
+function processLine {
+  local line="$1"
+
+  # perform regex on whole line
+  if hasKeyword "$line"; then
+
+    # perform keyword uppercase operation
+    ucaseLine=$(echo $line | sed -E "s/$rgxKeywords/\U\1/gI")
+
+    # output uppercase line to file
+    #echo -n "${ucaseLine}" >> $outputFile
+    echo "${ucaseLine}"
+  else
+    # output line to output file as is
+    echo "$line"
+  fi
+}
+
 # Perform all the work to uppercase keywords in speified file
 # 
 # @param file - the sql script file to convert
 function processFile {
   local inputFiles="$1"
- 
+
   # get the seprate file parts name and extension
   local fileName=$(basename $inputFile)
   log "File Name: $fileName"
@@ -161,25 +179,11 @@ function processFile {
     if [ "$DEBUG" = true ]; then 
       spinDel
     fi
-
+    
+    # process an individual line
     log "LINE:$line"
-    
-    # perform regex on whole line
-    if hasKeyword "$line"; then
-      log "  ${RED}HAS KEYWORD${NC}"
-
-      # perform keyword uppercase operation
-      ucaseLine=$(echo $line | sed -E "s/$rgxKeywords/\U\1/gI")
-      log "  ${GRN}UCASE:${NC}${ucaseLine}"
-
-      # output uppercase line to file
-      echo -n "${ucaseLine}" >> $outputFile
-    else
-      # output line to output file as is
-      echo -n "$line" >> $outputFile
-    fi
-    
-    echo "" >> $outputFile
+    newLine=$(processLine "$line")
+    echo "${newLine}" >> $outputFile
   done < $inputFile
 
   spinDel
