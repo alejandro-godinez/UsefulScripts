@@ -51,11 +51,8 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
-# line bash match regex (\b not supported)
-#rgxKeywordsMatch='[^:alnum:](use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)[^:alnum:]'
-
 # line replace regex (\b ok with sed)
-rgxKeywords='\b(use|declare|set|select|from|where|join|on|as|and|or|in|case|when|then|end|not|asc|desc|order|by)\b'
+rgxKeywords='\b(and|as|asc|by|case|declare|desc|end|from|in|join|not|null|on|or|order|select|set|then|use|when|where)\b'
 
 # Print the usage information for this script to standard output.
 function printHelp {
