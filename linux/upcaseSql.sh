@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #-------------------------------------------------------------------------------------------
-# This script will perform uppercase operation on any SQL keyword in the specified
+# This script will perform uppercase operation on any SQL keyword/function in the specified
 # input file. A new copy of the script with '_ucase' in the name will be generated in the
 # same directory.
 # 
@@ -52,7 +52,17 @@ for lib in "${libs[@]}"; do
 done
 
 # line replace regex (\b ok with sed)
-rgxKeywords='\b(and|as|asc|by|case|declare|desc|end|from|in|join|not|null|on|or|order|select|set|then|use|when|where)\b'
+rgxKeywords="\b(add|all|alter|and|any|as|asc|ascii|backup|between|by|"
+rgxKeywords+="case|char|charindex|check|column|concat|constraint|create|"
+rgxKeywords+="database|datalength|declare|default|delete|desc|difference|distinct|drop|"
+rgxKeywords+="end|exec|exists|foreign|format|from|full|group|having|"
+rgxKeywords+="in|index|inner|insert|into|is|join|"
+rgxKeywords+="left|len|like|limit|lower|ltrim|nchar|not|null|"
+rgxKeywords+="on|or|order|outer|patindex|primary|procedure|qoutename|"
+rgxKeywords+="replace|replicate|reverse|right|right|rownum|rtrim|"
+rgxKeywords+="select|set|soundex|space|str|stuff|substring|"
+rgxKeywords+="then|translate|trim|unicode|upper|use|when|where)\b"
+
 
 # Print the usage information for this script to standard output.
 function printHelp {
