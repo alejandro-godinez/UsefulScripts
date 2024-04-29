@@ -71,6 +71,9 @@ Move all files in the working directory into a sub-folder of the year equal to t
 - **[unzipAll.sh](linux/docs/unzipAll.sh.md)**  
 Extract all '.tar.gz' file into the working directory.
 
+- **[upcaseSql.sh](linux/docs/upcaseSql.sh.md)**
+Perform upercase operation on SQL keyword.
+
 - **Libraries**  
     - **[logging.sh](linux/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
     - **[arguments.sh](linux/lib/docs/arguments.sh.md)** - Implementation of script argument processing

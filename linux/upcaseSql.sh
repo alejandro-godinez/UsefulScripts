@@ -59,7 +59,7 @@ rgxKeywords='\b(use|declare|set|select|from|where|join|on|as|and|or|in|case|when
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "This script will make all keywords in an SQL script upercase"
+  echo "This script will make all keywords in an SQL script uppercase"
   echo ""
   echo "Usage: "
   echo "  upcaseSql.sh [OPTION] <file>"
@@ -125,7 +125,7 @@ function hasKeyword {
   return 1
 }
 
-# Perform all the work to upercase keywords in speified file
+# Perform all the work to uppercase keywords in speified file
 # 
 # @param file - the sql script file to convert
 function processFile {
