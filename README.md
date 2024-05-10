@@ -13,7 +13,7 @@ A largley re-usable ANT build script for any standalone java project that will e
 Parse documentation comments from bash script and generate markdown
 
 ### [Git](git/readme.md)
-- **[gitBranchList.sh](git/docs/gitBranchList.sh.md)**  
+- **[gitCurrentBranch.sh](git/docs/gitCurrentBranch.sh.md)**  
 List the current branch name for git projects in the current directory
 
 - **[gitFetch.sh](git/docs/gitFetch.sh.md)**  

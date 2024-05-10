@@ -73,16 +73,29 @@ alias gitLogLocal='git log ORIGIN..HEAD'
 #alias gitLogLocal='git log origin/trunk..HEAD'
 alias gitLogLocalLines='git log ORIGIN..HEAD --pretty=oneline'
 #alias gitLogLocalLines='git log origin/trunk..HEAD --pretty=oneline'
+alias gitFR='gitFetch.sh; gitRevCount.sh'
+alias gitSwitchToMaster='for dir in $(find -mindepth 1 -maxdepth 1 -type d); do if [[ -d ${dir}/.git ]]; then echo "${dir} - GIT"; git -C $dir switch master; fi ; done'
+alias gitListBranchAll='git branch -a'
+alias gitListBranchRemote='git branch -r'
+alias gitListBranchVerbose='git branch -vv'
+alias gitBranchList="branch -v --sort=committerdate --format='%(refname:short)  -->  %(committerdate:short)'"
 
 #------------------------------------------------
 # SSH commands
 #------------------------------------------------
 #//start ssh agent if not already running
 alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); fi'
+#//start ssh agent and also add ssh key
+#alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); addSSHKey; fi'
 #//adds key from default home .ssh directory
 alias addSSHKey='ssh-add'
 #//add specific key file to agent
 alias addSSHKey='ssh-add ~/.ssh/id_ed25519'
 #//stop ssh-agent (add to .bash_logout)
 alias stopSSHAgent='ssh-agent -k'
+
+#--------------------------------
+# GRPCUI commands
+#--------------------------------
+#alias grpcPRA='grpcui.exe --open-browser localhost:<port>'
 

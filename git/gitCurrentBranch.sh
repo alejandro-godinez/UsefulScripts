@@ -42,7 +42,7 @@ RGX_NUM='^[0-9]+$'
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "Usage: gitBranchList.sh [-h] [-v] [-d num]"
+  echo "Usage: gitCurrentBranch.sh [-h] [-v] [-d num]"
   echo "  Prints the current branch of each git project found in the current directory"
   echo ""
   echo "  Options:"

@@ -11,12 +11,12 @@ As is common you can post scripts in your home bin folder so that they are avail
 
 <br><br>
 
-# [gitBranchList.sh](docs/gitBranchList.sh.md)
+# [gitCurrentBranch.sh](docs/gitCurrentBranch.sh.md)
 This script will list the current branch for each of the git project folders in the current directory.  When already inside a git project folder it will display that projects current branch.
 
 **Sample:**
 ```
-$ gitBranchList.sh
+$ gitCurrentBranch.sh
 Depth Search: 1
 ./UsefulScripts - trunk
 ./userDefinedLanguages - master
