@@ -78,7 +78,8 @@ alias gitSwitchToMaster='for dir in $(find -mindepth 1 -maxdepth 1 -type d); do 
 alias gitListBranchAll='git branch -a'
 alias gitListBranchRemote='git branch -r'
 alias gitListBranchVerbose='git branch -vv'
-alias gitBranchList="branch -v --sort=committerdate --format='%(refname:short)  -->  %(committerdate:short)'"
+#//list of repo branches sorted by commit date
+alias gitBranchList="git branch -v --sort=committerdate --format='%(refname:short)  -->  %(committerdate:short)'"
 
 #------------------------------------------------
 # SSH commands
