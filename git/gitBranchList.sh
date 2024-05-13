@@ -1,9 +1,10 @@
 #!/bin/bash
+ 
 #-------------------------------------------------------------------------------
-#  This script will show the current status, in short form of each of the 
-#  project in the current directory
-#  
-#  version: 2023.5.23
+# This script will print the list of branches available for the current git
+# project folder sorted by the last commit date.
+# 
+# version: 2024.5.13
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -16,9 +17,10 @@ if ((BASH_VERSINFO[0] < 4)); then
 fi
 
 #//echo print colors
-NC='\033[0m' # No Color
-RED='\033[1;31m'
-U_CYN='\033[4;36m'       # Cyan
+NC='\033[0m'       # No Color
+RED='\033[0;31m'
+GRN='\033[0;32m'
+YEL='\033[1;33m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
@@ -30,9 +32,6 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
-#//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-#IFS=$'\n'
-
 #//search depth
 MAX_DEPTH=1
 
@@ -41,13 +40,15 @@ RGX_NUM='^[0-9]+$'
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "Usage: gitStatusList.sh [-h] [-v] [-d num]"
-  echo "  Prints the current status in short form for each of the projects found in the current directory"
+  echo "Usage: gitBranchList.sh [-h] [-v]"
+  echo "  Prints the list of branches available in the current project directory sorted"
+  echo "  in descending commit date order (newest first)."
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
-  echo "    -d num    Search depth (default 1)"
+  echo "    -a        Ascending order (oldest first)"
+  # echo "    -d num    Search depth (default 1)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -57,7 +58,8 @@ function processArgs {
   # initialize expected options
   addOption "-v"      #verbose
   addOption "-h"      #help
-  addOption "-d" true #search depth number
+  addOption "-a"      #ascending order
+  # addOption "-d" true #search depth number
   
   # perform parsing of options
   parseArguments "$@"
@@ -77,24 +79,29 @@ function processArgs {
   fi
 
   # check for depth
-  if hasArgument "-d" ]; then
-    numValue=$(getArgument "-d")
-    log "  Depth Value: $numValue"
-    if [[ $numValue =~ $RGX_NUM ]]; then
-      MAX_DEPTH=$numValue
-      log "  Max Depth: $MAX_DEPTH"
-    fi
-  fi
+#   if hasArgument "-d" ]; then
+#     numValue=$(getArgument "-d")
+#     log "  Depth Value: $numValue"
+#     if [[ $numValue =~ $RGX_NUM ]]; then
+#       MAX_DEPTH=$numValue
+#       log "  Max Depth: $MAX_DEPTH"
+#     fi
+#   fi
 }
 
-# print the git status of the local repository
+# Perform all the processing for a single repository
 # 
 # @param repoDir - path to local git project
-function printStatus {
+function processGitDirectory {
   local repoDir=$1
+
+  #//check if ascending order argument was specified
+  if hasArgument "-a"; then
+    gitBranchList "${repoDir}" true
+  else
+    gitBranchList "${repoDir}"
+  fi
   
-  logAll "${U_CYN}${repoDir}${NC}"
-  git -C "${repoDir}" status -s
 }
 
 #< - - - Main - - - >
@@ -111,14 +118,10 @@ processArgs "$@"
 currDir="./"
 log "Current Dir: ${currDir}"
 if isGitDir "${currDir}"; then
-  printStatus "${currDir}"
-fi
 
-logAll "Depth Search: $MAX_DEPTH"
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
-do
-  if isGitDir "${aDir}"; then
-    printStatus "${aDir}"
-  fi
-done
-logAll "DONE"
+  log "Processing current directory..."
+  processGitDirectory "${currDir}"
+
+  #logAll "DONE"
+  #exit 0
+fi

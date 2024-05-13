@@ -10,9 +10,9 @@
    exit
  fi
  source ~/lib/git_lib.sh
- </pre>  
+ </pre>
 
- version: 2023.5.24  
+ version: 2023.5.24
 
 
 ## Variables:
@@ -33,6 +33,7 @@
 | gitStashList(repoDir) |  Perform the stash list command and ouputs to standard output.  You can capture output using command substitution "$( getStashList )"  <br><br><u><b>Args:</b></u><br>repoDir - path to local git project <br> |
 | gitStash(repoDir,&nbsp;message) |  Perform a stash of code  <br><br><u><b>Args:</b></u><br>repoDir - path to local git project <br>message - message for the stash entry <br> |
 | gitApply(repoDir) |  Perform a stash apply  <br><br><u><b>Args:</b></u><br>repoDir - path to local git project <br> |
-| gitStashShow(index,&nbsp;repoDir) |  Perform a git stash show.  You can capture output using substitution "$( getStashShow )"  <br><br><u><b>Args:</b></u><br>index - optional index number of stash entry to show <br>repoDir - path to local git project <br> |
-| trimStash(count,&nbsp;repoDir) |  Trim stash entries from the end of the list down to the stash count specified  <br><br><u><b>Args:</b></u><br>count - the number of stash entries that should remain after trim <br>repoDir - path to local git project <br> |
-| gitRevisionCounts(remote,&nbsp;repoDir) |  Get revision counts comparing current working branch against the local master  or if you specify the remote orign master.  <br><br><u><b>Args:</b></u><br>remote - optional, TRUE to indicate counts against remote, local otherwise <br>repoDir - path to local git project <br><br><u><b>Output:</b></u><br>two tab separated count numbers, indicating revision ahead and behind <br> |
+| gitStashShow(repoDir,&nbsp;index) |  Perform a git stash show.  You can capture output using substitution "$( getStashShow )"  <br><br><u><b>Args:</b></u><br>repoDir - path to local git project <br>index - optional index number of stash entry to show <br> |
+| trimStash(repoDir,&nbsp;count) |  Trim stash entries from the end of the list down to the stash count specified  <br><br><u><b>Args:</b></u><br>repoDir - path to local git project <br>count - the number of stash entries that should remain after trim <br> |
+| gitRevisionCounts(repoDir,&nbsp;remote) |  Get revision counts comparing current working branch against the local master  or if you specify the remote orign master.  <br><br><u><b>Args:</b></u><br>repoDir - path to local git project <br>remote - optional, TRUE to indicate counts against remote, local otherwise <br><br><u><b>Output:</b></u><br>two tab separated count numbers, indicating revision ahead and behind <br> |
+| gitBranchList(repoDir,&nbsp;ascending) |  Perform a git branch command to print branches sorted by last commit date in descending  order (newest first), or ascending (oldest first) if option is specified.   <br><br><u><b>Args:</b></u><br>repoDir - path to the local git project <br>ascending - optional, flag to indicate ascending order (oldest first) <br> |

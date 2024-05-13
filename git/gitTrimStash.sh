@@ -32,7 +32,7 @@ for lib in "${libs[@]}"; do
 done
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-IFS=$'\n'
+#IFS=$'\n'
 
 #//force trim without prompting
 FORCE=false

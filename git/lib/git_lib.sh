@@ -1,7 +1,7 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
 # Library of common GIT functionality.
-#  
+# 
 # Import Sample Code:
 # <pre>
 # if [[ ! -f ~/lib/git_lib.sh ]]; then
@@ -9,9 +9,9 @@
 #   exit
 # fi
 # source ~/lib/git_lib.sh
-# </pre>  
-#  
-# version: 2023.5.24  
+# </pre>
+# 
+# version: 2023.5.24
 #-------------------------------------------------------------------------------
 
 # main branch name regex
@@ -186,4 +186,26 @@ function gitRevisionCounts {
   else
     git -C "${repoDir}" rev-list --left-right --count HEAD..."${mainBranch}"
   fi
+}
+
+# Perform a git branch command to print branches sorted by last commit date in descending
+# order (newest first), or ascending (oldest first) if option is specified. 
+# 
+# @param repoDir - path to the local git project
+# @param ascending - optional, flag to indicate ascending order (oldest first)
+function gitBranchList {
+  local repoDir=$1
+  local ascending=false
+
+  #// check if the second order argument was specified
+  if (( $# > 1 )) && [ "$2" = true ]; then
+    ascending=$2
+  fi
+
+  if [ "${ascending}" = true ]; then
+    git -C "${1}" branch -v --sort=committerdate --format="%(committerdate:short) | %(refname:short)"
+  else
+    git -C "${1}" branch -v --sort=-committerdate --format="%(committerdate:short) | %(refname:short)"
+  fi
+
 }
