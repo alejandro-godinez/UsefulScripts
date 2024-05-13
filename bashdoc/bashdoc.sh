@@ -362,7 +362,8 @@ function writeFunctionClose {
 function writeFunctionParameters {
   spinDel
   local isFirstParam=true
-  for index in "${!paramMap[@]}"; do 
+  # for index in "${!paramMap[@]}"; do
+  for index in "${paramMapKeys[@]}"; do
     local paramLine="${paramMap[$index]}"
     # ommit output with quiet option
     if ! hasArgument "-q"; then
@@ -393,7 +394,8 @@ function writeParameterDescription {
     return 0
   fi
 
-  for index in "${!paramMap[@]}"; do 
+  # for index in "${!paramMap[@]}"; do
+  for index in "${paramMapKeys[@]}"; do
     local paramLine="${paramMap[$index]}"
 
     # perform keyword match to get capture groups
@@ -470,6 +472,7 @@ function parseBashScript {
   # declare an array to store comments before function
   local -a commentArr=()
   local -A paramMap=()
+  local -a paramMapKeys=()  #to keep param index order
   local -A keywordMap=()
   local isFirstFunction=true
   local isFirstVariable=true
@@ -531,6 +534,7 @@ function parseBashScript {
           if ! arrayHasKey paramMap $paramName; then
             log "  Adding parameter '${paramName}' to list..."
             paramMap[$paramName]="$commentText"
+            paramMapKeys+=( "$paramName" )
           else
             log "    Append additional comment to '[$paramName]'..."
             paramMap[$paramName]="${paramMap[$paramName]} ${BASH_REMATCH[4]}"
@@ -649,6 +653,7 @@ function parseBashScript {
       log "  Clearing arrays..."
       commentArr=()
       paramMap=()
+      paramMapKeys=()
       keywordMap=()
     else
       log "[$lineNoPadded] - NONE: $line"
@@ -656,6 +661,7 @@ function parseBashScript {
       log "  Clearing arrays..."
       commentArr=()
       paramMap=()
+      paramMapKeys=()
       keywordMap=()
     fi
 
