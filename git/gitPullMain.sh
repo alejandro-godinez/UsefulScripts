@@ -197,8 +197,6 @@ if isGitDir "${currDir}"; then
   #// pull main branch
   log "  Performing the pull..."
   gitPullMain "${currDir}"
-
-  exit 0
 else
   log "  Not A Repo"
 fi
