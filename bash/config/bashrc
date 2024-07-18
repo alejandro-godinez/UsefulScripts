@@ -48,6 +48,7 @@ alias gitpromptconfig='nano /c/Program\ Files/Git/etc/profile.d/git-prompt.sh'
 alias npp='notepad++.exe'
 #//launch VSCode with current directory as project
 alias vsCodeHere='code . &'
+alias explorerHere='explorer.exe . &'
 
 #------------------------------------------------
 # Aliases for modifications to common commands
