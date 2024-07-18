@@ -34,7 +34,7 @@
 # install.sh -d
 # - enable project data folder installation
 # install.sh -n spinner
-# - install the spinner.sh script from the linux library project
+# - install the spinner.sh script from the bash library project
 # </pre>
 #-------------------------------------------------------------------------------
 
@@ -58,7 +58,7 @@ U_CYN='\033[4;36m'
 
 
 # define list of libraries and import them
-declare -a libs=( ./linux/lib/logging.sh ./linux/lib/arguments.sh ./linux/lib/prompt.sh)
+declare -a libs=( ./bash/lib/logging.sh ./bash/lib/arguments.sh ./bash/lib/prompt.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -76,7 +76,7 @@ RGX_NUM='^[0-9]+$'
 RGX_LIB='/lib/'
 
 # array of directories that contain scripts to be installed
-declare -a PROJECT_DIRS=("linux" "git" "bashdoc" "timelog" "projectFolders")
+declare -a PROJECT_DIRS=("bash" "git" "bashdoc" "timelog" "projectFolders")
 
 # variable for selected project directory 
 projDir=""
@@ -106,7 +106,7 @@ function printHelp {
   echo "  install.sh -d"
   echo "  - enable project data folder installation"
   echo "  install.sh -n spinner"
-  echo "  - install the spinner.sh script from the linux library project"
+  echo "  - install the spinner.sh script from the bash library project"
 }
 
 
