@@ -36,7 +36,7 @@ nanoRcFile=~/.nanorc
 homeNanoDir=~/.nano
 
 # define list of libraries and import them (from the project)
-declare -a libs=( ../linux/lib/logging.sh ../linux/lib/arguments.sh)
+declare -a libs=( ../bash/lib/logging.sh ../bash/lib/arguments.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"

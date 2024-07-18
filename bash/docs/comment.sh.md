@@ -6,7 +6,7 @@ specified.
 
 
 Dependencies:  
-  ../UsefulScripts/linux/lib/logging.sh  
+  ../UsefulScripts/bash/lib/logging.sh  
 
 TODO:  
   - don't add comment to line that already has comment  

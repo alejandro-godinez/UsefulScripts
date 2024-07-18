@@ -9,7 +9,7 @@ such as ini or config files.
 
 
 Dependencies:  
-  ../UsefulScripts/linux/lib/logging.sh  
+  ../UsefulScripts/bash/lib/logging.sh  
 
 TODO:  
   - improve support for targetting values under sections  

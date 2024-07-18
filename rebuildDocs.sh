@@ -38,7 +38,7 @@ for lib in "${libs[@]}"; do
 done
 
 # array of directories that contain scripts to be installed
-declare -a PROJECT_DIRS=("linux" "git" "bashdoc" "timelog" "projectFolders")
+declare -a PROJECT_DIRS=("bash" "git" "bashdoc" "timelog" "projectFolders")
 #declare -a PROJECT_DIRS=("bashdoc")
 
 # Print the usage information for this script to standard output.

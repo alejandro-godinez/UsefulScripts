@@ -4,8 +4,8 @@ As is common you can post scripts in your home bin folder so that they are avail
 **Dependencies**  
   _Include the following in a lib folder in your bash home directory_  
   - [git_lib.sh](lib/docs/git_lib.sh.md)
-  - [logging.sh](../linux/lib/docs/logging.sh.md)
-  - [arguments.sh](../linux/lib/docs/arguments.sh.md)
+  - [logging.sh](../bash/lib/docs/logging.sh.md)
+  - [arguments.sh](../bash/lib/docs/arguments.sh.md)
 
   For convenience [Install](../docs/install.sh.md) script is provided at the root of this repo.
 

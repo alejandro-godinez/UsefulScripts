@@ -6,8 +6,8 @@ that meet the specified name filter.
 
 
 Dependencies:  
-  ../UsefulScripts/linux/lib/logging.sh  
-  ../UsefulScripts/linux/lib/arguments.sh
+  ../UsefulScripts/bash/lib/logging.sh  
+  ../UsefulScripts/bash/lib/arguments.sh
 
 version: 2023.7.25
 

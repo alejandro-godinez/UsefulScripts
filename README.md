@@ -40,46 +40,46 @@ Perform a trim (drop) of the oldes stash entries down to a set number of items.
 - **Libraries**  
     - **[git_lib.sh](git/lib/docs/git_lib.sh.md)** - Various GIT functions to obtain repo information or perform operations.
 
-### [Linux](linux/readme.md)
-- **[avgFileSize.sh](linux/docs/avgFileSize.sh.md)**  
+### [Bash](bash/readme.md)
+- **[avgFileSize.sh](bash/docs/avgFileSize.sh.md)**  
 Get an average file size of all the files that meet the specified name filter.
 
-- **[changeOptionValue.sh](linux/docs/changeOptionValue.sh.md)**  
+- **[changeOptionValue.sh](bash/docs/changeOptionValue.sh.md)**  
 Change the value of a standard "name=value" pair such as ini or config files.
 
-- **[comment.sh](linux/docs/comment.sh.md)**  
+- **[comment.sh](bash/docs/comment.sh.md)**  
 Add a comment "#" to the start of the line number(s) specified.
 
-- **[findFileInTarGzip.sh](linux/docs/findFileInTarGzip.sh.md)**  
+- **[findFileInTarGzip.sh](bash/docs/findFileInTarGzip.sh.md)**  
 Search the contents of any '.tar.gz' file in the specified directory for entries with matching specified search text.
 
-- **[findFilesWithText.sh](linux/docs/findFilesWithText.sh.md)**  
+- **[findFilesWithText.sh](bash/docs/findFilesWithText.sh.md)**  
 Search the contents of file in sub-directories from the working path for content that matches the specified search text.
 
-- **[findFilesWithTextInTarGzip.sh](linux/docs/findFilesWithTextInTarGzip.sh.md)**  
+- **[findFilesWithTextInTarGzip.sh](bash/docs/findFilesWithTextInTarGzip.sh.md)**  
 search the contents of any '.tar.gz' file in the specified directory for entries with matching specified search text.
 
-- **[findLargestFiles.sh](linux/docs/findLargestFiles.sh.md)**    
+- **[findLargestFiles.sh](bash/docs/findLargestFiles.sh.md)**    
 Find the largest files for the specified directory recursively.
 
-- **[jarinfo.sh](linux/docs/jarinfo.sh.md)**  
+- **[jarinfo.sh](bash/docs/jarinfo.sh.md)**  
 Display the contents of the manifest file inside of the jar file specified.
 
-- **[sortFilesIntoYearFolders.sh](linux/docs/sortFilesIntoYearFolders.sh.md)**  
+- **[sortFilesIntoYearFolders.sh](bash/docs/sortFilesIntoYearFolders.sh.md)**  
 Move all files in the working directory into a sub-folder of the year equal to the last modified date.
 
-- **[unzipAll.sh](linux/docs/unzipAll.sh.md)**  
+- **[unzipAll.sh](bash/docs/unzipAll.sh.md)**  
 Extract all '.tar.gz' file into the working directory.
 
-- **[upcaseSql.sh](linux/docs/upcaseSql.sh.md)**
+- **[upcaseSql.sh](bash/docs/upcaseSql.sh.md)**
 Perform upercase operation on SQL keyword.
 
 - **Libraries**  
-    - **[logging.sh](linux/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
-    - **[arguments.sh](linux/lib/docs/arguments.sh.md)** - Implementation of script argument processing
-    - **[config.sh](linux/lib/docs/config.sh.md)** - Implementation of reader for name/value pair from config file
-    - **[spinner.sh](linux/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
-    - **[prompt.sh](linux/lib/docs/prompt.sh.md)** - Re-usable user input prompt methods
+    - **[logging.sh](bash/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
+    - **[arguments.sh](bash/lib/docs/arguments.sh.md)** - Implementation of script argument processing
+    - **[config.sh](bash/lib/docs/config.sh.md)** - Implementation of reader for name/value pair from config file
+    - **[spinner.sh](bash/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
+    - **[prompt.sh](bash/lib/docs/prompt.sh.md)** - Re-usable user input prompt methods
 
 
 ### Maven  

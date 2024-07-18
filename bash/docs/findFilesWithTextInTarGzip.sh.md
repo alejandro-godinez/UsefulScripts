@@ -7,7 +7,7 @@ specified search text.
 
 
 Dependencies:  
-  ../UsefulScripts/linux/lib/logging.sh  
+  ../UsefulScripts/bash/lib/logging.sh  
 
 version: 2023.3.16
 

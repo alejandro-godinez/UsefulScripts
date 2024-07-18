@@ -35,7 +35,7 @@ Examples:
 install.sh -d
 - enable project data folder installation
 install.sh -n spinner
-- install the spinner.sh script from the linux library project
+- install the spinner.sh script from the bash library project
 </pre>
 
 
