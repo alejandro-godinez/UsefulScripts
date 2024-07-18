@@ -79,8 +79,9 @@ alias gitSwitchToMaster='for dir in $(find -mindepth 1 -maxdepth 1 -type d); do 
 alias gitListBranchAll='git branch -a'
 alias gitListBranchRemote='git branch -r'
 alias gitListBranchVerbose='git branch -vv'
-#//list of repo branches sorted by commit date
-alias gitBranchList="git branch -v --sort=committerdate --format='%(refname:short)  -->  %(committerdate:short)'"
+alias gitGraph='git log -all --decorate --oneline --graph'
+alias gitConflicts='git diff --name-only --diff-filter=U'
+alias gitDiffPrev='git diff HEAD^ HEAD'
 
 #------------------------------------------------
 # SSH commands
@@ -92,7 +93,7 @@ alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}
 #//adds key from default home .ssh directory
 alias addSSHKey='ssh-add'
 #//add specific key file to agent
-alias addSSHKey='ssh-add ~/.ssh/id_ed25519'
+#alias addSSHKey='ssh-add ~/.ssh/id_ed25519'
 #//stop ssh-agent (add to .bash_logout)
 alias stopSSHAgent='ssh-agent -k'
 
@@ -100,5 +101,3 @@ alias stopSSHAgent='ssh-agent -k'
 # GRPCUI commands
 #--------------------------------
 #alias grpcPRA='grpcui.exe --open-browser localhost:<port>'
-
-
