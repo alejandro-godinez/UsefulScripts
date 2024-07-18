@@ -11,7 +11,7 @@
 
 
 #//add additional applications to export
-export PATH=$PATH:/path/to/binary:/path/to/another/binary
+#export PATH=$PATH:/path/to/binary:/path/to/another/binary
 
 #//command with leading space or duplicates will not be added to history
 HISTCONTROL=ignoreboth
@@ -30,7 +30,7 @@ alias ifsDefault='IFS=$IFS_DEFAULT'
 alias ifsNewline='IFS=$IFS_NEWLINE'
 
 #------------------------------------------------
-# Alias for confing of common files (i use nano)
+# Alias for config of common files (i use nano)
 #------------------------------------------------
 #//config bash
 alias bashconfig='nano ~/.bashrc'
@@ -85,9 +85,9 @@ alias gitBranchList="git branch -v --sort=committerdate --format='%(refname:shor
 # SSH commands
 #------------------------------------------------
 #//start ssh agent if not already running
-alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); fi'
+#alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); fi'
 #//start ssh agent and also add ssh key
-#alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); addSSHKey; fi'
+alias startSSHAgent='if [[ ! -z "${SSH_AGENT_PID}" ]] && ps -p "${SSH_AGENT_PID}" > /dev/null; then echo "ssh-agent is already running"; else eval $(ssh-agent -s); addSSHKey; fi'
 #//adds key from default home .ssh directory
 alias addSSHKey='ssh-add'
 #//add specific key file to agent
@@ -99,4 +99,5 @@ alias stopSSHAgent='ssh-agent -k'
 # GRPCUI commands
 #--------------------------------
 #alias grpcPRA='grpcui.exe --open-browser localhost:<port>'
+
 
