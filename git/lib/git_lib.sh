@@ -167,7 +167,7 @@ function trimStash {
 # or if you specify the remote orign master.
 # 
 # @param repoDir - path to local git project
-# @param remote - optional, TRUE to indicate counts against remote, local otherwise
+# @param remote - optional, 'remote' keyword to indicate counts against remote, local otherwise
 # @output - two tab separated count numbers, indicating revision ahead and behind
 function gitRevisionCounts {
   local repoDir=$1
@@ -192,7 +192,7 @@ function gitRevisionCounts {
 # order (newest first), or ascending (oldest first) if option is specified. 
 # 
 # @param repoDir - path to the local git project
-# @param ascending - optional, flag to indicate ascending order (oldest first)
+# @param ascending - optional, true/flase flag to indicate ascending order (oldest first)
 function gitBranchList {
   local repoDir=$1
   local ascending=false
@@ -203,9 +203,38 @@ function gitBranchList {
   fi
 
   if [ "${ascending}" = true ]; then
-    git -C "${1}" branch -v --sort=committerdate --format="%(committerdate:short) | %(refname:short)"
+    git -C "${repoDir}" branch -v --sort=committerdate --format="%(committerdate:short) | %(refname:short)"
   else
-    git -C "${1}" branch -v --sort=-committerdate --format="%(committerdate:short) | %(refname:short)"
+    git -C "${repoDir}" branch -v --sort=-committerdate --format="%(committerdate:short) | %(refname:short)"
   fi
 
+}
+
+# Perform a branch delete command (git branch -d).
+#
+# @param repoDir - path to the local git project
+# @param branchName - name of branch to delete
+# @param force - optional, true/flase flag to indicate force delete option (git branch -D)
+function gitDeleteBranch {
+  local repoDir=$1
+  local branchName=$2
+  local force=false
+
+  #// check if provided report directory exists
+  if [[ ! -d $repoDir ]]; then
+    echo "Error: repo directory ($repoDir) was not found"
+    return 1
+  fi
+
+  #// check if the optional third argument was specified
+  if (( $# > 2 )) && [ "$3" = true ]; then
+    force=$3
+  fi
+
+  #// perform the delete operation
+  if [ "${force}" = true ]; then
+    git -C "${repoDir}" branch -D "${branchName}"
+  else
+    git -C "${repoDir}" branch -d "${branchName}"
+  fi
 }
