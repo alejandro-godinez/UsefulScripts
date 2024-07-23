@@ -94,7 +94,7 @@ PUR='\033[0;35m'
 CYN='\033[1;36m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh ~/lib/arrays.sh )
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh ~/lib/strings.sh ~/lib/arrays.sh )
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -285,14 +285,6 @@ function isVariable {
   return 1
 }
 
-# Replace newline characters (cr and lf) to space
-# 
-# @param text - text to perform replacement
-# @output - the trimmed text on standard output
-function newLinesToSpace() {
-  echo "$1" | tr "\r\n" " "
-}
-
 # Write the accumulated comments to the output file
 function writeComments {
   spinDel
@@ -481,7 +473,8 @@ function parseBashScript {
   while IFS= read -r line; do
     spinChar
 
-    #line=$(echo "$line" | tr -d '\r' | tr -d '\n')
+    #// replace newline characters to space, avoid issues with parsing lines
+    line=$(newLinesToSpace "$line")
 
     # count number of lines
     lineNo=$((++lineNo))
