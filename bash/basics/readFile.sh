@@ -1,9 +1,10 @@
 #!/bin/bash
 
-#-----------------------------------------------------------------------------
+#---------------------------------------------------------------------------------
 #  Bash Notes: 
-#    <       - input stream redirect
-#-----------------------------------------------------------------------------
+#    <                - input stream redirect
+#    IFS= (or IFS='') - prevents leading/trailing whitespace from being trimmed.
+#---------------------------------------------------------------------------------
 
 #//bash shell options
 set -u #//error on unset variable
@@ -14,7 +15,8 @@ inputFile=readme.md
 
 lineNo=0
 lineNoPadded="000"
-#//loop through lines of input file
+
+#//loop through lines of input file (-r pevent backslash escapes)
 while IFS= read -r line; do
   #//count number of lines
   lineNo=$((++lineNo))
