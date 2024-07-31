@@ -160,9 +160,8 @@ function processGitDirectory {
       local promptText="Do you want to prun branch ${branchName}?"
       if promptYesNo "$promptText"; then
         # TODO: perform the delete the branch
-        logAll " - DELETE"
+        logAll " ${RED}DELETED${NC}"
       fi
-
     fi
   done
 
