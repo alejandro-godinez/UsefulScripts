@@ -37,7 +37,7 @@ GRN='\033[0;32m'
 YEL='\033[1;33m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/strings.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/strings.sh ~/lib/prompt.sh ~/lib/git_lib.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -46,6 +46,9 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
+# maximum days after which branch will be considered for pruning
+MAX_DAYS=90
+CAUTION_DAYS=$((MAX_DAYS / 2))
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -136,9 +139,9 @@ function processGitDirectory {
     daysSince=$(( (todaySec - commitSec ) / 86400 ))
     #daysSinceVal=$(padRight "${daysSince}" 5 " ")
     daysSinceVal=$(padLeft "${daysSince} " 5 " ")
-    if (( daysSince > 90 )); then
+    if (( daysSince >= MAX_DAYS )); then
       logAllN "${RED}${daysSinceVal}${NC}"
-    elif (( daysSince > 60 )); then
+    elif (( daysSince >= CAUTION_DAYS )); then
       logAllN "${YEL}${daysSinceVal}${NC}"
     else
       logAllN "${GRN}${daysSinceVal}${NC}"
@@ -150,7 +153,17 @@ function processGitDirectory {
       continue
     fi
 
-    #TODO: perform branch delete if older than days
+    # check if branch is older then the maximum set number of days
+    if (( daysSince >= MAX_DAYS )); then
+
+      # confirm with user if they want to delete
+      local promptText="Do you want to prun branch ${branchName}?"
+      if promptYesNo "$promptText"; then
+        # TODO: perform the delete the branch
+        logAll " - DELETE"
+      fi
+
+    fi
   done
 
   #// reset IFS back to default
