@@ -193,19 +193,32 @@ function gitRevisionCounts {
 # 
 # @param repoDir - path to the local git project
 # @param ascending - optional, true/flase flag to indicate ascending order (oldest first)
+# @param remote - optional, true/false falag to list remote branches
 function gitBranchList {
   local repoDir=$1
   local ascending=false
+  local remote=false
 
   #// check if the second order argument was specified
   if (( $# > 1 )) && [ "$2" = true ]; then
     ascending=$2
   fi
+  if (( $# > 2 )) && [ "$3" = true ]; then
+    remote=$3
+  fi
 
   if [ "${ascending}" = true ]; then
-    git -C "${repoDir}" branch -v --sort=committerdate --format="%(committerdate:short) | %(refname:short)"
+    if [ "${remote}" = true ]; then
+      git -C "${repoDir}" branch -r -v --sort=committerdate --format="%(committerdate:short) | %(refname:short)"
+    else
+      git -C "${repoDir}" branch -v --sort=committerdate --format="%(committerdate:short) | %(refname:short)"
+    fi
   else
-    git -C "${repoDir}" branch -v --sort=-committerdate --format="%(committerdate:short) | %(refname:short)"
+    if [ "${remote}" = true ]; then
+      git -C "${repoDir}" branch -r -v --sort=-committerdate --format="%(committerdate:short) | %(refname:short)"
+    else
+      git -C "${repoDir}" branch -v --sort=-committerdate --format="%(committerdate:short) | %(refname:short)"
+    fi
   fi
 
 }

@@ -4,7 +4,7 @@
 # This script will print the list of branches available for the current git
 # project folder sorted by the last commit date.
 # 
-# version: 2024.5.13
+# version: 2024.8.4
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -48,6 +48,7 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -a        Ascending order (oldest first)"
+  echo "    -r        List remote branches"
   # echo "    -d num    Search depth (default 1)"
 }
 
@@ -59,6 +60,7 @@ function processArgs {
   addOption "-v"      #verbose
   addOption "-h"      #help
   addOption "-a"      #ascending order
+  addOption "-r"      #remote banches
   # addOption "-d" true #search depth number
   
   # perform parsing of options
@@ -94,13 +96,18 @@ function processArgs {
 # @param repoDir - path to local git project
 function processGitDirectory {
   local repoDir=$1
+  local ascend=false
+  local remote=false
 
   #//check if ascending order argument was specified
   if hasArgument "-a"; then
-    gitBranchList "${repoDir}" true
-  else
-    gitBranchList "${repoDir}"
+    ascend=true
   fi
+  if hasArgument "-r"; then
+    remote=true
+  fi
+
+  gitBranchList "${repoDir}" $ascend $remote
   
 }
 
