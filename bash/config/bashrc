@@ -79,7 +79,7 @@ alias gitSwitchToMaster='for dir in $(find -mindepth 1 -maxdepth 1 -type d); do 
 alias gitListBranchAll='git branch -a'
 alias gitListBranchRemote='git branch -r'
 alias gitListBranchVerbose='git branch -vv'
-alias gitGraph='git log -all --decorate --oneline --graph'
+alias gitGraph='git log --all --decorate --oneline --graph'
 alias gitConflicts='git diff --name-only --diff-filter=U'
 alias gitDiffPrev='git diff HEAD^ HEAD'
 
