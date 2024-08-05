@@ -1,9 +1,26 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will get a count of revisions ahead and behind from master both
-#  against local and remote.
+# This script will get a count of revisions ahead and behind from master both
+# against local and remote.
 #  
-#  version: 2023.5.12
+# version: 2023.5.12
+# 
+# Usage:<br>
+# <pre>
+# gitRevCount.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -d num       Search depth (default 1)
+# </pre>
+# 
+# Examples:
+# <pre>
+# // list revision counts for repos in current directory
+# gitRevCount.sh
+# 
+# // list revision counts for all repos down to 3 sub directories
+# gitRevCount.sh -d 3
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

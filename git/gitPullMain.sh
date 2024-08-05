@@ -1,10 +1,29 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will perform a pull on each of the git project folders in the
-#  current directory if it is pointing to the main branch.  The user will
-#  be interrogated to confirm pull.
+# This script will perform a pull on each of the git project folders in the
+# current directory if it is pointing to the main branch.  The user will
+# be interrogated to confirm pull.
 #  
-#  version: 2024.1.4
+# version: 2024.1.4
+#
+# Usage:<br>
+# <pre>
+# gitPullMan.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -a           Prompt to pull for all ALL branches"
+#   -f           Don't prompt for pull (force)"
+#   -d num       Search depth (default 1)"
+# </pre>
+# 
+# Examples:
+# <pre>
+# // pull main branch with prompt in current directory
+# gitPullMain.sh
+# 
+# // no prompt pull all repos to 3 sub directories
+# gitPullMain.sh -d 3 -f
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

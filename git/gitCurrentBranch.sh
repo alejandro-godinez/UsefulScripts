@@ -1,9 +1,26 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will list the current branch for each of the git project folders
-#  in the current directory.
+# This script will list the current branch for each of the git project folders
+# in the current directory.
 # 
-#  version: 2023.5.4
+# version: 2023.5.4
+#
+# Usage:<br>
+# <pre>
+# gitCurrentBranch.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -d num       Search depth (default 1)
+# </pre>
+# 
+# Examples:
+# <pre>
+# // list current branch for repos in current directory
+# gitCurrentBranch.sh
+# 
+# // list branch for all repos down to 3 sub directories
+# gitCurrentBranch.sh -d 3
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

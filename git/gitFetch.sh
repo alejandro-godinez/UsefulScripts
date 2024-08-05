@@ -1,9 +1,26 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will perform a fetch on each of the git project folders 
-#  in the current directory.
+# This script will perform a fetch on each of the git project folders 
+# in the current directory.
 #  
-#  version: 2023.5.16
+# version: 2023.5.16
+#
+# Usage:<br>
+# <pre>
+# gitFetch.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -d num       Search depth (default 1)
+# </pre>
+# 
+# Examples:
+# <pre>
+# // fet all repos in current dir
+# gitFetch.sh
+# 
+# // fetch all repos to 3 sub directories
+# gitFetch.sh -d 3
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

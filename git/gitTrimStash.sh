@@ -1,9 +1,31 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will trim the stash of entries from the end/oldest down to
-#  a specified number of entries.
-#  
+# This script will trim the stash of entries from the end/oldest down to
+# a specified number of entries.
+# 
 #  version: 2023.10.11
+#
+# Usage:<br>
+# <pre>
+# gitTrimStash.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -f           Force trim without prompting"
+#   -d num       Search depth (default 1)"
+#   -t num       Trim Size (default 3), keeps most recent"
+# </pre>
+# 
+# Examples:
+# <pre>
+# // perform trim with prompt on repos in current directory
+# gitTrimStash.sh
+# 
+# // perform trim with prompt on all repos down to 3 sub directories
+# gitTrimStash.sh -d 3
+# 
+# // perform trim w/o prompt down to 1 stash entry on repos in current directory
+# gitTrimStash.sh -f -t 1
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

@@ -5,6 +5,20 @@
 # last commit.
 # 
 # version: 2024.7.22
+# 
+# Usage:<br>
+# <pre>
+# gitBranchPrune.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -l           List branch info only
+# </pre>
+# 
+# Examples:
+# <pre>
+# gitBranchPrune.sh
+# gitBranchPrune.sh -l
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

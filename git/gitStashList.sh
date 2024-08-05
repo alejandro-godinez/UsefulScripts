@@ -1,9 +1,27 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will list the stash entries of each of the git project folders 
-#  in the current directory.
+# This script will list the stash entries of each of the git project folders 
+# in the current directory.
 #  
-#  version: 2023.3.21
+# version: 2023.3.21
+#
+# Usage:<br>
+# <pre>
+# gitStashList.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -s           perfomr stash show for change detail
+#   -d num       Search depth (default 1)
+# </pre>
+# 
+# Examples:
+# <pre>
+# // list stash for repos in current directory
+# gitStashList.sh
+# 
+# // list stash w/show for all repos down to 3 sub directories
+# gitStashList.sh -d 3 -s
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable

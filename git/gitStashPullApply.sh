@@ -1,8 +1,21 @@
 #!/bin/bash
 #-------------------------------------------------------------------------------
-#  This script will perform a stash-pull-apply sequence of operations.
-#  
-#  version: 2023.3.21
+# This script will perform a stash-pull-apply sequence of operations.
+# 
+# version: 2023.3.21
+#
+# Usage:<br>
+# <pre>
+# gitCurrentBranch.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+# </pre>
+# 
+# Examples:
+# <pre>
+# // list current branch for repos in current directory
+# gitStashPullApply.sh "some work was done"
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
