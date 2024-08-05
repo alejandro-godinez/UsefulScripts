@@ -2,9 +2,25 @@
  
 #-------------------------------------------------------------------------------
 # This script will print the list of branches available for the current git
-# project folder sorted by the last commit date.
+# project folder sorted by the last commit date. Options are provided to list
+# the remote branches and in ascending order.
 # 
 # version: 2024.8.4
+#
+# Usage:<br>
+# <pre>
+# gitBranchList.sh [options]
+#   -h           This help info
+#   -v           Verbose/debug output
+#   -a           Ascending order (oldest first)
+#   -r           List remote branches
+# </pre>
+# 
+# Examples:
+# <pre>
+# gitBranchList.sh
+# gitBranchList.sh -r -a
+# </pre>
 #-------------------------------------------------------------------------------
 
 set -u #//error on unset variable
@@ -79,16 +95,6 @@ function processArgs {
   if hasArgument "-v"; then
     DEBUG=true
   fi
-
-  # check for depth
-#   if hasArgument "-d" ]; then
-#     numValue=$(getArgument "-d")
-#     log "  Depth Value: $numValue"
-#     if [[ $numValue =~ $RGX_NUM ]]; then
-#       MAX_DEPTH=$numValue
-#       log "  Max Depth: $MAX_DEPTH"
-#     fi
-#   fi
 }
 
 # Perform all the processing for a single repository
@@ -103,6 +109,8 @@ function processGitDirectory {
   if hasArgument "-a"; then
     ascend=true
   fi
+
+  #//check if remote opton was specified
   if hasArgument "-r"; then
     remote=true
   fi

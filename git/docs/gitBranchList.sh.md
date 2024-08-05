@@ -2,9 +2,25 @@
 # [gitBranchList.sh](../gitBranchList.sh)
 
  This script will print the list of branches available for the current git 
- project folder sorted by the last commit date. 
+ project folder sorted by the last commit date. Options are provided to list 
+ the remote branches and in ascending order. 
 
  version: 2024.8.4 
+
+ Usage:<br> 
+ <pre> 
+ gitBranchList.sh [options] 
+   -h           This help info 
+   -v           Verbose/debug output 
+   -a           Ascending order (oldest first) 
+   -r           List remote branches 
+ </pre> 
+
+ Examples: 
+ <pre> 
+ gitBranchList.sh 
+ gitBranchList.sh -r -a 
+ </pre> 
 
 
 ## Functions:
