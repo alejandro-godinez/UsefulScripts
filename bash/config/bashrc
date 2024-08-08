@@ -82,6 +82,7 @@ alias gitListBranchVerbose='git branch -vv'
 alias gitGraph='git log --all --decorate --oneline --graph'
 alias gitConflicts='git diff --name-only --diff-filter=U'
 alias gitDiffPrev='git diff HEAD^ HEAD'
+alias gitRoot='cd $(git -rev-parse --show-toplevel)'
 
 #------------------------------------------------
 # SSH commands
