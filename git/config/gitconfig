@@ -1,0 +1,9 @@
+[user]
+  name = fist last
+  emai = user@test.com
+[core]
+  editor = nano -w
+[remote "origin"]
+  puttykeyfile = /path/to/putty/key/file.ppk
+[alias]
+  root = rev-parse --show-toplevel  #navigate to project root directory
