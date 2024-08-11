@@ -68,7 +68,7 @@ alias gitConfigGlobal='nano ~/.gitconfig'
 alias gitConfigLocal='if [[ -f .git/config ]]; then nano .git/config; else echo "Not git config"; fi'
 #//list five most recent log entries
 alias gitLog='git log -5'
-alias gitLogLines='git log -5 --pretty=online'
+alias gitLogLines='git log -5 --pretty=oneline'
 #//list of local commits (HEAD) not pushed to origin
 alias gitLogLocal='git log ORIGIN..HEAD'
 #alias gitLogLocal='git log origin/trunk..HEAD'
