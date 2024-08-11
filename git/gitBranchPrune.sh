@@ -47,19 +47,19 @@ for lib in "${libs[@]}"; do
 done
 
 # maximum days after which branch will be considered for pruning
-MAX_DAYS=90
-CAUTION_DAYS=$((MAX_DAYS / 2))
+PRUNE_DAYS=90
+CAUTION_DAYS=45
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "Usage: gitBranchPrune.sh [-h] [-v]"
+  echo "Usage: gitBranchPrune.sh [options]"
   echo "  Prunes branches locally that are older than some date since last commit"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -l        list branch age only"
-  # echo "    -d num    Search depth (default 1)"
+  echo "    -p num    Days after which branch will be deleted (default 90)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -87,6 +87,25 @@ function processArgs {
   if hasArgument "-v"; then
     DEBUG=true
   fi
+
+  if hasArgument "-p"; then
+    local numValue=$(getArgument "-d")
+    log "  Prune Value: $numValue"
+    if [[ $numValue =~ $RGX_NUM ]]; then
+      setPruneDays $numValue
+      log "  Max Depth: $PRUNE_DAYS"
+      log "  Caution Days: $CAUTION_DAYS"
+    fi
+  fi
+}
+
+# Set the number of days after which a branch will be deleted. Also updates the
+# caution date to half of the value provided.
+# 
+# @param days - number of days
+function setPruneDays {
+  PRUNE_DAYS=$1
+  CAUTION_DAYS=$((PRUNE_DAYS / 2))
 }
 
 # Print the column headers for branch information
@@ -139,7 +158,7 @@ function processGitDirectory {
     daysSince=$(( (todaySec - commitSec ) / 86400 ))
     #daysSinceVal=$(padRight "${daysSince}" 5 " ")
     daysSinceVal=$(padLeft "${daysSince} " 5 " ")
-    if (( daysSince >= MAX_DAYS )); then
+    if (( daysSince >= PRUNE_DAYS )); then
       logAllN "${RED}${daysSinceVal}${NC}"
     elif (( daysSince >= CAUTION_DAYS )); then
       logAllN "${YEL}${daysSinceVal}${NC}"
@@ -154,7 +173,7 @@ function processGitDirectory {
     fi
 
     # check if branch is older then the maximum set number of days
-    if (( daysSince >= MAX_DAYS )); then
+    if (( daysSince >= PRUNE_DAYS )); then
 
       # confirm with user if they want to delete
       local promptText="Do you want to prun branch ${branchName}?"

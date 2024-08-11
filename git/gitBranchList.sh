@@ -56,7 +56,7 @@ RGX_NUM='^[0-9]+$'
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "Usage: gitBranchList.sh [-h] [-v]"
+  echo "Usage: gitBranchList.sh [options]"
   echo "  Prints the list of branches available in the current project directory sorted"
   echo "  in descending commit date order (newest first)."
   echo ""
