@@ -78,7 +78,7 @@ Perform upercase operation on SQL keyword.
     - **[arguments.sh](bash/lib/docs/arguments.sh.md)** - functions to handle command line arguments in scripts
     - **[arrays.sh](bash/lib/docs/arrays.sh.md)** - helper functions for arrays
     - **[config.sh](bash/lib/docs/config.sh.md)** - function for name/value pair from config file
-    - **[directoryStash.sh](bash/lib/docs/directoryStash.sh.md)** - functions for using the directory stack
+    - **[directoryStack.sh](bash/lib/docs/directoryStack.sh.md)** - functions for using the bash directory stack
     - **[logging.sh](bash/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.  
     - **[prompt.sh](bash/lib/docs/prompt.sh.md)** - Re-usable user input prompt methods
     - **[spinner.sh](bash/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
