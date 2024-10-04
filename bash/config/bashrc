@@ -24,6 +24,13 @@ IFS_NEWLINE=$'\n'
 IFS=$'\n'
 
 #------------------------------------------------
+# source any libraries and add alias to methods
+#------------------------------------------------
+source ~/lib/directoryStack.sh
+alias sw='stackIndex'
+alias ss='stackSwitch'
+
+#------------------------------------------------
 # Alias for changes to bash environment
 #------------------------------------------------
 alias ifsDefault='IFS=$IFS_DEFAULT'
