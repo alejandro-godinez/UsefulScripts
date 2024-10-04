@@ -75,12 +75,15 @@ Extract all '.tar.gz' file into the working directory.
 Perform upercase operation on SQL keyword.
 
 - **Libraries**  
-    - **[logging.sh](bash/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.
-    - **[arguments.sh](bash/lib/docs/arguments.sh.md)** - Implementation of script argument processing
-    - **[config.sh](bash/lib/docs/config.sh.md)** - Implementation of reader for name/value pair from config file
-    - **[spinner.sh](bash/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
+    - **[arguments.sh](bash/lib/docs/arguments.sh.md)** - functions to handle command line arguments in scripts
+    - **[arrays.sh](bash/lib/docs/arrays.sh.md)** - helper functions for arrays
+    - **[config.sh](bash/lib/docs/config.sh.md)** - function for name/value pair from config file
+    - **[directoryStash.sh](bash/lib/docs/directoryStash.sh.md)** - functions for using the directory stack
+    - **[logging.sh](bash/lib/docs/logging.sh.md)** - Implementation of verbose toggle for console output. Add as many console output code that will only output if debug is enabled.  
     - **[prompt.sh](bash/lib/docs/prompt.sh.md)** - Re-usable user input prompt methods
-
+    - **[spinner.sh](bash/lib/docs/spinner.sh.md)** - Implementation of rotating character to show work activity
+    - **[strings.sh](bash/lib/docs/strings.sh.md)** - Helper string functions
+    - **[system.sh](bash/lib/docs/system.sh.md)** - system information helper methods
 
 ### Maven  
 - **[installToMaven.sh](maven/docs/installToMaven.sh.md)**  
