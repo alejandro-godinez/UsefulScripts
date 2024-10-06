@@ -93,7 +93,7 @@ function processArgs {
     log "  Prune Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
       setPruneDays $numValue
-      log "  Max Depth: $PRUNE_DAYS"
+      log "  Prune Days:   $PRUNE_DAYS"
       log "  Caution Days: $CAUTION_DAYS"
     fi
   fi
