@@ -49,7 +49,7 @@ function stackIndex {
   local dirPath="$1"
 
   # grep for line number with matching path, cut on ":" delimiter and get first field
-  lineNo=$(dirs -v | grep -m 1 -in "${dirPath}" | cut -d: -f1)
+  lineNo=$(dirs -v -l | grep -m 1 -in "${dirPath}" | cut -d: -f1)
 
   if [ -n "${lineNo}" ]; then
     echo $((lineNo - 1))
@@ -65,7 +65,8 @@ function stackIndex {
 # push another entry onto the stack.
 # Notes: 
 #  - dir path argument can be a partial path, such as the folder name
-#  - will only return index of first match in stack
+#  - will switch to first match in stack
+#  - it seems pushd will trim trailing directory slash, will affect matching if not careful
 # 
 # @param dir - the directory path to serach in the stack
 # @return - 0 (zero) with swich, 1 otherwise
@@ -91,3 +92,14 @@ function stackSwitch {
 
   return 1
 }
+
+
+
+# -- TESTING --
+# @break
+
+# echo "- TESTING - "
+# pushd ~/temp
+# pushd "/c/Users/agodinez/OneDrive - Sompo"
+# dirs -l -v
+# stackIndex "~/OneDrive - Sompo"
