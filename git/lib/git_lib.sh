@@ -233,7 +233,7 @@ function gitBranchList {
 #
 # @param repoDir - path to the local git project
 # @param branchName - name of branch to delete
-# @param force - optional, true/flase flag to indicate force delete option (git branch -D)
+# @param force - optional, true/false flag to indicate force delete option (git branch -D)
 function gitDeleteBranch {
   local repoDir=$1
   local branchName=$2

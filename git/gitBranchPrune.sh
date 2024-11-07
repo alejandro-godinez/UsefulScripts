@@ -12,6 +12,8 @@
 #   -h           This help info
 #   -v           Verbose/debug output
 #   -l           List branch info only
+#   -m           Mock run, will display steps but not actually delete
+#   -p num       Days after which branch will be deleted (default 90)"
 # </pre>
 # 
 # Examples:
@@ -35,6 +37,7 @@ NC='\033[0m'       # No Color
 RED='\033[0;31m'
 GRN='\033[0;32m'
 YEL='\033[1;33m'
+PUR='\033[0;35m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/strings.sh ~/lib/prompt.sh ~/lib/git_lib.sh)
@@ -50,6 +53,9 @@ done
 PRUNE_DAYS=90
 CAUTION_DAYS=45
 
+# numeric regex
+RGX_NUM='^[0-9]+$'
+
 # Print the usage information for this script to standard output.
 function printHelp {
   echo "Usage: gitBranchPrune.sh [options]"
@@ -59,7 +65,8 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -l        list branch age only"
-  echo "    -p num    Days after which branch will be deleted (default 90)"
+  echo "    -m        Mock run, will display steps but not actually delete"
+  echo "    -p num    Days from last commit to consider for deletion (default 90)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -67,9 +74,11 @@ function printHelp {
 # @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
-  addOption "-v"      #verbose
-  addOption "-h"      #help
-  addOption "-l"      #list
+  addOption "-v"         #verbose
+  addOption "-h"         #help
+  addOption "-l"         #list
+  addOption "-m"         #mock
+  addOption "-p" true    #prune days
   
   # perform parsing of options
   parseArguments "$@"
@@ -89,7 +98,7 @@ function processArgs {
   fi
 
   if hasArgument "-p"; then
-    local numValue=$(getArgument "-d")
+    local numValue=$(getArgument "-p")
     log "  Prune Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
       setPruneDays $numValue
@@ -122,6 +131,7 @@ function printHeader(){
 function processGitDirectory {
   local repoDir=$1
   #logAll "Repo: $repoDir"
+  local forceDelete=false
 
   local today=$(date '+%Y-%m-%d')
   log "  Today Date: ${today}"
@@ -176,10 +186,15 @@ function processGitDirectory {
     if (( daysSince >= PRUNE_DAYS )); then
 
       # confirm with user if they want to delete
-      local promptText="Do you want to prun branch ${branchName}?"
+      local promptText="Do you want to prune branch ${branchName}?"
       if promptYesNo "$promptText"; then
+        
         # TODO: perform the delete the branch
-        logAll " ${RED}DELETED${NC}"
+        if ! hasArgument "-m"; then
+          gitDeleteBranch "${repoDir}" "${branchName}" $forceDelete
+        fi
+
+        logAll " ${RED}DELETED${NC} - ${branchName}"
       fi
     fi
   done
@@ -197,7 +212,10 @@ escapesOn
 #//process arguments
 processArgs "$@"
 
-#// 
+if  hasArgument "-m"; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
+
+logAll "Prune Days: ${PRUNE_DAYS}"
+
 currDir="./"
 log "Current Dir: ${currDir}"
 
