@@ -108,10 +108,16 @@ function gitStashList {
 # Perform a stash of code
 # 
 # @param repoDir - path to local git project
-# @param message - message for the stash entry
+# @param message - optional, message for the stash entry
+# @param untracked - optional, true/false flag to include untracked (-u)
 function gitStash {
-  if (( $# > 1 )); then
-    git -C "${1}" stash -m "${2}"
+  local repoDir=$1
+  if (( $# > 2 )); then
+    git -C "${repoDir}" stash -u -m "${2}"
+  elif (( $# > 1 )); then
+    git -C "${repoDir}" stash -m "${2}"
+  else
+    git -C "${repoDir1}" stash
   fi
 }
 
