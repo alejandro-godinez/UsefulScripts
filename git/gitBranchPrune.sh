@@ -212,7 +212,7 @@ function processGitDirectory {
     fi
       
     # perform the delete the branch, when not 
-    if ! hasArgument "-m"; then
+    if hasArgument "-m"; then
       logAll " ${PUR}DELETED${NC} - ${branchName}"
       continue
     fi
