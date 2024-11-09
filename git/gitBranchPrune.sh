@@ -12,6 +12,8 @@
 #   -h           This help info
 #   -v           Verbose/debug output
 #   -l           List branch info only
+#   -m           Mock run, will display steps but not actually delete
+#   -p num       Days after which branch will be deleted (default 90)"
 # </pre>
 # 
 # Examples:
@@ -35,9 +37,10 @@ NC='\033[0m'       # No Color
 RED='\033[0;31m'
 GRN='\033[0;32m'
 YEL='\033[1;33m'
+PUR='\033[0;35m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/strings.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/strings.sh ~/lib/prompt.sh ~/lib/git_lib.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -46,17 +49,28 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
+NO_PROMPT=FALSE
+
+# maximum days after which branch will be considered for pruning
+PRUNE_DAYS=90
+CAUTION_DAYS=45
+
+# numeric regex
+RGX_NUM='^[0-9]+$'
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "Usage: gitBranchPrune.sh [-h] [-v]"
+  echo "Usage: gitBranchPrune.sh [options]"
   echo "  Prunes branches locally that are older than some date since last commit"
   echo ""
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo "    -l        list branch age only"
-  # echo "    -d num    Search depth (default 1)"
+  echo "    -m        Mock run, will display steps but not actually delete"
+  echo "    -f        Don't prompt for pull (force)"
+  echo "    -p num    Days from last commit to consider for deletion (default 90)"
+  echo "    -D        Force delete branch option (same as git branch -D)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -64,9 +78,13 @@ function printHelp {
 # @param args - array of argument values provided when calling the script
 function processArgs {
   # initialize expected options
-  addOption "-v"      #verbose
-  addOption "-h"      #help
-  addOption "-l"      #list
+  addOption "-v"         #verbose
+  addOption "-h"         #help
+  addOption "-l"         #list
+  addOption "-m"         #mock
+  addOption "-f"         #no prompt
+  addOption "-p" true    #prune days
+  addOption "-D"         #force delete
   
   # perform parsing of options
   parseArguments "$@"
@@ -84,6 +102,30 @@ function processArgs {
   if hasArgument "-v"; then
     DEBUG=true
   fi
+
+  # check for force pull, no prompt
+  if hasArgument "-f"; then
+    NO_PROMPT=true
+  fi
+
+  if hasArgument "-p"; then
+    local numValue=$(getArgument "-p")
+    log "  Prune Value: $numValue"
+    if [[ $numValue =~ $RGX_NUM ]]; then
+      setPruneDays $numValue
+      log "  Prune Days:   $PRUNE_DAYS"
+      log "  Caution Days: $CAUTION_DAYS"
+    fi
+  fi
+}
+
+# Set the number of days after which a branch will be deleted. Also updates the
+# caution date to half of the value provided.
+# 
+# @param days - number of days
+function setPruneDays {
+  PRUNE_DAYS=$1
+  CAUTION_DAYS=$((PRUNE_DAYS / 2))
 }
 
 # Print the column headers for branch information
@@ -100,6 +142,11 @@ function printHeader(){
 function processGitDirectory {
   local repoDir=$1
   #logAll "Repo: $repoDir"
+  local forceDelete=false
+
+  if hasArgument "-D"; then
+    forceDelete=true
+  fi
 
   local today=$(date '+%Y-%m-%d')
   log "  Today Date: ${today}"
@@ -136,9 +183,9 @@ function processGitDirectory {
     daysSince=$(( (todaySec - commitSec ) / 86400 ))
     #daysSinceVal=$(padRight "${daysSince}" 5 " ")
     daysSinceVal=$(padLeft "${daysSince} " 5 " ")
-    if (( daysSince > 90 )); then
+    if (( daysSince >= PRUNE_DAYS )); then
       logAllN "${RED}${daysSinceVal}${NC}"
-    elif (( daysSince > 60 )); then
+    elif (( daysSince >= CAUTION_DAYS )); then
       logAllN "${YEL}${daysSinceVal}${NC}"
     else
       logAllN "${GRN}${daysSinceVal}${NC}"
@@ -150,7 +197,28 @@ function processGitDirectory {
       continue
     fi
 
-    #TODO: perform branch delete if older than days
+    # check if branch is not older then the prune number of days
+    if (( daysSince < PRUNE_DAYS )); then
+      continue
+    fi
+
+    # prompt user if they want to delete, when force 
+    if [ ! "$NO_PROMPT" = true ]; then
+      local promptText="Do you want to prune branch ${branchName}?"
+      if ! promptYesNo "$promptText"; then
+        logAll "  Skipped"
+        continue
+      fi
+    fi
+      
+    # perform the delete the branch, when not 
+    if hasArgument "-m"; then
+      logAll " ${PUR}DELETED${NC} - ${branchName}"
+      continue
+    fi
+
+    gitDeleteBranch "${repoDir}" "${branchName}" $forceDelete
+    logAll " ${RED}DELETED${NC} - ${branchName}"
   done
 
   #// reset IFS back to default
@@ -166,7 +234,10 @@ escapesOn
 #//process arguments
 processArgs "$@"
 
-#// 
+if  hasArgument "-m"; then logAll "${PUR}--- MOCK RUN ---${NC}"; fi
+
+logAll "Prune Days: ${PRUNE_DAYS}"
+
 currDir="./"
 log "Current Dir: ${currDir}"
 
