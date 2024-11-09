@@ -67,7 +67,7 @@ function printHelp {
   echo "    -l        list branch age only"
   echo "    -m        Mock run, will display steps but not actually delete"
   echo "    -p num    Days from last commit to consider for deletion (default 90)"
-  echo "    -f        Force delete branch option (-D)"
+  echo "    -D        Force delete branch option (same as git branch -D)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -80,7 +80,7 @@ function processArgs {
   addOption "-l"         #list
   addOption "-m"         #mock
   addOption "-p" true    #prune days
-  addOption "-f"         #force delete
+  addOption "-D"         #force delete
   
   # perform parsing of options
   parseArguments "$@"
@@ -135,7 +135,7 @@ function processGitDirectory {
   #logAll "Repo: $repoDir"
   local forceDelete=false
 
-  if hasArgument "-f"; then
+  if hasArgument "-D"; then
     forceDelete=true
   fi
 
