@@ -49,6 +49,8 @@ for lib in "${libs[@]}"; do
   source "$lib"
 done
 
+NO_PROMPT=FALSE
+
 # maximum days after which branch will be considered for pruning
 PRUNE_DAYS=90
 CAUTION_DAYS=45
@@ -66,6 +68,7 @@ function printHelp {
   echo "    -v        Verbose/debug output"
   echo "    -l        list branch age only"
   echo "    -m        Mock run, will display steps but not actually delete"
+  echo "    -f        Don't prompt for pull (force)"
   echo "    -p num    Days from last commit to consider for deletion (default 90)"
   echo "    -D        Force delete branch option (same as git branch -D)"
 }
@@ -79,6 +82,7 @@ function processArgs {
   addOption "-h"         #help
   addOption "-l"         #list
   addOption "-m"         #mock
+  addOption "-f"         #no prompt
   addOption "-p" true    #prune days
   addOption "-D"         #force delete
   
@@ -97,6 +101,11 @@ function processArgs {
   # check for vebose/debug
   if hasArgument "-v"; then
     DEBUG=true
+  fi
+
+  # check for force pull, no prompt
+  if hasArgument "-f"; then
+    NO_PROMPT=true
   fi
 
   if hasArgument "-p"; then
@@ -188,21 +197,28 @@ function processGitDirectory {
       continue
     fi
 
-    # check if branch is older then the maximum set number of days
-    if (( daysSince >= PRUNE_DAYS )); then
+    # check if branch is not older then the prune number of days
+    if (( daysSince < PRUNE_DAYS )); then
+      continue
+    fi
 
-      # confirm with user if they want to delete
+    # prompt user if they want to delete, when force 
+    if [ ! "$NO_PROMPT" = true ]; then
       local promptText="Do you want to prune branch ${branchName}?"
-      if promptYesNo "$promptText"; then
-        
-        # TODO: perform the delete the branch
-        if ! hasArgument "-m"; then
-          gitDeleteBranch "${repoDir}" "${branchName}" $forceDelete
-        fi
-
-        logAll " ${RED}DELETED${NC} - ${branchName}"
+      if ! promptYesNo "$promptText"; then
+        logAll "  Skipped"
+        continue
       fi
     fi
+      
+    # perform the delete the branch, when not 
+    if ! hasArgument "-m"; then
+      logAll " ${PUR}DELETED${NC} - ${branchName}"
+      continue
+    fi
+
+    gitDeleteBranch "${repoDir}" "${branchName}" $forceDelete
+    logAll " ${RED}DELETED${NC} - ${branchName}"
   done
 
   #// reset IFS back to default
