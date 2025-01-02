@@ -39,7 +39,7 @@ GRN='\033[0;32m'
 YEL='\033[1;33m'
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
+declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh ~/lib/strings.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -97,6 +97,14 @@ function processArgs {
   fi
 }
 
+# Print the column headers for branch information
+function printHeader(){
+  local dateHeader=$(padRight "Last Commit" 12 " ")
+  local nameHeader=" Branch name"
+  logAll "${dateHeader}|${nameHeader}"
+  logAll $(padRight "" 50 "-")
+}
+
 # Perform all the processing for a single repository
 # 
 # @param repoDir - path to local git project
@@ -115,8 +123,33 @@ function processGitDirectory {
     remote=true
   fi
 
-  gitBranchList "${repoDir}" $ascend $remote
-  
+  #// branch list command outputs LF delimited lines
+  IFS=$'\n'
+
+  #// print headers
+  printHeader
+
+  branchList=$(gitBranchList "${repoDir}" $ascend $remote)
+
+  for branchLine in $branchList; do
+    log "Branch Line: $branchLine"
+
+    #// parse branch line info into temp array
+    IFS=' | ' read -r -a tempArr <<< "$branchLine"
+    #// get commit date from temp array
+    commitDate="${tempArr[0]}"
+    
+     #// get branch name from temp array
+    branchName="${tempArr[1]}"
+    log "  Branch Name: $branchName"
+    log "  Commit Date: $commitDate"
+
+    commitDate=$(padRight "$commitDate" 12 " ")
+    logAll "$commitDate| $branchName"
+  done
+
+  #// reset IFS back to default
+  unset IFS
 }
 
 #< - - - Main - - - >
