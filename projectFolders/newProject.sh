@@ -3,9 +3,12 @@
 # Create a new project work folder for the specified ticket number and description.  
 # A copy of the template folder is copied to the current working directory or a specific
 # output path if the provided option (-o) is used. The template directory is expected to
-# be installed to a data home directory but can be changed to be elsewhere.
+# be installed to a data home directory but can be changed to be elsewhere. The default
+# template folder name used is 'Template' however additional template folders can be added
+# with a suffix such as 'Template_FT'. The template option (-t) can be used to specify which
+# template folder will be used.
 #
-# @version 2024.01.11
+# @version 2025.2.2
 #
 # Usage:<br>
 # <pre>
@@ -13,12 +16,15 @@
 #   -h           This help info
 #   -v           Verbose/debug output
 #   -o path      Output path
+#   -t suffix    Template suffix
 # </pre>
 # 
 # Examples:
 # <pre>
 # ./newProject.sh ABC-1245 "New script to create project folder"
 # ./newProject.sh -o "01-Assigned" "ABC-1245" "New script to create project folder"
+# ./newProject.sh -t "FT" "ABC-1245" 
+# - The "FT" suffix expects a folder 'Template_FT' to exists in the template path
 # </pre>
 #-------------------------------------------------------------------------------------------
 
@@ -70,10 +76,12 @@ function printHelp {
   echo "    -h           This help info"
   echo "    -v           Verbose/debug output"
   echo "    -o path      Output path"
+  echo "    -t suffix    Template folder suffix"
   echo ""
   echo "Examples:"
   echo "  ./newProject.sh ABC-1245 \"New script to create project folder\""
   echo "  ./newProject.sh -o \"01-Assigned\" \"ABC-1245\" \"New script to create project folder\""
+  echo "  ./newProject.sh -t \"FT\" \"ABC-1245\"" 
 }
 
 # Load configuration properties from config file
@@ -99,7 +107,6 @@ function loadConfig {
   else
     log ""
   fi
-  
 
   # load the link file extension property
   logN "Link EXT: "
@@ -120,6 +127,7 @@ function processArgs {
   addOption "-v"
   addOption "-h"
   addOption "-o" true
+  addOption "-t" true
   
   # perform parsing of options
   parseArguments "$@"
@@ -139,9 +147,16 @@ function processArgs {
   fi
 
   # check for output path option
-  if hasArgument "-o" ]; then
+  if hasArgument "-o" ; then
     OUTPUT_PATH=$(getArgument "-o")
     log "  Output Path: $OUTPUT_PATH"
+  fi
+
+  # check for template name
+  if hasArgument "-t"; then
+    local templateSuffix=$(getArgument "-t")
+    TEMPLATE_PATH="${TEMPLATE_PATH}_${templateSuffix}"
+    log "  Template Path: $TEMPLATE_PATH"
   fi
 }
 
