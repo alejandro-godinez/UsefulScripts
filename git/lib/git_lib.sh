@@ -108,14 +108,29 @@ function gitStashList {
 # Perform a stash of code
 # 
 # @param repoDir - path to local git project
-# @param message - optional, message for the stash entry
 # @param untracked - optional, true/false flag to include untracked (-u)
+# @param message - optional, message for the stash entry
 function gitStash {
   local repoDir=$1
-  if (( $# > 2 )); then
-    git -C "${repoDir}" stash -u -m "${2}"
-  elif (( $# > 1 )); then
-    git -C "${repoDir}" stash -m "${2}"
+  local hasMessage=false
+  local includeUntracked=false
+
+  # check if untracked option was included and was true
+  if (( $# > 1 )) && [ "${2^^}" = "TRUE" ]; then
+    includeUntracked=true
+  fi
+
+  # check if a message argument was provided
+  if (( $# > 1 )); then
+    hasMessage=true
+  fi
+
+  if [ "${includeUntracked}" = true ]; then
+    if [ "${hasMessage}" = true ]; then
+      git -C "${repoDir}" stash -u -m "${2}"
+    else
+      git -C "${repoDir}" stash -u
+    fi    
   else
     git -C "${repoDir1}" stash
   fi
