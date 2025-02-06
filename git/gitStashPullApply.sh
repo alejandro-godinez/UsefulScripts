@@ -9,6 +9,7 @@
 # gitCurrentBranch.sh [options]
 #   -h           This help info
 #   -v           Verbose/debug output
+#   -u           Include untracked files
 # </pre>
 # 
 # Examples:
@@ -60,6 +61,7 @@ function printHelp {
   echo "  Options:"
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
+  echo "    -u        Include untracked files"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -114,9 +116,13 @@ log "  Message:  ${message}"
 
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
+  local includeUntracked=false
+  if hasArgument "-u"; then
+    includeUntracked=true
+  fi
 
   logAll "  Performing Stash..."
-  gitStash "${currDir}" "${message}"
+  gitStash "${currDir}" "${includeUntracked}" "${message}" 
 
   logAll "  Performing pull..."
   gitPull "${currDir}"
