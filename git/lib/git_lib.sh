@@ -132,7 +132,7 @@ function gitStash {
       git -C "${repoDir}" stash -u
     fi    
   else
-    git -C "${repoDir1}" stash
+    git -C "${repoDir}" stash
   fi
 }
 
