@@ -9,7 +9,22 @@ As is common you can post scripts in your home bin folder so that they are avail
 
   For convenience [Install](../docs/install.sh.md) script is provided at the root of this repo.
 
-<br><br>
+### Tool Suggestion
+
+ [ShellCheck](https://www.shellcheck.net) - This is a useful code analysis tool to check bash script syntax and coding issues.
+ 
+ *Note: Have only recently started using this not all errors and warnings have been corrected.*
+
+Windows Install (for gitbash):
+```
+winget install --id koalaman.shellcheck
+```
+
+Usage Examples:
+```
+shellcheck.exe gitStashPullApply.sh
+shellcheck.exe -f checkstyle gitStashPullApply.sh > gitStashPullApply.sh.xml
+```
 
 # [avgFileSize.sh](avgFileSize.sh)
 This script will get an average file size of all the file that meet the specified name filter.

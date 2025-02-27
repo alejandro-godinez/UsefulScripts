@@ -30,8 +30,6 @@ fi
 
 #//echo print colors
 NC='\033[0m' # No Color
-GRN='\033[0;32m'
-YEL='\033[1;33m'
 RED='\033[1;31m'
 
 # define list of libraries and import them
@@ -46,9 +44,6 @@ done
 
 #//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
-
-#//numeric regex
-RGX_NUM='^[0-9]+$'
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -104,7 +99,6 @@ currDir=$(pwd)
 log "Current Dir: ${currDir}"
 
 #//if the directory is not supplied default to current work directory
-argCount=0
 if [[ ! -v REM_ARGS ]]; then
   #log "No Process Arguments Identified"
   printHelp
@@ -116,7 +110,7 @@ log "  Message:  ${message}"
 
 log "Checking current directory..."
 if isGitDir "${currDir}"; then
-  local includeUntracked=false
+  includeUntracked=false
   if hasArgument "-u"; then
     includeUntracked=true
   fi
