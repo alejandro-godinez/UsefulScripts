@@ -172,7 +172,7 @@ fi
 logAll "Checking if value was changed..."
 alreadySet=$(grep -cE "^(\s*)${optionName}=${optionValue}" "${file}")
 if (( alreadySet == 0 )); then
-  alreadyset="${RED}NO${NC}"
+  alreadySet="${RED}NO${NC}"
 else
   alreadySet="${GRN}YES${NC}"
 fi

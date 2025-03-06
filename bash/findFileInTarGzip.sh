@@ -87,7 +87,7 @@ function processArgs {
   fi
   
  # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -147,7 +147,7 @@ fi
 #//list all file using the filter and loop through them
 iter=0
 logAll "Depth Search: $MAX_DEPTH"
-for f in $( find ${dir} -mindepth 1 -maxdepth $MAX_DEPTH -name "${tgzFilter}" -type f )
+for f in $( find "${dir}" -mindepth 1 -maxdepth "$MAX_DEPTH" -name "${tgzFilter}" -type f )
 do 
   #//keep track of iteration count and print status update indicator
   iter=$(( iter+1 ))
@@ -156,7 +156,7 @@ do
   fi 
 
   #//perform grep serch on the tar listing output and capture the located lines
-  result=$( tar -tvf ${f} | grep ${search} )
+  result=$( tar -tvf "${f}" | grep "${search}" )
 
   #//check if grep found something (success)
   if [[ $? -eq 0 ]]; then
