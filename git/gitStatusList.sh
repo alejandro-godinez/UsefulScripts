@@ -3,7 +3,7 @@
 # This script will show the current status, in short form of each of the 
 # project in the current directory
 # 
-# version: 2023.5.23
+# version: 2025.8.13
 #
 # Usage:<br>
 # <pre>
@@ -35,7 +35,9 @@ fi
 #//echo print colors
 NC='\033[0m' # No Color
 RED='\033[1;31m'
-U_CYN='\033[4;36m'       # Cyan
+GRN='\033[0;32m'
+YEL='\033[1;33m'
+U_CYN='\033[4;36m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh)
@@ -110,7 +112,17 @@ function processArgs {
 function printStatus {
   local repoDir=$1
   
-  logAll "${U_CYN}${repoDir}${NC}"
+  #//print out the repo path and branch
+  logAllN "${U_CYN}${repoDir}${NC} - "
+  branch=$(gitBranchName ${repoDir})
+  log "  Branch: ${branch}"
+  if [[ $branch =~ $RGX_MAIN ]]; then
+    logAll "${GRN}${branch}${NC}"
+  else
+    logAll "${YEL}${branch}${NC}"
+  fi
+
+  #//call git status
   git -C "${repoDir}" status -s
 }
 
