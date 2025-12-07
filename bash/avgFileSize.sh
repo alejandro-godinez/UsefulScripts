@@ -30,7 +30,8 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+  # shellcheck disable=SC1090 # disable warning for dynamic source 
   source "$lib"
 done
 
@@ -53,7 +54,7 @@ function printHelp {
   echo "    -h        This help text info"
   echo "    -v        Verbose/debug output"
   echo ""
-  echo "Example:  avgFileSize.sh '*.tar.gz\'"
+  echo "Example:  avgFileSize.sh '*.tar.gz'"
   echo "  - gets an average file size for all '.tar.gz' files in the current directory"
   echo ""
 }
@@ -81,6 +82,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
   fi
 }
