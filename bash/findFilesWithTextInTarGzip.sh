@@ -26,7 +26,8 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -84,11 +85,12 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
   fi
   
- # check for depth
-  if hasArgument "-d" ]; then
+  # check for depth
+  if hasArgument "-d" ; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -149,20 +151,20 @@ fi
 
 #//list all file using the filter and loop through them
 iter=0
-for f in $(${filterCommand[@]})
+for f in $("${filterCommand[@]}")
 do 
   #//keep track of iteration count and print status update indicator
   iter=$(( iter+1 ))
-  if [[ $(( $iter%50 )) -eq 0 ]]; then
+  if [[ $(( iter%50 )) -eq 0 ]]; then
     logAllN "."
   fi 
 
   #//perform grep serch on the tar listing output and capture the located lines
-  #result=$( zcat ${f} | strings | grep ${search} )
-  result=$( zcat ${f} | grep -m 1 -a ${search} )
+  result=$( zgrep -m 1 -a -- "${search}" "${f}" )
+  returnCode=$?
 
   #//check if grep found something (success)
-  if [[ $? -eq 0 ]]; then
+  if [[ $returnCode -eq 0 ]]; then
     logAll ""
     logAll "${f}"
     logAll "${result}"
