@@ -29,12 +29,12 @@ function div {
 
   # check for zero, no need to perform division just pad zeros
   if (( $1 == 0 )); then
-    echo $(printf "%.${precision}f" "0")
+    printf "%.${precision}f" "0"
     return
   fi
   
   # multiple by scale and perform division
-  local result=$(($scale * $1 / $2))
+  local result=$(("$scale" * $1 / $2))
 
   # insert decimal into result
   result="${result:0:-$precision}.${result: -$precision}"
