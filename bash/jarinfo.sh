@@ -38,4 +38,4 @@ echo ""
 echo ""
 
 #//perform unzip to standard output (-q=quiet -c=extract to stdout)
-unzip -q -c ${jarFile} ${manifestPath}
+unzip -q -c "${jarFile}" "${manifestPath}"
