@@ -27,6 +27,7 @@ for lib in "${libs[@]}"; do
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
   fi 
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -82,11 +83,12 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
   fi
   
  # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -134,7 +136,7 @@ log "Column Format: $columnFormat"
 
 #// size, user, path
 if (( MAX_DEPTH > -1 )); then
-  find $dir -mindepth 1 -maxdepth ${MAX_DEPTH} -type f -printf "$columnFormat" | sort -n | tail
+  find "$dir" -mindepth 1 -maxdepth "${MAX_DEPTH}" -type f -printf "$columnFormat" | sort -n | tail
 else
-  find $dir -mindepth 1 -type f -printf "$columnFormat" | sort -n | tail
+  find "$dir" -mindepth 1 -type f -printf "$columnFormat" | sort -n | tail
 fi
