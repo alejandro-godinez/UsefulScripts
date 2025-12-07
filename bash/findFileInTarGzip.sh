@@ -21,11 +21,12 @@ fi
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh)
-for lib in "${libs[@]}"; do 
+for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -83,6 +84,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
   fi
   
@@ -147,19 +149,21 @@ fi
 #//list all file using the filter and loop through them
 iter=0
 logAll "Depth Search: $MAX_DEPTH"
+# shellcheck disable=SC2044 # disable warning for find in for loop script uses \n as IFS
 for f in $( find "${dir}" -mindepth 1 -maxdepth "$MAX_DEPTH" -name "${tgzFilter}" -type f )
 do 
   #//keep track of iteration count and print status update indicator
   iter=$(( iter+1 ))
-  if [[ $(( $iter%50 )) -eq 0 ]]; then
+  if [[ $(( iter%50 )) -eq 0 ]]; then
     logAllN "."
   fi 
 
   #//perform grep serch on the tar listing output and capture the located lines
-  result=$( tar -tvf "${f}" | grep "${search}" )
+  result=$( tar -tvf "${f}" | grep -- "${search}" )
+  returnCode=$?  # capture the exit status of grep, before it gets overwritten by some other command
 
   #//check if grep found something (success)
-  if [[ $? -eq 0 ]]; then
+  if [[ $returnCode -eq 0 ]]; then
     logAll ""
     logAll "${f}"
     logAll "${result}"
