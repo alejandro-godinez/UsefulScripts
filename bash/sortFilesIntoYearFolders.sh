@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #-------------------------------------------------------------------------------
 # This script will list all the files in the current working
 # directory and move the file into a sub-folder of the year
@@ -14,13 +14,15 @@
 # Version: 2022.3.8
 #-------------------------------------------------------------------------------
 
+#//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
+IFS=$'\n'
+
 #//get the current working directory
 dir=$( pwd )
 echo "Working Directory: ${dir}"
 
 #TODO: Ask User for confirmation before executing
-echo "Are you sure you want to move all files into year folders?  (yes|no):"
-read userIN
+read -r -p "Are you sure you want to move all files into year folders?  (yes|no): " userIN
 
 #// check for empty input
 if [ -z "${userIN}" ]; then
@@ -42,17 +44,19 @@ fi
 
 #//get all the files in the directory, ignore year tar.gz files
 iter=0
-for f in $(find -maxdepth 1 -type f -not -name "20*.tar.gz")
+
+# shellcheck disable=SC2044 # disable warning for find in for loop script uses \n as IFS
+for f in $(find . -maxdepth 1 -type f -not -name "20*.tar.gz")
 do
   #echo "File Name: ${f}"
   #//keep track of iteration count and print status update indicator
   iter=$(( iter+1 ))
-  if [[ $(( $iter%100 )) -eq 0 ]]; then
+  if [[ $(( iter%100 )) -eq 0 ]]; then
     echo -n "."
   fi
 
   #//get the file's modified date/time
-  fileDateTime=$(stat -c '%y' $f)
+  fileDateTime=$(stat -c '%y' "$f")
   #echo "  Date: ${fileDateTime}"
 
   #//get only the year from the full date

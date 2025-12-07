@@ -35,11 +35,6 @@ fi
 # echo print colors
 NC='\033[0m' # No Color
 RED='\033[0;31m'
-GRN='\033[0;32m'
-BLU='\033[0;34m'
-YEL='\033[1;33m'
-PUR='\033[0;35m'
-CYN='\033[1;36m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
@@ -48,6 +43,7 @@ for lib in "${libs[@]}"; do
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
   fi 
+  # shellcheck disable=SC1090 # disable dynamic source warning
   source "$lib"
 done
 
@@ -118,7 +114,8 @@ function hasKeyword {
   local line=$1
 
   #log "Line:$line"
-  local matchResult=$(grep -iE "$rgxKeywords" <<< "$line")
+  local matchResult
+  matchResult=$(grep -iE "$rgxKeywords" <<< "$line")
   #local cmdResult=$?
 
   #log "Match Result: $matchResult"
@@ -139,7 +136,7 @@ function processLine {
   if hasKeyword "$line"; then
 
     # perform keyword uppercase operation
-    ucaseLine=$(echo $line | sed -E "s/$rgxKeywords/\U\1/gI")
+    ucaseLine=$(echo "$line" | sed -E "s/$rgxKeywords/\U\1/gI")
 
     # output uppercase line to file
     #echo -n "${ucaseLine}" >> $outputFile
@@ -154,23 +151,28 @@ function processLine {
 # 
 # @param file - the sql script file to convert
 function processFile {
-  local inputFiles="$1"
+  local inputFile="$1"
 
   # get the seprate file parts name and extension
-  local fileName=$(basename $inputFile)
+  local fileName
+  fileName=$(basename "$inputFile")
   log "File Name: $fileName"
-  local fileNameNoExt="${fileName%.*}"
+
+  local fileNameNoExt
+  fileNameNoExt="${fileName%.*}"
   log "File Name (no ext): $fileNameNoExt"
-  local fileExtension="${fileName##*.}"
+  
+  local fileExtension
+  fileExtension="${fileName##*.}"
   log "File Extension: $fileExtension"
 
   # Reset the output file
   local outputFile="${fileNameNoExt}_ucase.${fileExtension}"
   log "Output File: $outputFile"
-  if [ -f ${outputFile} ]; then
-    rm ${outputFile}
+  if [ -f "${outputFile}" ]; then
+    rm "${outputFile}"
   fi
-  touch ${outputFile}
+  touch "${outputFile}"
 
   # Read the file line by line (-r prevent backslash escape intepretation)
   while IFS= read -r line; do
@@ -183,8 +185,8 @@ function processFile {
     # process an individual line
     log "LINE:$line"
     newLine=$(processLine "$line")
-    echo "${newLine}" >> $outputFile
-  done < $inputFile
+    echo "${newLine}" >> "$outputFile"
+  done < "$inputFile"
 
   spinDel
 }
@@ -217,7 +219,7 @@ for inputFile in "${REM_ARGS[@]}"; do
   logAll "Input File ($fileCount of $argCount): ${inputFile}"
 
   # check if the file exists
-  if [ ! -f $inputFile ]; then
+  if [ ! -f "$inputFile" ]; then
     logAll "${RED}ERROR: input file not found${NC}"
     exit
   fi
