@@ -27,6 +27,7 @@ for lib in "${libs[@]}"; do
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
   fi 
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -86,11 +87,12 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
   fi
   
- # check for depth
-  if hasArgument "-d" ]; then
+  # check for depth
+  if hasArgument "-d" ; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -140,7 +142,7 @@ if (( argCount > 1 )); then
 fi
 log "File Filter: ${filterCommand[*]}"
 
-for f in $(${filterCommand[@]})
+for f in $("${filterCommand[@]}")
 do
   spinChar
   log "$f"
