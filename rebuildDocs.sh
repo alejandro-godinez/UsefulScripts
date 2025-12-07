@@ -34,6 +34,8 @@ for lib in "${libs[@]}"; do
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
   fi
+  
+  # shellcheck disable=SC1090 # disable warning for dynamic source 
   source "$lib"
 done
 
@@ -73,7 +75,9 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
+
     printArgs
     printRemArgs
   fi
@@ -111,7 +115,8 @@ function processDirectory {
   log "Source Path: ${srcDir}"
 
   # get a list of bash script from the source directory, no sub-directories
-  local fileList=$(find $srcDir -mindepth 1 -maxdepth 1 -type f -name "*.sh")
+  local fileList
+  fileList=$(find "${srcDir}" -mindepth 1 -maxdepth 1 -type f -name "*.sh")
 
   # Loop through and install each file in the list
   for srcFile in $fileList; do
@@ -129,7 +134,8 @@ function processFile {
   local srcFile="$1"
   
   # generate destination docs directory as a sub folder of the file
-  local destDir="$(dirname $srcFile)/docs"
+  local destDir
+  destDir="$(dirname "$srcFile")/docs"
   log "Dest Dir: $destDir"
 
   # perform badh doc conversion on the file
@@ -156,9 +162,9 @@ for projDir in "${PROJECT_DIRS[@]}"; do
 
   # process script files in the directory
   logAll "${BLU}BIN Scripts...${NC}"
-  processDirectory $projDir
+  processDirectory "${projDir}"
   
   # process extra lib script files
   logAll "${BLU}LIB Scripts...${NC}"
-  processDirectory "$projDir" "lib"
+  processDirectory "${projDir}" "lib"
 done
