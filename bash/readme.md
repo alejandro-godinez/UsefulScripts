@@ -23,8 +23,12 @@ winget install --id koalaman.shellcheck
 Usage Examples:
 ```
 shellcheck.exe gitStashPullApply.sh
+shellcheck.exe -f gcc gitStashPullApply.sh
 shellcheck.exe -f checkstyle gitStashPullApply.sh > gitStashPullApply.sh.xml
 ```
+
+Use the docs page to check reasoning for each error  
+https://www.shellcheck.net/wiki/\<THE_CODE\>
 
 # [avgFileSize.sh](avgFileSize.sh)
 This script will get an average file size of all the file that meet the specified name filter.

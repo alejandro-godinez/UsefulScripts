@@ -64,14 +64,14 @@ for lib in "${libs[@]}"; do
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
   fi 
+  
+  # shellcheck disable=SC1090 # disable warning for dynamic source 
   source "$lib"
 done
 
 # set the Internal Field Separator to newline (git-bash uses spaces for some reason)
 #IFS=$'\n'
 
-# numeric regex
-RGX_NUM='^[0-9]+$'
 # library folder regex
 RGX_LIB='/lib/'
 
@@ -134,7 +134,9 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
+    
     printArgs
     printRemArgs
   fi
@@ -147,12 +149,8 @@ function processArgs {
 
 # Ask user which project they would like to install from the set
 # 
-# @return - exit value of zero (truthy) indicates installDir variable set, 1 otherwise
+# @return - exit value of zero (truthy) indicates projDir variable set, 1 otherwise
 function promptForInstall {
-  # reset install directory
-  installDir=""
-
-  local optionNo=0
   local optionCount=${#PROJECT_DIRS[@]}
   log "Option Count: ${optionCount}"
 
@@ -214,7 +212,8 @@ function installProject {
   log "Source Path: ${srcDir}"
   
   # get a list of bash script from the source directory, no sub-directories
-  local fileList=$(find $srcDir -mindepth 1 -maxdepth 1 -type f -name "*.sh")
+  local fileList
+  fileList=$(find "$srcDir" -mindepth 1 -maxdepth 1 -type f -name "*.sh")
 
   # Loop through and install each file in the list
   for srcFile in $fileList; do
@@ -243,7 +242,8 @@ function installData {
     logAll "  No project data directory"
     return 0
   else
-    local fileList=$(find $projSubDir -mindepth 1)
+    local fileList
+    fileList=$(find "$projSubDir" -mindepth 1)
     # log the files from the data folder
     for srcFile in $fileList; do logAll "$srcFile"; done
   fi
@@ -296,7 +296,8 @@ function installFile {
   local destDir="$2"
 
   # get the base file name
-  local fileName=$(basename $srcFile)
+  local fileName
+  fileName=$(basename "$srcFile")
   log "  File Name: ${fileName}"
   
   # build destination path for this file
@@ -315,9 +316,9 @@ function installFile {
   fi
 
   # get hash for both source and destination files
-  srcHash=$(md5sum $srcFile | cut -d' ' -f1)
+  srcHash=$(md5sum "$srcFile" | cut -d' ' -f1)
   log "  Src Hash: $srcHash"
-  destHash=$(md5sum $destFile | cut -d' ' -f1)
+  destHash=$(md5sum "$destFile" | cut -d' ' -f1)
   log "  Dest Hash: $srcHash"
 
   # update if there is a difference in the files
@@ -351,8 +352,9 @@ function findFile {
   readarray -d '' fileList < <(find . -type d -name "test" -prune -o -iname "${fileName}.sh" -print0)
 
   # check if file list was empty/undefined
-  if [[ -z "${fileList[@]}" ]]; then
-    echo ""
+    # ...existing code...
+  if (( ${#fileList[@]} == 0 )); then
+    echo
     return 1
   fi
 
