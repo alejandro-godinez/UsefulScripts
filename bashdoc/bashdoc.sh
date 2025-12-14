@@ -99,7 +99,8 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -121,8 +122,8 @@ RELATIVE_PATH="../"
 
 # method keyword
 PARAMETER_KEYWORD="param"
-RETURN_KEYWORD="return"
-OUTPUT_KEYWORD="output"
+#RETURN_KEYWORD="return"
+#OUTPUT_KEYWORD="output"
 IGNORE_KEYWORD="ignore"
 BREAK_KEYWORD="break"
 VAR_KEYWORD="var"
@@ -176,6 +177,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable from a library
     DEBUG=true
   fi
 
@@ -292,7 +294,7 @@ function writeComments {
 
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do
-    echo "${commentArr[$index]}" >> $outputFile
+    echo "${commentArr[$index]}" >> "$outputFile"
   done
 }
 
@@ -306,7 +308,7 @@ function writeCommentsFlat {
     if ! hasArgument "-q"; then
       logAll "  ${GRN}Comment:${NC}${commentArr[$index]}"
     fi
-    echo -n "${commentLine}" >> $outputFile
+    echo -n "${commentLine}" >> "$outputFile"
   done
 }
 
@@ -320,7 +322,7 @@ function writeVariableName {
   if ! hasArgument "-q"; then
     logAll "${BLU}Variable:${NC}${variableName}"
   fi
-  echo -n "| ${variableName} |" >> $outputFile
+  echo -n "| ${variableName} |" >> "$outputFile"
 }
 
 # write out the variable type
@@ -329,7 +331,7 @@ function writeVariableType {
   spinDel
   local variableType="$1"
 
-  echo -n " $variableType | " >> $outputFile
+  echo -n " $variableType | " >> "$outputFile"
 }
 
 # write out the function name
@@ -342,12 +344,12 @@ function writeFunctionName {
   if ! hasArgument "-q"; then
     logAll "${BLU}Function:${NC}${functionName}"
   fi
-  echo -n "| ${functionName}(" >> $outputFile
+  echo -n "| ${functionName}(" >> "$outputFile"
 }
 
 # write out function signature close
 function writeFunctionClose {
-  echo -n ") | " >> $outputFile
+  echo -n ") | " >> "$outputFile"
 }
 
 # write out the accumulated function parameters
@@ -369,10 +371,10 @@ function writeFunctionParameters {
 
       log "IsFirstParam:$isFirstParam"
       if [ "$isFirstParam" = false ]; then
-        echo -n ",&nbsp;" >> $outputFile
+        echo -n ",&nbsp;" >> "$outputFile"
       fi
       isFirstParam=false
-      echo -n "${keywordName}" >> $outputFile
+      echo -n "${keywordName}" >> "$outputFile"
     fi
   done
 }
@@ -381,7 +383,7 @@ function writeFunctionParameters {
 function writeParameterDescription {
   local paramCount=${#paramMap[@]}
   if (( paramCount > 0 )); then
-    echo -n "<br><br><u><b>Args:</b></u><br>" >> $outputFile
+    echo -n "<br><br><u><b>Args:</b></u><br>" >> "$outputFile"
   else
     return 0
   fi
@@ -392,11 +394,14 @@ function writeParameterDescription {
 
     # perform keyword match to get capture groups
     if isKeyword "$paramLine"; then
-      local keywordName="${BASH_REMATCH[3]}"
-      local keywordDesc=$( newLinesToSpace "${BASH_REMATCH[5]:-""}" )
+      local keywordName
+      keywordName="${BASH_REMATCH[3]}"
+      local keywordDesc
+      keywordDesc=$( newLinesToSpace "${BASH_REMATCH[5]:-""}" )
+
       log "Keyword Name:$keywordName"
       log "Keyword Desc:$keywordDesc"
-      echo -n "${keywordName} - ${keywordDesc}<br>" >> $outputFile
+      echo -n "${keywordName} - ${keywordDesc}<br>" >> "$outputFile"
     fi
   done
 }
@@ -409,14 +414,15 @@ function writeReturnDescription {
     return 0
   fi
 
-  local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
+  local description
+  description=$( newLinesToSpace "${keywordMap[$keyword]}" )
   # ommit output with quiet option
   if ! hasArgument "-q"; then
     logAll "  ${PUR}Return:${NC}${description}"
   fi
-  echo -n "<br><u><b>Return:</b></u><br>" >> $outputFile
+  echo -n "<br><u><b>Return:</b></u><br>" >> "$outputFile"
   log "Keyword Desc:$description"
-  echo -n "${description}<br>" >> $outputFile
+  echo -n "${description}<br>" >> "$outputFile"
 }
 
 # write out the output description
@@ -427,14 +433,15 @@ function writeOutputDescription {
     return 0
   fi
 
-  local description=$( newLinesToSpace "${keywordMap[$keyword]}" )
+  local description
+  description=$( newLinesToSpace "${keywordMap[$keyword]}" )
   # ommit output with quiet option
   if ! hasArgument "-q"; then
     logAll "  ${CYN}Output:${NC}${description}"
   fi
-  echo -n "<br><u><b>Output:</b></u><br>" >> $outputFile
+  echo -n "<br><u><b>Output:</b></u><br>" >> "$outputFile"
   log "Keyword Desc:$description"
-  echo -n "${description}<br>" >> $outputFile
+  echo -n "${description}<br>" >> "$outputFile" 
 }
 
 # perform all the work to parse the documentation from the specified bash script file
@@ -447,19 +454,20 @@ function parseBashScript {
   local lineNoPadded="000"
 
   # Reset the output file
-  local fileName=$(basename $inputFile)
+  local fileName
+  fileName=$(basename "$inputFile")
   local outputFile="${OUTPUT_PATH}/${fileName}.md"
   log "Output File: $outputFile"
-  if [ -f ${outputFile} ]; then
-    rm ${outputFile}
+  if [ -f "${outputFile}" ]; then
+    rm "${outputFile}"
   fi
-  touch ${outputFile}
+  touch "${outputFile}"
 
   # add auto-generated comment
-  echo "<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>" >> $outputFile
+  echo "<small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>" >> "$outputFile"
 
   # add file title header, check if a relative path was specified
-  echo "# [${fileName}](${RELATIVE_PATH}${fileName})" >> $outputFile
+  echo "# [${fileName}](${RELATIVE_PATH}${fileName})" >> "$outputFile"
 
   # declare an array to store comments before function
   local -a commentArr=()
@@ -506,7 +514,7 @@ function parseBashScript {
         # write out accumulated description comments, keep the newlines
         log "Writing out comments..."
         writeComments
-        echo "" >> $outputFile
+        echo "" >> "$outputFile"
       elif isKeyword "$commentText"; then
         local keywordType="${BASH_REMATCH[1]}"
         log "  Keyword Type:$keywordType"
@@ -524,7 +532,7 @@ function parseBashScript {
           log "  Param Name:$paramName"
 
           # check if parameter name already exists in map, if so append text
-          if ! arrayHasKey paramMap $paramName; then
+          if ! arrayHasKey paramMap "$paramName"; then
             log "  Adding parameter '${paramName}' to list..."
             paramMap[$paramName]="$commentText"
             paramMapKeys+=( "$paramName" )
@@ -548,7 +556,7 @@ function parseBashScript {
           log "  Is Keyword"
 
           log " Capturing $keywordType to list..."
-          if ! arrayHasKey keywordMap $keywordType; then
+          if ! arrayHasKey keywordMap "$keywordType"; then
             log "  Adding keyword '[$keywordType]' to map..."
             keywordMap[$keywordType]="${BASH_REMATCH[5]}"
           else
@@ -574,16 +582,16 @@ function parseBashScript {
           
         # add variable header when first variable is encountered
         if [ "$isFirstVariable" = true ]; then
-          echo "" >> $outputFile
-          echo "## Variables:" >> $outputFile
-          echo "| Variables | Type | description |" >> $outputFile
-          echo "|-----------|------|-------------|" >> $outputFile
+          echo "" >> "$outputFile"
+          echo "## Variables:" >> "$outputFile"
+          echo "| Variables | Type | description |" >> "$outputFile"
+          echo "|-----------|------|-------------|" >> "$outputFile"
           isFirstVariable=false
         fi
 
         # write variable with 
         spinDel
-        writeVariableName $variableName
+        writeVariableName "$variableName"
 
         # write variable type
         writeVariableType "${keywordMap[$VAR_KEYWORD]}"
@@ -591,7 +599,7 @@ function parseBashScript {
         # write comments flat as description
         writeCommentsFlat
 
-        echo " |" >> $outputFile
+        echo " |" >> "$outputFile"
       fi
 
     elif isFunction "$line"; then
@@ -608,16 +616,16 @@ function parseBashScript {
       else 
         # add function header when first function is encountered
         if [ "$isFirstFunction" = true ]; then 
-          echo "" >> $outputFile
-          echo "## Functions:" >> $outputFile
-          echo "| Function | Description |" >> $outputFile
-          echo "|----------|-------------|" >> $outputFile
+          echo "" >> "$outputFile"
+          echo "## Functions:" >> "$outputFile"
+          echo "| Function | Description |" >> "$outputFile"
+          echo "|----------|-------------|" >> "$outputFile"
           isFirstFunction=false
         fi
 
         # write function with open parenthesis
         spinDel
-        writeFunctionName $functionName
+        writeFunctionName "$functionName"
 
         # write out the parameters if any
         log "Writing function parameters..."
@@ -639,7 +647,7 @@ function parseBashScript {
         log "Writing output description..."
         writeOutputDescription
 
-        echo " |" >> $outputFile
+        echo " |" >> "$outputFile"
       fi
 
       # clear arrays for next function
@@ -658,7 +666,7 @@ function parseBashScript {
       keywordMap=()
     fi
 
-  done < $inputFile
+  done < "$inputFile"
   spinDel
 }
 
@@ -703,7 +711,7 @@ for inputFile in "${REM_ARGS[@]}"; do
   logAll "Input File ($fileCount of $argCount): ${inputFile}"
 
   # check if the file exists
-  if [ ! -f $inputFile ]; then
+  if [ ! -f "$inputFile" ]; then
     logAll "${RED}ERROR: input file not found${NC}"
     exit
   fi
