@@ -1,0 +1,13 @@
+# Temporary files and folders
+*.tmp
+*.temp
+tmp/
+temp/
+.tmp/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
