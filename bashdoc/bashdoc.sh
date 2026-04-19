@@ -303,7 +303,8 @@ function writeCommentsFlat {
   spinDel
   log "  Comment Count: ${#commentArr[@]}"
   for index in "${!commentArr[@]}"; do 
-    local commentLine=$(newLinesToSpace "${commentArr[$index]}")
+    local commentLine
+    commentLine=$(newLinesToSpace "${commentArr[$index]}")
     # ommit output with quiet option
     if ! hasArgument "-q"; then
       logAll "  ${GRN}Comment:${NC}${commentArr[$index]}"
@@ -582,10 +583,12 @@ function parseBashScript {
           
         # add variable header when first variable is encountered
         if [ "$isFirstVariable" = true ]; then
-          echo "" >> "$outputFile"
-          echo "## Variables:" >> "$outputFile"
-          echo "| Variables | Type | description |" >> "$outputFile"
-          echo "|-----------|------|-------------|" >> "$outputFile"
+          {
+            echo ""
+            echo "## Variables:"
+            echo "| Variables | Type | description |"
+            echo "|-----------|------|-------------|"
+          } >> "$outputFile"
           isFirstVariable=false
         fi
 
@@ -615,11 +618,13 @@ function parseBashScript {
         logAll "${BLU}Function ${RED}(ignore)${NC}:${functionName}"
       else 
         # add function header when first function is encountered
-        if [ "$isFirstFunction" = true ]; then 
-          echo "" >> "$outputFile"
-          echo "## Functions:" >> "$outputFile"
-          echo "| Function | Description |" >> "$outputFile"
-          echo "|----------|-------------|" >> "$outputFile"
+        if [ "$isFirstFunction" = true ]; then
+          {
+            echo ""
+            echo "## Functions:"
+            echo "| Function | Description |"
+            echo "|----------|-------------|"
+          } >> "$outputFile"
           isFirstFunction=false
         fi
 

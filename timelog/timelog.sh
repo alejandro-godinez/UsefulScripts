@@ -44,7 +44,6 @@ RED='\033[0;31m'
 GRN='\033[0;32m'
 BLU='\033[0;34m'
 YEL='\033[0;33m'
-U_CYN='\033[4;36m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/spinner.sh)
@@ -52,7 +51,8 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
