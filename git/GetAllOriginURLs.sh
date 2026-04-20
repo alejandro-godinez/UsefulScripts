@@ -3,8 +3,12 @@
 # print working directory for reference
 pwd
 
+# find all .git directories and store the output in an array
+declare -a findOutput
+mapfile -t findOutput < <(find . -type d -name .git)
+
 # find and loop through all .git directories
-for repo in $( find -type d -name .git )
+for repo in "${findOutput[@]}"
 do
   # get the repo parent directory
   repoDir=$(dirname "${repo}")

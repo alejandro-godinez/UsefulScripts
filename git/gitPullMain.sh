@@ -48,7 +48,9 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -105,6 +107,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
@@ -119,7 +122,7 @@ function processArgs {
   fi
   
   # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -166,7 +169,7 @@ function gitPullMain {
   logAll "${U_CYN}${repoDir}${NC}"
   
   #//get current working branch
-  branch=$(gitBranchName $repoDir)
+  branch=$(gitBranchName "$repoDir")
   log "  Branch: ${branch}"
 
   #//skip if branch is not the main branch
@@ -178,11 +181,11 @@ function gitPullMain {
   fi
 
   #// get the main branch
-  mainBranch=$(gitMainBranch $repoDir)
+  mainBranch=$(gitMainBranch "$repoDir")
   log "Main Branch: ${mainBranch}"
 
   #//get revision count info
-  remoteCounts=$(gitRevisionCounts $repoDir remote)
+  remoteCounts=$(gitRevisionCounts "$repoDir" remote)
   logAll "Rev [ahead behind]: ${remoteCounts}\t${branch}->origin/${mainBranch}"
 
   #//wait for input, unless force option was specified
@@ -195,7 +198,7 @@ function gitPullMain {
 
   #//perform the git pull
   log "  Performing the pull..."
-  gitPull $repoDir
+  gitPull "$repoDir"
 }
 
 #< - - - Main - - - >
@@ -222,7 +225,10 @@ fi
 
 #// get list of all directories at the current location
 logAll "Depth Search: $MAX_DEPTH"
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+declare -a dirList=()
+mapfile -t dirList < <(find . -mindepth 1 -maxdepth "$MAX_DEPTH" -type d)
+
+for aDir in "${dirList[@]}"
 do
   log "Directory: ${aDir}"
 

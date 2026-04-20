@@ -39,6 +39,8 @@ for lib in "${libs[@]}"; do
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
   fi 
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -46,7 +48,6 @@ done
 #IFS=$'\n'
 
 #//echo print colors
-GRN='\033[0;32m'
 NC='\033[0m' # No Color
 U_CYN='\033[4;36m'       # Cyan
 
@@ -90,11 +91,12 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
   
   # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -113,7 +115,7 @@ function processRepo {
   
   #//get and print remote counts
   log "Performing fetch"
-  gitFetch $repoDir
+  gitFetch "$repoDir"
 }
 
 #< - - - Main - - - >
@@ -135,10 +137,13 @@ if isGitDir "${currDir}"; then
 fi
 
 log "Depth Search: $MAX_DEPTH"
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+declare -a allDirs
+mapfile -t allDirs < <( find . -mindepth 1 -maxdepth "$MAX_DEPTH" -type d )
+
+for aDir in "${allDirs[@]}"
 do
   if isGitDir "${aDir}"; then
-    processRepo ${aDir}
+    processRepo "${aDir}"
   fi
 done
 log ""

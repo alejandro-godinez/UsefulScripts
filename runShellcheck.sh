@@ -45,7 +45,8 @@ for lib in "${libs[@]}"; do
 done
 
 # output path to save shell check results
-OUTPUT_PATH="./temp/shellcheck/"
+OUTPUT_PATH="./temp/"
+SUMMARY_FILE="${OUTPUT_PATH}shellcheck_summary.md"
 
 #//search depth
 MAX_DEPTH=1
@@ -60,8 +61,9 @@ function printHelp {
   echo ""
   echo "Usage:"
   echo "runShellcheck.sh [options]"
-  echo "  - h    Thsis help info"
-  echo "  - v    Verbose/debug output"
+  echo "  - h      Thsis help info"
+  echo "  - v      Verbose/debug output"
+  echo "  - d num  Search depth (default 1)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -86,7 +88,7 @@ function processArgs {
   fi
 
   if hasArgument "-v"; then
-    # shellcheck disable=SC2034 # disable warning for unused variable
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
@@ -107,14 +109,14 @@ function processArgs {
 function addHeaderToSummary {
   local totalFiles=$1
   {
-    echo "--------------------------------------------"
-    echo "Shellcheck Summary"
-    echo "Generated on: $(date)"
-    echo "Working Directory: $(pwd)"
-    echo "Search Depth: $MAX_DEPTH"
-    echo "Total Files Found: $totalFiles"
-    echo "--------------------------------------------"
-    echo
+    echo "# Shellcheck Summary  "
+    echo "**Generated on:** $(date)  "
+    echo "**Working Directory:** $(pwd)  "
+    echo "**Search Depth:** ${MAX_DEPTH}  "
+    echo "**Total Files Found:** ${totalFiles}  "
+    echo "  "
+    echo "---"
+    echo "  "
   } >> "$SUMMARY_FILE"
 }
 
@@ -124,6 +126,9 @@ function addHeaderToSummary {
 function processFile {
   local shellFile=$1
   
+  # local fileName
+  # fileName=$(basename "$shellFile")
+
   # Capture shellcheck output without failing the script on non-zero status
   local output
   output=$(shellcheck "$shellFile" 2>&1 || true)
@@ -131,35 +136,24 @@ function processFile {
   #determine if output is empty or not
   if [[ -z "$output" ]]; then
     log "No issues found by shellcheck for $shellFile"
-    return 
-  fi
+    return 1
+  fi  
 
-  # Determine output file path, preserving relative subdirectory
-  local relative_path
-  relative_path="${shellFile#./}"
-  local output_file
-  output_file="${OUTPUT_PATH}${relative_path}.txt"
-  log "Output File: $output_file"
-  
-  local output_dir
-  output_dir=$(dirname "$output_file")
-  
-  # Create the subdirectory if it doesn't exist
-  log "Creating output directory..."
-  log "Output Directory: $output_dir"
-  mkdir -p "$output_dir"
-  
-  # Save the output to the file
-  echo "$output" > "$output_file"
+  # create a relative path that is two levels up from the output directory
+  local relativePath
+  relativePath="../${shellFile#./}"
+  log "Relative Path: $relativePath"
 
   # Add a summary entry only for files that generated output
-  file_name=$(basename "$shellFile")
   {
-    echo "$file_name"
-    echo "$shellFile"
-    echo "$output_file"
+    echo "[$shellFile]($relativePath)"
+    echo "<pre>"
+    echo "$output"
+    echo "</pre>"
     echo
   } >> "$SUMMARY_FILE"
+
+  returnn 0 # indicate that output was generated
 }
 
 #< - - - Main - - - >
@@ -184,7 +178,6 @@ if [[ ! -d "$OUTPUT_PATH" ]]; then
 fi
 
 # initialize the shellcheck summary file
-SUMMARY_FILE="${OUTPUT_PATH}shellcheck_summary.txt"
 echo "" > "$SUMMARY_FILE"
 
 # find all the .sh file recursively and store them in an array
@@ -203,12 +196,26 @@ addHeaderToSummary "$totalFiles"
 
 # loop through the array and run shellcheck on each file
 fileCount=0
+filesWithErrors=0
+filesWithoutErrors=0
+
 for file in "${fileList[@]}"; do
   fileCount=$((++fileCount))
   logAll "Processing File ($fileCount of $totalFiles): ${U_CYN}$file${NC}"
   spinChar
-  processFile "$file"
+
+  if processFile "$file"; then
+    filesWithErrors=$((++filesWithErrors))
+  else
+    filesWithoutErrors=$((++filesWithoutErrors))
+  fi
+
   spinDel
 done
+{
+  echo "## Results  "
+  echo "**Files with Issues:** $filesWithErrors  "
+  echo "**Files without Issues:** $filesWithoutErrors  "
+} >> "$SUMMARY_FILE"
 
 logAll "Shellcheck processing complete. Summary saved to $SUMMARY_FILE"

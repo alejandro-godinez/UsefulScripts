@@ -44,7 +44,9 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -91,11 +93,12 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
   # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -112,7 +115,7 @@ function printRepoBranch {
 
   #//print out the repot path and branch
   logAllN "${repoDir} - "
-  branch=$(gitBranchName ${repoDir})
+  branch=$(gitBranchName "${repoDir}")
   log "  Branch: ${branch}"
   
   if [[ $branch =~ $RGX_MAIN ]]; then
@@ -144,7 +147,11 @@ fi
 
 #//get list of all directories at the current location
 logAll "Depth Search: $MAX_DEPTH"
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+declare -a allDirs
+mapfile -t allDirs < <(find . -mindepth 1 -maxdepth "$MAX_DEPTH" -type d)
+
+# loop through and process each git repo directory found
+for aDir in "${allDirs[@]}"
 do
   log "Directory: ${aDir}"
   if isGitDir "${aDir}"; then

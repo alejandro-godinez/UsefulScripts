@@ -45,7 +45,9 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -96,6 +98,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
@@ -105,7 +108,7 @@ function processArgs {
   fi
   
   # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -183,7 +186,10 @@ fi
 
 #//get list of all directories at the current location
 log "Depth Search: $MAX_DEPTH"
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+declare -a dirList=()
+mapfile -t dirList < <(find . -mindepth 1 -maxdepth "$MAX_DEPTH" -type d)
+
+for aDir in "${dirList[@]}"
 do
   if isGitDir "${aDir}"; then
     log "  Getting the stash"

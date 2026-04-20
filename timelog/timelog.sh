@@ -76,7 +76,7 @@ WRITE_CSV=false
 
 # Print the usage information for this script to standard output.
 function printHelp {
-  echo "This script will parse a time log ".hrs" file and output task work time"
+  echo "This script will parse a time log \".hrs\" file and output task work time"
   echo ""
   echo "Usage: "
   echo "  timelog.sh [OPTION] <files>"
@@ -125,6 +125,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
@@ -202,12 +203,12 @@ function div {
 
   # check for zero, no need to perform division just pad zeros
   if (( $1 == 0 )); then
-    echo $(printf "%.${precision}f" "0")
+    printf "%.${precision}f" "0"
     return
   fi
   
   # multiple by scale and perform division
-  local result=$(($scale * $1 / $2))
+  local result=$((scale * $1 / $2))
 
   # insert decimal into result
   result="${result:0:-$precision}.${result: -$precision}"
@@ -233,7 +234,7 @@ function writeToCSV {
   if [[ -z $OUTPUT_FILE ]]; then
     OUTPUT_FILE="$(getDateTimeFileName).csv"
     log "Creating blank CSV file '$OUTPUT_FILE'"
-    touch $OUTPUT_FILE
+    touch "$OUTPUT_FILE"
 
     if [[ ! -e $OUTPUT_FILE ]]; then
       logAll "${RED}ERROR: Failed to create output file${NC}"
@@ -241,13 +242,13 @@ function writeToCSV {
     fi
 
     # write headers
-    echo "file,task no,minutes" >> $OUTPUT_FILE
+    echo "file,task no,minutes" >> "$OUTPUT_FILE"
   fi
 
   local inputFile="$1"
   local taskNo="$2"
   local minutes="$3"
-  echo "${inputFile},${taskNo},${minutes}" >> $OUTPUT_FILE
+  echo "${inputFile},${taskNo},${minutes}" >> "$OUTPUT_FILE"
 }
 
 # Trim newline characters (cr and lf)
@@ -298,7 +299,8 @@ function parseFile {
 
       # filter for only the specified task
       if hasArgument "-t"; then
-        local filterTask=$(getArgument "-t")
+        local filterTask
+        filterTask=$(getArgument "-t")
         if [ "$currentTaskNo" != "$filterTask" ]; then
           currentTaskNo=""
           continue
@@ -320,7 +322,8 @@ function parseFile {
       logN "End: $timeEnd"
 
       # calculate the elapsed minutes from range
-      local elapsedMinutes=$(getElapsedMinutes "$timeStart" "$timeEnd")
+      local elapsedMinutes
+      elapsedMinutes=$(getElapsedMinutes "$timeStart" "$timeEnd")
       log " -> Minutes: $elapsedMinutes"
 
       # add time without defined task to a special position
@@ -340,7 +343,7 @@ function parseFile {
         taskList["$NO_TASK"]=$((taskList["$NO_TASK"] + elapsedMinutes))
 
         # add task time to summary
-        addTaskToSummary "$NO_TASK" $elapsedMinutes
+        addTaskToSummary "$NO_TASK" "$elapsedMinutes"
         continue
       fi
 
@@ -349,7 +352,7 @@ function parseFile {
       taskList["$currentTaskNo"]=$((taskList["$currentTaskNo"] + elapsedMinutes))
       
       # add task time to summary
-      addTaskToSummary "$currentTaskNo" $elapsedMinutes
+      addTaskToSummary "$currentTaskNo" "$elapsedMinutes"
     
       # clear the task number after assigning this time range
       currentTaskNo=''
@@ -381,12 +384,13 @@ function parseFile {
     log "    Minutes: $taskMin"
     
     log "    Dividing by 60 to get hours"
-    local taskHours=$(div "$taskMin" "60")
+    local taskHours
+    taskHours=$(div "$taskMin" "60")
 
     if [[ "$index" == "$NO_TASK" ]]; then
-      logAll "${YEL}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+      logAll "${YEL}$(printf %${TASK_PAD}s "${index}:")${NC}$(printf %${HOURS_PAD}s "${taskHours}")"
     else
-      logAll "${BLU}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+      logAll "${BLU}$(printf %${TASK_PAD}s "${index}:")${NC}$(printf %${HOURS_PAD}s "${taskHours}")"
     fi
 
     if [[ "$WRITE_CSV" == "true" ]]; then
@@ -400,10 +404,11 @@ function parseFile {
   fi
 
   log "Total Minutes: $totalMinutes"
-  local totalHours=$(div "$totalMinutes" "60")
+  local totalHours
+  totalHours=$(div "$totalMinutes" "60")
 
   logAll "----------------------"
-  logAll "${GRN}$(printf %${TASK_PAD}s 'Total Hours:')${NC}$(printf %${HOURS_PAD}s ${totalHours})"
+  logAll "${GRN}$(printf %${TASK_PAD}s 'Total Hours:')${NC}$(printf %${HOURS_PAD}s "${totalHours}")"
   logAll ""
 }
 
@@ -436,12 +441,13 @@ function printSummary {
     
     # bash doesn't do dicimals, fake it using fixed point arithmetic (multiply by 100 to get 2 decimal positions)
     log "    Dividing by 60 to get hours"
-    local taskHours=$(div "$taskMin" "60")
+    local taskHours
+    taskHours=$(div "$taskMin" "60")
 
     if [[ "$index" == "$NO_TASK" ]]; then
-      logAll "${YEL}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+      logAll "${YEL}$(printf %${TASK_PAD}s "${index}:")${NC}$(printf %${HOURS_PAD}s "${taskHours}")"
     else
-      logAll "${BLU}$(printf %${TASK_PAD}s ${index}:)${NC}$(printf %${HOURS_PAD}s ${taskHours})"
+      logAll "${BLU}$(printf %${TASK_PAD}s "${index}:")${NC}$(printf %${HOURS_PAD}s "${taskHours}")"
     fi
   done
 }
@@ -462,9 +468,11 @@ if [[ -v REM_ARGS ]]; then
 else
   # search for hrs files in current directory, depth of 3 should be enough (timelog/year/month)
   log "Serach for hrs files..."
-  fileList=$(find -mindepth 1 -maxdepth 3 -type f -name '*.hrs')
-  for file in $fileList; do
-    REM_ARGS+=($file)
+  declare -a fileList=()
+  mapfile -t fileList < <(find . -mindepth 1 -maxdepth 3 -type f -name '*.hrs')
+
+  for file in "${fileList[@]}"; do
+    REM_ARGS+=("$file")
     argCount=$((++argCount))
   done
 fi
@@ -506,7 +514,7 @@ for inputFile in "${REM_ARGS[@]}"; do
   fi
 
   log "Parsing File..."
-  parseFile $inputFile
+  parseFile "$inputFile"
 done
 
 if hasArgument "-c"; then

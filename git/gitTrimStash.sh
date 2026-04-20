@@ -49,7 +49,9 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -104,6 +106,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
@@ -112,9 +115,8 @@ function processArgs {
     FORCE=true
   fi
 
-
   # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -123,8 +125,8 @@ function processArgs {
     fi
   fi
 
-  # check for depth
-  if hasArgument "-t" ]; then
+  # check for trim size
+  if hasArgument "-t"; then
     numValue=$(getArgument "-t")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -227,13 +229,15 @@ if isGitDir "${currDir}"; then
 fi
 
 #//get list of all directories at the current location
-for currDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+declare -a allDirs=()
+mapfile -t allDirs < <( find . -mindepth 1 -maxdepth "$MAX_DEPTH" -type d )
+
+for currDir in "${allDirs[@]}"
 do
   if isGitDir "${currDir}"; then
   
     log "Processing current directory..."
     processGitDirectory "${currDir}"
-    
   fi
 done
 logAll "DONE"

@@ -35,8 +35,6 @@ fi
 #//echo print colors
 NC='\033[0m'       # No Color
 RED='\033[0;31m'
-GRN='\033[0;32m'
-YEL='\033[1;33m'
 
 # define list of libraries and import them
 declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/git_lib.sh ~/lib/strings.sh)
@@ -44,15 +42,11 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
-
-#//search depth
-MAX_DEPTH=1
-
-#//numeric regex
-RGX_NUM='^[0-9]+$'
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -65,7 +59,6 @@ function printHelp {
   echo "    -v        Verbose/debug output"
   echo "    -a        Ascending order (oldest first)"
   echo "    -r        List remote branches"
-  # echo "    -d num    Search depth (default 1)"
 }
 
 # Setup and execute the argument processing functionality imported from arguments.sh.
@@ -77,7 +70,6 @@ function processArgs {
   addOption "-h"      #help
   addOption "-a"      #ascending order
   addOption "-r"      #remote banches
-  # addOption "-d" true #search depth number
   
   # perform parsing of options
   parseArguments "$@"
@@ -93,16 +85,19 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 }
 
 # Print the column headers for branch information
 function printHeader(){
-  local dateHeader=$(padRight "Last Commit" 12 " ")
+  local dateHeader
+  dateHeader=$(padRight "Last Commit" 12 " ")
+
   local nameHeader=" Branch name"
   logAll "${dateHeader}|${nameHeader}"
-  logAll $(padRight "" 50 "-")
+  logAll "$(padRight "" 50 "-")"
 }
 
 # Perform all the processing for a single repository

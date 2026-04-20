@@ -44,7 +44,8 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -93,11 +94,12 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
   # check for depth
-  if hasArgument "-d" ]; then
+  if hasArgument "-d"; then
     numValue=$(getArgument "-d")
     log "  Depth Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
@@ -113,19 +115,19 @@ function processArgs {
 function processRepo {
   local repoDir=$1
   
-  mainBranch=$(gitMainBranch $repoDir)
+  mainBranch=$(gitMainBranch "$repoDir")
   log "Main Branch: ${mainBranch}"
-  branch=$(gitBranchName $repoDir)
+  branch=$(gitBranchName "$repoDir")
   log "Current Branch: ${branch}"
   
   #//print local counts if current branch is not main
   if ! [[ $branch =~ $RGX_MAIN ]]; then
-    localCounts=$(gitRevisionCounts $repoDir)
+    localCounts=$(gitRevisionCounts "$repoDir")
     logAll "${localCounts}\t${branch}->${mainBranch}  ${repoDir}"
   fi
   
   #//get and print remote counts
-  remoteCounts=$(gitRevisionCounts $repoDir remote)
+  remoteCounts=$(gitRevisionCounts "$repoDir" remote)
   logAll "${remoteCounts}\t${branch}->origin/${mainBranch}  ${repoDir}"
 }
 
@@ -153,10 +155,13 @@ if isGitDir "${currDir}"; then
 fi
 
 log "Depth Search: $MAX_DEPTH"
-for aDir in $( find -mindepth 1 -maxdepth $MAX_DEPTH -type d )
+declare -a dirList=()
+mapfile -t dirList < <(find . -mindepth 1 -maxdepth "$MAX_DEPTH" -type d)
+
+for aDir in "${dirList[@]}"
 do
   if isGitDir "${aDir}"; then
-    processRepo ${aDir}
+    processRepo "${aDir}"
   fi
 done
 logAll ""

@@ -41,7 +41,9 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -81,6 +83,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 }
@@ -91,7 +94,7 @@ function processArgs {
 # @return - exit value of zero indicates yes (bash no error)
 function promptYesNo {
   local promptText=$1
-  read -p "${promptText} [Y/N]: "
+  read -r -p "${promptText} [Y/N]: "
   # check if user reply is numeric
   if [[ "$REPLY" == "y" ]] || [[ "$REPLY" == "Y" ]]; then
     return 0
@@ -103,18 +106,20 @@ function promptYesNo {
 function createNanoRCFile {
   # create blank nano .nanorc file
   log "Creating blank .nanorc file"
-  touch  ${nanoRcFile}
+  touch "${nanoRcFile}"
 
   #//append special config options
-  echo "set tabstospaces" >> ${nanoRcFile}
-  echo "set tabsize 2" >> ${nanoRcFile}
-  echo "set linenumbers" >> ${nanoRcFile}
-  echo "set autoindent" >> ${nanoRcFile}
+  {
+    echo "set tabstospaces"
+    echo "set tabsize 2"
+    echo "set linenumbers"
+    echo "set autoindent"
 
-  #//set some commented options that can be toggled by user and if version of nano allows
-  echo "#set whitespace \">.\"" >> ${nanoRcFile}
-  echo "#set mouse" >> ${nanoRcFile}
-  echo "" >> ${nanoRcFile}
+    #//set some commented options that can be toggled by user and if version of nano allows
+    echo "#set whitespace \">.\""
+    echo "#set mouse"
+    echo ""
+  } >> "${nanoRcFile}"
 }
 
 # add include statements for each of the files in the user share 
@@ -137,10 +142,12 @@ function includeSyntaxFromInstall {
   fi
   
   # loop through syntax files in nano share directory
-  for nanoFile in  $( find "${nanoInstallDir}" -mindepth 1 -maxdepth 1 -type f -name "*.nanorc" ); do
-    log "${nanoFile}"
+  declare -a nanoDirs=()
+  mapfile -t nanoDirs < <( find "${nanoInstallDir}" -mindepth 1 -maxdepth 1 -type f -name "*.nanorc" )
 
-    echo "include ${nanoInstallDir}${nanoFile}" >> ${nanoRcFile}
+  for nanoFile in  "${nanoDirs[@]}"; do
+    log "${nanoFile}"
+    echo "include ${nanoInstallDir}${nanoFile}" >> "${nanoRcFile}"
   done
 
   log ""
@@ -158,20 +165,23 @@ function includeSyntaxFromProject {
   fi
 
   # loop through all nanorc syntax file in project
-  for nanoFile in $( find -mindepth 1 -maxdepth 1 -type f -name "*.nanorc" ); do 
+  declare -a nanoFiles=()
+  mapfile -t nanoFiles < <( find . -mindepth 1 -maxdepth 1 -type f -name "*.nanorc" )
+
+  for nanoFile in "${nanoFiles[@]}"; do
     log "$nanoFile"
 
     # copy nanorc files from project to the home nano folder
-    cp $nanoFile "${homeNanoDir}/"
+    cp "$nanoFile" "${homeNanoDir}/"
 
     # add an include statement for the syntax file
-    fileName=$(basename $nanoFile)
-    echo "include ~/.nano/$fileName" >> ${nanoRcFile}
+    fileName=$(basename "$nanoFile")
+    echo "include ~/.nano/$fileName" >> "${nanoRcFile}"
   done
 
   # add a commented include statement for the unibasic language
-  #echo "#include ~/.nano/unibasic.nanorc" >> ${nanoRcFile}
-  #echo "#include ~/.nano/.nanorc" >> ${nanoRcFile}
+  #echo "#include ~/.nano/unibasic.nanorc" >> "${nanoRcFile}"
+  #echo "#include ~/.nano/.nanorc" >> "${nanoRcFile}"
 }
 
 

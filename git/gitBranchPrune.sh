@@ -45,7 +45,9 @@ for lib in "${libs[@]}"; do
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
     exit
-  fi 
+  fi
+
+  # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
 
@@ -100,6 +102,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 
@@ -109,10 +112,11 @@ function processArgs {
   fi
 
   if hasArgument "-p"; then
-    local numValue=$(getArgument "-p")
+    local numValue
+    numValue=$(getArgument "-p")
     log "  Prune Value: $numValue"
     if [[ $numValue =~ $RGX_NUM ]]; then
-      setPruneDays $numValue
+      setPruneDays "$numValue"
       log "  Prune Days:   $PRUNE_DAYS"
       log "  Caution Days: $CAUTION_DAYS"
     fi
@@ -134,7 +138,7 @@ function printHeader(){
   dateHeader=$(padRight " Commit " 12 " ")
   nameHeader=" Branch name"
   logAll "${daysHeader}|${dateHeader}|${nameHeader}"
-  logAll $(padRight "" 50 "-")
+  logAll "$(padRight "" 50 "-")"
 }
 # Perform all the work for a single repository directory
 # 
@@ -148,9 +152,12 @@ function processGitDirectory {
     forceDelete=true
   fi
 
-  local today=$(date '+%Y-%m-%d')
+  local today
+  today=$(date '+%Y-%m-%d')
   log "  Today Date: ${today}"
-  local todaySec=$(date +%s -d "${today}")
+  
+  local todaySec
+  todaySec=$(date +%s -d "${today}")
   local daysSince
 
   #// branch list command outputs LF delimited lines

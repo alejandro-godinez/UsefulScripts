@@ -182,13 +182,13 @@ function processArgs {
   fi
 
   # check for output path option
-  if hasArgument "-o" ]; then
+  if hasArgument "-o"; then
     OUTPUT_PATH=$(getArgument "-o")
     log "  Output Path: $OUTPUT_PATH"
   fi
 
   # check for relative path for link
-  if hasArgument "-r" ]; then
+  if hasArgument "-r"; then
     RELATIVE_PATH=$(getArgument "-r")
     log "  Relative Path: $RELATIVE_PATH"
   fi

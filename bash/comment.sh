@@ -82,7 +82,7 @@ function processArgs {
 
   # check for vebose/debug
   if hasArgument "-v"; then
-    # shellcheck disable=SC2034 # disable warning for unused variable from a library
+    # shellcheck disable=SC2034 # disable warning for unused variable, DEBUG is sourced from logging.sh
     DEBUG=true
   fi
 }

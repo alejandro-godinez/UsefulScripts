@@ -27,17 +27,17 @@ fi
 #//check with user if they want to intall the project
 jarFile="release/${projVersion}/${projName}-${projVersion}.jar"
 echo -n "Do you want to install ${projName}.jar v${projVersion}? (y/yes): "
-read doInstall
+read -r doInstall
 if [[ ${doInstall} =~ ^([y]|yes|YES)$ ]]
 then
   
   #//install project to maven
   echo "Installing ${projName} to maven..."
   mvn install:install-file \
-  -Dfile=${jarFile} \
-  -DgroupId=${groupId} \
-  -DartifactId=${artifactId} \
-  -Dversion=${projVersion} \
+  -Dfile="${jarFile}" \
+  -DgroupId="${groupId}" \
+  -DartifactId="${artifactId}" \
+  -Dversion="${projVersion}" \
   -Dpackaging=jar \
   -DgeneratePom=true
   
