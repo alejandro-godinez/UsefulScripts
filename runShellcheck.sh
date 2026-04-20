@@ -1,15 +1,19 @@
 #!/bin/bash
 #----------------------------------------------------------------------------
-# Script to run shellcheck tool against all the bash script file in the currenty
-# directory recursively and save the results in a specified output directory.
+# Script to run the shellcheck code analysis tool against all the bash script
+# files in the currenty directory recursively. 
+# Results for files with errors/warnings are saved in a markdown file in the
+# temp directory.
 # 
 # @version 2026.04.19
 # 
 # Usage:
+# <pre>
 # runShellcheck.sh [options]
 #   - h      This help info
 #   - v      Verbose/debug output
 #   - d num  Search depth (default 1)
+# </pre>
 #----------------------------------------------------------------------------
 
 # set the bash set variables

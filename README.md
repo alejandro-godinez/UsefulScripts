@@ -5,6 +5,10 @@ An assortment of useful scripts from a wide variety of technologies.
 - **[install.sh](install.sh)**  
 Script to install the various bash scripts and libraries from this project
 
+### [Shellcheck](docs/runShellcheck.sh.md)
+- **[runShellcheck.sh](runShellheck.sh)**  
+Script to run shellcheck code analysis tool, all bash scripts follow community standards outlined by this tool
+
 ### [ANT](ant/readme.md)
 - **build_junit.xml**  
 A largley re-usable ANT build script for any standalone java project that will execute and halt on failed JUnit tests.
