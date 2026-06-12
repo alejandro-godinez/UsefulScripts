@@ -1,3 +1,5 @@
+REM https://github.com/microsoft/winget-cli/discussions/1798
+
 @echo off
 
 REM -e ensures an exact match for the package ID 
