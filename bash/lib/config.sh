@@ -39,7 +39,7 @@ function hasProperty {
 
   # check if config file specified exists
   #echo "Config File: $configFile"
-  if [ ! -f $configFile ]; then
+  if [ ! -f "$configFile" ]; then
     #echo "Config File Not Found"
     return 1
   fi
@@ -65,7 +65,7 @@ function getProperty {
   local propName="$2"
 
   # check if config file specified exists
-  if [ ! -f $configFile ]; then
+  if [ ! -f "$configFile" ]; then
     return 1
   fi
 
@@ -87,7 +87,8 @@ function getProperty {
 # @break
 
 # configFile="./test/test.config"
-# declare -a props=("name" "country" "lastupdate" "somekey" "link.url") 
+# echo "$configFile"
+# declare -a props=("name" "country" "lastupdate" "somekey" "link.url" "user" "base_url") 
 # for property in "${props[@]}"; do
 #   if hasProperty "$configFile" "$property"; then
 #     echo -n "${property} - "
