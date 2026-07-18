@@ -44,6 +44,10 @@ Perform a trim (drop) of the oldes stash entries down to a set number of items.
 - **Libraries**  
     - **[git_lib.sh](git/lib/docs/git_lib.sh.md)** - Various GIT functions to obtain repo information or perform operations.
 
+### Jira
+- **[JiraInfo](jira/docs/jiraInfo.sh.md)**  
+Fetch jira information for a given work item
+
 ### [Bash](bash/readme.md)
 - **[avgFileSize.sh](bash/docs/avgFileSize.sh.md)**  
 Get an average file size of all the files that meet the specified name filter.
