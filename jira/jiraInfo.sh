@@ -249,7 +249,7 @@ issueKey="${REM_ARGS[0]}"
 log "Issue Key: ${issueKey}"
 
 # get next file name
-outputDir="./temp/"
+outputDir=~/temp/jira/
 outputFile="${outputDir}${issueKey}.log"
 logAll "Output File: ${outputFile}"
 
