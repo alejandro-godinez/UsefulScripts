@@ -32,6 +32,11 @@
  if hasArgument "-file"; then
    file=$(getArgument "-file")
  fi
+
+ # check if any one option was specified
+ if hasAnyArgument "-v" "-verbose"; then
+   echo "Verbose option was specified"
+ fi
  </pre>
 
  Limitation Notes:
@@ -55,6 +60,7 @@
 | setArgument(option,&nbsp;value) |  Sets the argument value for the specified option  <br><br><u><b>Args:</b></u><br>option - the option name <br>value - the argument value <br> |
 | getArgument(option) |  Get the argument value for an option name.  <br><br><u><b>Args:</b></u><br>option - the option name <br><br><u><b>Return:</b></u><br>0 (zero) with valid option, 1 otherwise. <br><br><u><b>Output:</b></u><br>the argument value <br> |
 | hasArgument(option) |  Check if the specified option was parsed from the arguments.  This checks if the value is not 'false'  <br><br><u><b>Args:</b></u><br>option - the option name <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise <br> |
+| hasAnyArgument(optionList) |  Check if any of the specified options were parsed from the arguments.  This checks if the value is not 'false'  <br><br><u><b>Args:</b></u><br>optionList - the list of option names to check <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise <br> |
 | startsWithDash(text) |  Check if text starts with dash  <br><br><u><b>Args:</b></u><br>text - the text to check <br><br><u><b>Return:</b></u><br>0 (zero) when true, 1 otherwise <br> |
 | addToREM(arg) |  Adds an entry to the argument remaining variable  <br><br><u><b>Args:</b></u><br>arg - argument value <br> |
 | parseArguments(args) |  Parsing and processing of the argument list  <br><br><u><b>Args:</b></u><br>args - array of arguments, use "$@" from script call <br> |
