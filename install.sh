@@ -11,7 +11,7 @@
 # - Any change in your local copy will be detected as needing an update
 # <br>
 # 
-# @version: 2024.1.29
+# @version: 2026.7.17
 # 
 # TODO:<br>
 # - Better detect changes in script, maybe by version number if one exists
@@ -76,7 +76,7 @@ done
 RGX_LIB='/lib/'
 
 # array of directories that contain scripts to be installed
-declare -a PROJECT_DIRS=("bash" "git" "bashdoc" "timelog" "projectFolders")
+declare -a PROJECT_DIRS=("bash" "git" "bashdoc" "timelog" "projectFolders" "jira")
 
 # variable for selected project directory 
 projDir=""

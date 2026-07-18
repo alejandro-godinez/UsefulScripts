@@ -31,6 +31,11 @@
 # if hasArgument "-file"; then
 #   file=$(getArgument "-file")
 # fi
+# 
+# # check if any one option was specified
+# if hasAnyArgument "-v" "-verbose"; then
+#   echo "Verbose option was specified"
+# fi
 # </pre>
 # 
 # Limitation Notes:
@@ -143,13 +148,30 @@ function hasArgument {
     return 1
   fi
 
-  local val=$(getArgument "$option")
+  local val
+  val=$(getArgument "$option")
   if [[ "$val" = "false" ]]; then
     return 1
   fi
 
   # any other value means the option was encountered
   return 0
+}
+
+# Check if any of the specified options were parsed from the arguments.
+# This checks if the value is not 'false'
+# 
+# @param optionList - the list of option names to check
+# @return - 0 (zero) when true, 1 otherwise
+function hasAnyArgument {
+  local optionList=("$@")
+
+  for option in "${optionList[@]}"; do
+    if hasArgument "$option"; then
+      return 0
+    fi
+  done
+  return 1
 }
 
 # Check if text starts with dash
