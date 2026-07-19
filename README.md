@@ -48,6 +48,9 @@ Perform a trim (drop) of the oldes stash entries down to a set number of items.
 - **[JiraInfo](jira/docs/jiraInfo.sh.md)**  
 Fetch jira information for a given work item
 
+- **Libraries**
+    - **[jira_lib.sh](jira/lib/docs/jira_lib.sh.md)** - Jira request and field parsing operations
+
 ### [Bash](bash/readme.md)
 - **[avgFileSize.sh](bash/docs/avgFileSize.sh.md)**  
 Get an average file size of all the files that meet the specified name filter.
