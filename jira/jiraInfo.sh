@@ -1,10 +1,10 @@
 #!/bin/bash
 #-----------------------------------------------------------------------------------
-# Fetch information for a given jira issue/ticket/work item id
+# Fetch information for a given jira issue key or id
 # the request results are cached in a local file for subsequent 
 # field lookups.  You can use the -u option to force an update of the cached file.
 # 
-# @version 2026.07.17
+# @version 2026.07.18
 # 
 # 
 # ### Requirements:
@@ -16,7 +16,7 @@
 # 
 # ### Usage:
 # <pre>
-# jiraInfo.sh [options] &lt;issueId&gt;
+# jiraInfo.sh [options] &lt;issueKeyOrId&gt;
 #   Options:
 #     -h         This help text info
 #     -v         Verbose/debug output
@@ -51,29 +51,11 @@ NC='\033[0m' # No Color
 RED='\033[0;31m'
 CYN='\033[0;36m'
 
-#//set the Internal Field Separator to newline (git-bash uses spaces for some reason)
-#IFS=$'\n'
-
-# JIRA API URLs
-BASE_URL="https://jira.atlassian.com"
-
 # user configuration
 CONFIG_FILE=~/auth/jira.config
-USER=
-API_TOKEN=
-API_VERSION="rest/api/3"
-
-# JQ command for parsing JSON output, -r option is used to output raw strings without quotes
-JQ_CMD="jq -r"
-
-# check if JQ is installed
-if ! command -v "jq" &> /dev/null; then
-  echo -e "${RED}ERROR: jq command not found. Please install jq to use this script.${NC}"
-  exit 1
-fi
 
 # define list of libraries and import them
-declare -a libs=( ~/lib/logging.sh ~/lib/arguments.sh ~/lib/config.sh)
+declare -a libs=( ~/lib/jira_lib.sh ~/lib/logging.sh ~/lib/arguments.sh ~/lib/config.sh)
 for lib in "${libs[@]}"; do 
   if [[ ! -f $lib ]]; then
     echo -e "${RED}ERROR: Missing $lib library${NC}"
@@ -83,6 +65,12 @@ for lib in "${libs[@]}"; do
   # shellcheck disable=SC1090 # disable warning for dynamic source
   source "$lib"
 done
+
+# check if JQ is installed
+if ! hasJqInstalled; then
+  echo -e "${RED}ERROR: jq command not found. Please install jq to use this script.${NC}"
+  exit 1
+fi
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -174,48 +162,16 @@ function loadConfig {
   done
 
   # load essential configurations
-  USER=$(getProperty "$CONFIG_FILE" "user" )
-  log "User: $USER"
-  API_TOKEN=$(getProperty "$CONFIG_FILE" "apiKey")
-  log "API Token: $API_TOKEN"
+  JIRA_USER=$(getProperty "$CONFIG_FILE" "user" )
+  log "User: $JIRA_USER"
+  JIRA_API_TOKEN=$(getProperty "$CONFIG_FILE" "apiKey")
+  log "API Token: $JIRA_API_TOKEN"
 
   # load alternate base url if it was provided
   if hasProperty "$CONFIG_FILE" "base_url"; then
-    BASE_URL=$(getProperty "$CONFIG_FILE" "base_url")
+    JIRA_URL=$(getProperty "$CONFIG_FILE" "base_url")
   fi
-  logAll "$BASE_URL"
-}
-
-# Performa a REST get request for issue information
-# 
-# @param $issueId - the issueId or key
-# @output the response from the API request
-function jiraFetchIssueDetails {
-  issueIdOrKey="$1"
-
-  # Construct the full URL
-  local apiUrl="${BASE_URL}/${API_VERSION}/issue/${issueIdOrKey}"
-
-  # perform curl request
-  #curl -s --request GET \   ## add -s for silent output
-  curl --request GET \
-    --url "${apiUrl}" \
-    --user "${USER}:${API_TOKEN}" \
-    --header 'Accept: application/json'
-}
-
-# Get a specific field value from the issue information JSON
-#
-# @param $issueInfo - the JSON string containing the issue information
-# @param $fieldName - the name of the field to extract (e.g., '.fields.status.name')
-# @output the value of the specified field
-function getJiraValue {
-  local issueInfo="$1"
-  local fieldName="$2"
-
-  local fieldValue
-  fieldValue=$(echo "$issueInfo" | $JQ_CMD "${fieldName}")
-  echo "$fieldValue"
+  logAll "$JIRA_URL"
 }
 
 #< - - - Main - - - >
@@ -245,12 +201,12 @@ else
 fi
 
 # get the first value from the REM_ARGS array as the issue key
-issueKey="${REM_ARGS[0]}"
-log "Issue Key: ${issueKey}"
+issueKeyOrId="${REM_ARGS[0]}"
+log "Issue Key: ${issueKeyOrId}"
 
 # get next file name
 outputDir=~/temp/jira/
-outputFile="${outputDir}${issueKey}.log"
+outputFile="${outputDir}${issueKeyOrId}.log"
 logAll "Output File: ${outputFile}"
 
 # create the output directory if it doesn't exist
@@ -278,13 +234,12 @@ if [ ! -f "${outputFile}" ]; then
   # create new empty file
   touch "${outputFile}"
 
-  logAll "API URL: ${BASE_URL}/${API_VERSION}/issue/${issueKey}"
   # perform issue info request
   logAll "Getting Issue Info..."
-  issueInfo=$(jiraFetchIssueDetails "$issueKey")
+  issueInfo=$(fetchJiraIssue "$issueKeyOrId")
 
   # use jq to pretty the issueInfo json output
-  issueInfo=$(echo "$issueInfo" | $JQ_CMD '.')
+  issueInfo=$(prettyPrintJson "$issueInfo")
 
   # write issue info to file
   echo -n "$issueInfo" > "${outputFile}"
@@ -292,14 +247,18 @@ fi
 
 # check if the issueInfo is empty
 if [ -z "$issueInfo" ]; then
-  echo -e "${RED}ERROR: Issue info is empty. Please check the issue key and try again.${NC}"
+  logAll "${RED}ERROR: Issue info is empty. Please check the issue key and try again.${NC}"
   exit 1
 fi
 
 # check if the issueInfo contains an error message
-if jq -e '.errorMessages | type == "array" and length > 0' <<< "$issueInfo" > /dev/null 2>&1; then
-  errorMessages=$(jq -r '.errorMessages[]' <<< "$issueInfo")
-  echo -e "${RED}ERROR: ${errorMessages}${NC}"
+logAll "Checking for errors in issue info..."
+if jiraHasErrors "$issueInfo"; then
+
+  logAll "Getting error messages from issue info..."
+  jiraErrors=$(getJiraErrorMessages "$issueInfo")
+  logAll "${RED}ERROR: Issue info contains error messages:${NC}"
+  logAll "${jiraErrors}"
   exit 1
 fi
 
@@ -308,9 +267,8 @@ if hasAnyArgument "-b" "-f"; then
   logAll "${CYN}----------- Issue Info -----------${NC}"
   issueId=$(getJiraValue "$issueInfo" ".id")
   logAll "Issue ID: ${issueId}"
+  issueKey=$(getJiraValue "$issueInfo" ".key")
   logAll "Issue Key: ${issueKey}"
-  issueDescription=$(getJiraValue "$issueInfo" ".fields.description")
-  logAll "Issue Description: ${issueDescription}"
   issueSummary=$(getJiraValue "$issueInfo" ".fields.summary")
   logAll "Issue Summary: ${issueSummary}"
 fi
