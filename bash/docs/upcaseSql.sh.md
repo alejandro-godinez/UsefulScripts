@@ -1,7 +1,7 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
 # [upcaseSql.sh](../upcaseSql.sh)
 
- This script will perform uppercase operation on any SQL keyword in the specified
+ This script will perform uppercase operation on any SQL keyword/function in the specified
  input file. A new copy of the script with '_ucase' in the name will be generated in the
  same directory.
 
@@ -28,4 +28,8 @@
 | printHelp() |  Print the usage information for this script to standard output.  |
 | processArgs(args) |  Setup and execute the argument processing functionality imported from arguments.sh.  <br><br><u><b>Args:</b></u><br>args - array of argument values provided when calling the script <br> |
 | hasKeyword(line) |  Check if a line contains an sql keyword  <br><br><u><b>Args:</b></u><br>line - the line of text to test <br><br><u><b>Return:</b></u><br>exit value of zero indicates yes <br> |
+| lineStartsWithComment(line) |  Check if a line starts with a comment (i.e. --)  <br><br><u><b>Args:</b></u><br>line - the line of text to test <br><br><u><b>Return:</b></u><br>exit value of zero indicates yes <br> |
+| lineHasStartBlockComment(line) |  Check if line has a start block comment character ('\*')  <br><br><u><b>Args:</b></u><br>line - the line of text to test <br><br><u><b>Return:</b></u><br>exit value of zero indicates yes <br> |
+| lineHasEndBlockComment(line) |  Check if line has an end block comment character ('*/')  <br><br><u><b>Args:</b></u><br>line - the line of text to test <br><br><u><b>Return:</b></u><br>exit value of zero indicates yes <br> |
+| processLine(line) |  Process a single line of text and perform the uppercase operation on any sql keyword  <br><br><u><b>Args:</b></u><br>line - the line of text to process <br><br><u><b>Return:</b></u><br>the processed line of text <br> |
 | processFile(file) |  Perform all the work to uppercase keywords in speified file  <br><br><u><b>Args:</b></u><br>file - the sql script file to convert <br> |
