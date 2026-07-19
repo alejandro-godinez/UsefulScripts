@@ -59,6 +59,10 @@ rgxKeywords+="replace|replicate|reverse|right|right|rownum|rtrim|"
 rgxKeywords+="select|set|soundex|space|str|stuff|substring|"
 rgxKeywords+="then|translate|trim|unicode|upper|use|when|where)\b"
 
+# regex to detect if line is a comment line (starts with --)
+rgxCommentLine="^[[:space:]]*--"
+rgxStartBlockComment="/\*"
+rgxEndBlockComment="\*/"
 
 # Print the usage information for this script to standard output.
 function printHelp {
@@ -130,6 +134,51 @@ function hasKeyword {
   return 1
 }
 
+# Check if a line starts with a comment (i.e. --)
+# 
+# @param line - the line of text to test
+# @return - exit value of zero indicates yes
+function lineStartsWithComment {
+  local line="$1"
+
+  if [[ $line =~ $rgxCommentLine ]]; then
+    return 0
+  fi
+
+  return 1
+}
+
+# Check if line has a start block comment character ('\*')
+# 
+# @param line - the line of text to test
+# @return - exit value of zero indicates yes
+function lineHasStartBlockComment {
+  local line="$1"
+
+  if [[ $line =~ $rgxStartBlockComment ]]; then 
+    return 0
+  fi
+  return 1
+}
+
+# Check if line has an end block comment character ('*/')
+# 
+# @param line - the line of text to test
+# @return - exit value of zero indicates yes
+function lineHasEndBlockComment {
+  local line="$1"
+
+  if [[ $line =~ $rgxEndBlockComment ]]; then
+    return 0
+  fi
+  return 1
+}
+
+
+# Process a single line of text and perform the uppercase operation on any sql keyword
+# 
+# @param line - the line of text to process
+# @return - the processed line of text
 function processLine {
   local line="$1"
 
@@ -142,10 +191,11 @@ function processLine {
     # output uppercase line to file
     #echo -n "${ucaseLine}" >> $outputFile
     echo "${ucaseLine}"
-  else
-    # output line to output file as is
-    echo "$line"
+    return 0
   fi
+
+  # output line to output file as is
+  echo "$line"
 }
 
 # Perform all the work to uppercase keywords in speified file
@@ -153,6 +203,9 @@ function processLine {
 # @param file - the sql script file to convert
 function processFile {
   local inputFile="$1"
+  
+  # variable to keep track if we have encounted a start block comment
+  local inBlockComment=false
 
   # get the seprate file parts name and extension
   local fileName
@@ -181,6 +234,36 @@ function processFile {
 
     if [ "$DEBUG" = true ]; then 
       spinDel
+    fi
+
+    # check if line start with comment, if so keep line as is
+    if lineStartsWithComment "$line"; then
+      echo "$line" >> "$outputFile"
+      continue
+    fi
+
+    # check if flag indicates we are in a block comment
+    if [[ "$inBlockComment" == true ]]; then
+      echo "$line" >> "$outputFile"
+
+      # check if line has the end block comment
+      if lineHasEndBlockComment "$line"; then
+        inBlockComment=false
+      fi
+
+      continue
+    fi
+
+    # check if this line is the start of a block comment
+    if lineHasStartBlockComment "$line"; then
+      echo "$line" >> "$outputFile"
+
+      # if the same line has end block comment no need to set block comment flag
+      if ! lineHasEndBlockComment "$line"; then
+        inBlockComment=true
+      fi
+      
+      continue
     fi
     
     # process an individual line
