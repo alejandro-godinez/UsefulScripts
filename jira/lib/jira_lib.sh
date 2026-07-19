@@ -1,7 +1,48 @@
 #!/bin/bash
 
 #-------------------------------------------------------------------------------
-# Library for jira request and parsing functionality.
+# Library for performing jira issue requests and parsing functionality.
+# 
+# @version: 2026.07.18
+# 
+# ### Requirements:
+# - The script requires the `jq` command to be installed for parsing JSON output.
+# Without jq you can perform fetch requests but you will not be able to parse output
+# for field values.
+#   - SEE: [jq Installation Guide](https://stedolan.github.io/jq/download/)
+#   - TIP: ```winget install jqlang.jq -e```
+# 
+# ### Import Sample Code:
+# <pre>
+# if [[ ! -f ~/lib/jira_lib.sh ]]; then
+#   echo "ERROR: Missing jira_lib.sh library"
+#   exit
+# fi
+# source ~/lib/jira_lib.sh
+# </pre>
+# 
+# ### Usage:
+# <pre>
+# # define required authentication variables
+# JIRA_USER="your_username_or_email"
+# JIRA_API_TOKEN="your_api_token"
+# 
+# # fetch issue information for a given issue key or id
+# issueKeyOrId="ISSUE-123"
+# issueInfo=$(fetchJiraIssue "$issueKeyOrId")
+# 
+# # check for errors in the response
+# if jiraHasErrors "$issueInfo"; then
+#   echo "Error fetching issue information:"
+#   getJiraErrorMessages "$issueInfo"
+# fi
+# 
+# # extract specific field values from the issue information
+# issueType=$(getJiraValue "$issueInfo" ".fields.issuetype.name")
+# issueStatus=$(getJiraValue "$issueInfo" ".fields.status.name")
+# 
+# 
+# </pre>
 #-------------------------------------------------------------------------------
 
 JIRA_URL="https://jira.atlassian.com"
@@ -88,5 +129,3 @@ function getJiraValue {
   fieldValue=$(echo "$issueInfo" | jq -r "${fieldName}")
   echo "$fieldValue"
 }
-
-# - - - TESTING - - -

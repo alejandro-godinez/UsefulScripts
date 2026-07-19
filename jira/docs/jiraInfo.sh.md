@@ -1,7 +1,7 @@
 <small><i>Auto-generated using [bashdoc.sh](https://github.com/alejandro-godinez/UsefulScripts/blob/trunk/bashdoc/bashdoc.sh)</i></small>
 # [jiraInfo.sh](../jiraInfo.sh)
 
- Fetch information for a given jira issue/ticket/work item id
+ Fetch information for a given jira issue key or id
  the request results are cached in a local file for subsequent 
  field lookups.  You can use the -u option to force an update of the cached file.
 
@@ -16,7 +16,7 @@
 
  ### Usage:
  <pre>
- jiraInfo.sh [options] &lt;issueId&gt;
+ jiraInfo.sh [options] &lt;issueKeyOrId&gt;
    Options:
      -h         This help text info
      -v         Verbose/debug output

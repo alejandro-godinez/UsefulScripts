@@ -4,7 +4,7 @@
 # the request results are cached in a local file for subsequent 
 # field lookups.  You can use the -u option to force an update of the cached file.
 # 
-# @version 2026.07.17
+# @version 2026.07.18
 # 
 # 
 # ### Requirements:
@@ -234,7 +234,6 @@ if [ ! -f "${outputFile}" ]; then
   # create new empty file
   touch "${outputFile}"
 
-  logAll "API URL: ${JIRA_URL}/${JIRA_API_VERSION}/issue/${issueKeyOrId}"
   # perform issue info request
   logAll "Getting Issue Info..."
   issueInfo=$(fetchJiraIssue "$issueKeyOrId")
