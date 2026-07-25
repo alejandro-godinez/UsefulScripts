@@ -3,45 +3,15 @@ As is common you can post scripts in your home bin folder so that they are avail
 
 **Dependencies**  
   _Include the following in a lib folder in your bash home directory_  
-  - [logging.sh](../bash/lib/docs/arguments.sh.md)
+  - [logging.sh](../bash/lib/docs/logging.sh.md)
   - [arguments.sh](../bash/lib/docs/arguments.sh.md)
   - [spinner.sh](../bash/lib/docs/spinner.sh.md)
 
   For convenience [Install](../docs/install.sh.md) script is provided at the root of this repo.
 
-### Tool Suggestion
-
- [ShellCheck](https://www.shellcheck.net) - This is a useful code analysis tool to check bash script syntax and coding issues.
- 
- *Note: Have only recently started using this not all errors and warnings have been corrected.*
-
-Windows Install (for gitbash):
-```
-winget install --id koalaman.shellcheck
-```
-
-Usage Examples:
-```
-shellcheck.exe gitStashPullApply.sh
-shellcheck.exe -f gcc gitStashPullApply.sh
-shellcheck.exe -f checkstyle gitStashPullApply.sh > gitStashPullApply.sh.xml
-```
-
-Use the docs page to check reasoning for each error  
-https://www.shellcheck.net/wiki/\<THE_CODE\>
-
-# [avgFileSize.sh](avgFileSize.sh)
-This script will get an average file size of all the file that meet the specified name filter.
-
-**Sample:**
-```
-$ avgFileSize.sh "*.ini"
-Search: *.ini
-Dir: /temp/
-Total (KiB): 0.6934
-File Count: 11
-Average (KiB): 0.0630
-```
+## Dev Notes
+  Consider the following tools for development
+  - [shellCheck](../docs/devTools.md#shellcheck) - bash script code analysis
 
 # [changeOptionValue.sh](changeOptionValue.sh)
 This script will change the value of a standard name=value pair file such as ini or config files.

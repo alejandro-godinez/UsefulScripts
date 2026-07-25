@@ -182,7 +182,7 @@ escapesOn
 
 #//process arguments
 processArgs "$@"
-printRemArgs
+#printRemArgs
 
 # load jira config options
 logAll "Loading configuration..."
