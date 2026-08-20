@@ -57,6 +57,7 @@ function printHelp {
   echo "    -v        Verbose/debug output"
   echo "    -s        show located test line results from grep"
   echo "    -d num    Search depth (default 1)"
+  echo "    -i        Case insensitive search"
   echo ""
   echo "  Example: findFileWidthText.sh \"hello\" \"*.txt\""
   echo "    - this will list '*.txt' files and search entries containing 'hello'"
@@ -72,6 +73,7 @@ function processArgs {
   addOption "-v"
   addOption "-s"
   addOption "-d" true
+  addOption "-i"
   
   # perform parsing of options
   parseArguments "$@"
@@ -140,6 +142,8 @@ filterCommand=("find" . "-mindepth" "1" "-maxdepth" "${MAX_DEPTH}" "-type" "f" )
 if (( argCount > 1 )); then
   filterCommand+=("-name" "${REM_ARGS[1]}")
 fi
+
+#//log the file filter command
 log "File Filter: ${filterCommand[*]}"
 
 for f in $("${filterCommand[@]}")
@@ -147,13 +151,24 @@ do
   spinChar
   log "$f"
 
-  #//perform grep search on file and capture match result
+  #//build out the grep commands into an array
+  grepCommand=("grep")
+  if hasArgument "-i"; then
+    grepCommand+=("-i")
+  fi
   if hasArgument "-s"; then
-    result=$( grep -n "${search}" "${f}" )
+    grepCommand+=("-n")
   else
-    result=$( grep -m 1 -n "${search}" "${f}" )
+    grepCommand+=("-m" "1") # stop searching after first match when not showing lines
   fi
 
+  grepCommand+=("${search}" "${f}")
+
+  log "Grep Command: ${grepCommand[*]}"
+
+  #//perform grep search on file and capture match result
+  result=$( "${grepCommand[@]}" )
+  
   if [ ! -z "${result// }" ]; then
     spinDel
     logAll "${f}"

@@ -49,6 +49,7 @@ function stackIndex {
   local dirPath="$1"
 
   # grep for line number with matching path, cut on ":" delimiter and get first field
+  local lineNo
   lineNo=$(dirs -v -l | grep -m 1 -in "${dirPath}" | cut -d: -f1)
 
   if [ -n "${lineNo}" ]; then
@@ -72,21 +73,22 @@ function stackIndex {
 # @return - 0 (zero) with swich, 1 otherwise
 function stackSwitch {
   local dirPath="$1"
-
+  local dirIndex
+  
   # get the path index in the stack
   dirIndex=$(stackIndex "${dirPath}")
 
   # check if index was found
   if (( dirIndex > -1 )); then
     # switch to that index in the stack
-    pushd +$dirIndex
+    pushd +"$dirIndex" || return 1
     return 0
   fi
 
   # not in stack, check if path provided was full and exists
-  if [ -d $dirPath ]; then 
+  if [ -d "$dirPath" ]; then 
     # add directory to stack
-    pushd "$dirPath"
+    pushd "$dirPath" || return 1
     return 0
   fi
 

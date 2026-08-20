@@ -109,8 +109,7 @@ function fetchJiraIssue {
   local apiUrl="${JIRA_URL}/${JIRA_API_VERSION}/issue/${issueIdOrKey}"
 
   # perform curl request
-  #curl -s --request GET \   ## add -s for silent output
-  curl --request GET \
+  curl --silent --show-error --request GET \
     --url "${apiUrl}" \
     --user "${JIRA_USER}:${JIRA_API_TOKEN}" \
     --header 'Accept: application/json'

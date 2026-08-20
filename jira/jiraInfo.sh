@@ -236,6 +236,7 @@ if [ ! -f "${outputFile}" ]; then
 
   # perform issue info request
   logAll "Getting Issue Info..."
+  log "API URL: ${JIRA_URL}/${JIRA_API_VERSION}/issue/${issueKeyOrId}"
   issueInfo=$(fetchJiraIssue "$issueKeyOrId")
 
   # use jq to pretty the issueInfo json output

@@ -73,7 +73,18 @@ function isOSX {
   return 1
 }
 
+# clean up a directory path for Windows compatibility
+cleanPathForWindows() {
+  local input_path="$1"
+  local cleaned_path
 
+  # Replace unsupported characters while preserving valid Windows path characters
+  # Escape backslashes for `sed` and preserve valid characters
+  cleaned_path=$(echo "$input_path" | sed 's#[^a-zA-Z0-9 .:\\/_-]#_#g')
+
+  # Return the cleaned path
+  echo "$cleaned_path"
+}
 
 # - - - TESTING - - - 
 # @break
@@ -84,3 +95,9 @@ function isOSX {
 # echo -n "MinGW:   "; isMinGW && echo "TRUE" || echo "FALSE"
 # echo -n "Sysgwin: "; isSygwin  && echo "TRUE" || echo "FALSE"
 # echo -n "OSX:     "; isOSX && echo "TRUE" || echo "FALSE"
+
+# TEST CleanPathForWindoes()
+# original_path='C:\Program Files\Invalid$!@#$%^&*()_+Characters\'
+# cleaned_path=$(cleanPathForWindows "$original_path")
+# echo "Original Path: $original_path"
+# echo "Cleaned Path:  $cleaned_path"
